@@ -2,10 +2,10 @@ name: build_downport_branch
 
 on:
   push:
-    branches: [standard]
+    branches: [main]
 
 jobs:
-  build_downport_branch:
+  build_downpor_branch:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -19,19 +19,15 @@ jobs:
       with:
         node-version: '16'
         
-    - uses: actions/setup-node@v4
-      with:
-        node-version: 20
-    - run: git clone https://github.com/abap2UI5/abap2UI5-setup.git && cp -r abap2UI5-setup/* . && npm i
     - run: npm ci
-    - run: npm run downport_samples
+    - run: npm run downport
     - name: Create Pull Request
       id: cpr
       uses: peter-evans/create-pull-request@v5
       with:
-        branch: auto-update
-        title: "Automatic Update"
-        commit-message: "Automated changes"
+        branch: auto-update-downport
+        title: "Auto Update Downport"
+        commit-message: "Auto Update Downport"
         body: "This PR contains automated changes."
         labels: "auto-merge"
     - name: Enable Pull Request Automerge
