@@ -2,7 +2,7 @@
 [![ABAP_STANDARD](https://github.com/abap2UI5/samples/actions/workflows/ABAP_STANDARD.yaml/badge.svg)](https://github.com/abap2UI5/samples/actions/workflows/ABAP_STANDARD.yaml)
 [![ABAP_CLOUD](https://github.com/abap2UI5/samples/actions/workflows/ABAP_CLOUD.yaml/badge.svg)](https://github.com/abap2UI5/samples/actions/workflows/ABAP_CLOUD.yaml)
 <br>
-[![auto_downporting](https://github.com/abap2UI5/samples/actions/workflows/auto_downporting.yaml/badge.svg)](https://github.com/abap2UI5/samples/actions/workflows/auto_downporting.yaml)
+[![auto_downport](https://github.com/abap2UI5/samples/actions/workflows/auto_downport.yaml/badge.svg)](https://github.com/abap2UI5/samples/actions/workflows/auto_downport.yaml)
 [![auto_cloud](https://github.com/abap2UI5/samples/actions/workflows/auto_cloud.yaml/badge.svg)](https://github.com/abap2UI5/samples/actions/workflows/auto_cloud.yaml)
 
 # abap2UI5 Samples
