@@ -1,4 +1,10 @@
-## abap2UI5 Samples
+[![ABAP_702](https://github.com/abap2UI5/samples/actions/workflows/ABAP_702.yaml/badge.svg?branch=702)](https://github.com/abap2UI5/samples/actions/workflows/ABAP_702.yaml)
+[![ABAP_STANDARD](https://github.com/abap2UI5/samples/actions/workflows/ABAP_STANDARD.yaml/badge.svg)](https://github.com/abap2UI5/samples/actions/workflows/ABAP_STANDARD.yaml)
+[![ABAP_CLOUD](https://github.com/abap2UI5/samples/actions/workflows/ABAP_CLOUD.yaml/badge.svg)](https://github.com/abap2UI5/samples/actions/workflows/ABAP_CLOUD.yaml)
+<br>
+[![auto_downporting](https://github.com/abap2UI5/samples/actions/workflows/auto_downporting.yaml/badge.svg)](https://github.com/abap2UI5/samples/actions/workflows/auto_downporting.yaml)
+
+# abap2UI5 Samples
 
 Install this repository and try out over 250 samples. This is the easiest way to learn how to develop with abap2UI5. More information [here.](https://abap2ui5.github.io/docs/get_started/samples.html)
 
