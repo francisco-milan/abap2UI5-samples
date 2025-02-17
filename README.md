@@ -5,7 +5,7 @@
 [![auto_downport](https://github.com/abap2UI5/samples/actions/workflows/auto_downport.yaml/badge.svg)](https://github.com/abap2UI5/samples/actions/workflows/auto_downport.yaml)
 [![auto_cloud](https://github.com/abap2UI5/samples/actions/workflows/auto_cloud.yaml/badge.svg)](https://github.com/abap2UI5/samples/actions/workflows/auto_cloud.yaml)
 
-# abap2UI5 Samples
+# abap2UI5-samples
 
 Install this repository and try out over 250 samples. This is the easiest way to learn how to develop with abap2UI5. More information [here.](https://abap2ui5.github.io/docs/get_started/samples.html)
 
