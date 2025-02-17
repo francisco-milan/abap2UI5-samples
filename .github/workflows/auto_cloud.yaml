@@ -1,11 +1,11 @@
-name: auto_downporting
+name: auto_cloud
 
 on:
   push:
     branches: [standard]
 
 jobs:
-  auto_downporting:
+  auto_cloud:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
