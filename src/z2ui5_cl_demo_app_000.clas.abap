@@ -3,6 +3,7 @@ CLASS z2ui5_cl_demo_app_000 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
+  "test
     DATA:
       BEGIN OF ms_check_expanded,
         basics          TYPE abap_bool,
