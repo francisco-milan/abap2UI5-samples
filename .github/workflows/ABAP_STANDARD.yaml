@@ -2,7 +2,7 @@ name: ABAP_STANDARD
 
 on:
   push:
-    branches: [main]
+    branches: [standard]
 
 permissions:
   contents: read
