@@ -2,7 +2,6 @@ name: ABAP_702
 
 on:
   push:
-    branches: [702]
 
 permissions:
   contents: read
@@ -20,4 +19,6 @@ jobs:
         node-version: 20
     - run: npm ci
     - run: npm run init_downport
+    - run: npm run downport
+    - run: npm run cleanup_downport
     - run: npx abaplint .github/abaplint/abap_702.jsonc
