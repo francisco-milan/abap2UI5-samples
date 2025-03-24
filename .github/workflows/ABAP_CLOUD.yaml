@@ -2,7 +2,6 @@ name: ABAP_CLOUD
 
 on:
   push:
-    branches: [STANDARD]
 
 permissions:
   contents: read
@@ -17,4 +16,5 @@ jobs:
       with:
         node-version: 20
     - run: npm ci
+    - run: rm -r 00
     - run: npx abaplint .github/abaplint/abap_cloud.jsonc
