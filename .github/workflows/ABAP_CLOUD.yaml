@@ -2,6 +2,7 @@ name: ABAP_CLOUD
 
 on:
   push:
+    branches: [STANDARD]
 
 permissions:
   contents: read
