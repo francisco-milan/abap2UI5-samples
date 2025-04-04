@@ -21,7 +21,7 @@ CLASS z2ui5_cl_demo_app_107 DEFINITION
   PROTECTED SECTION.
 
     DATA client TYPE REF TO z2ui5_if_client.
-    DATA check_initialized TYPE abap_bool.
+
     DATA check_load_cc TYPE abap_bool.
 
     METHODS z2ui5_view_display.
@@ -75,8 +75,7 @@ CLASS Z2UI5_CL_DEMO_APP_107 IMPLEMENTATION.
       client->nav_app_call( z2ui5_cl_pop_js_loader=>factory( get_custom_js( ) ) ).
       RETURN.
 
-    ELSEIF check_initialized = abap_false.
-      check_initialized = abap_true.
+    ELSEIF client->check_on_init( ).
       z2ui5_view_display( ).
       RETURN.
     ENDIF.

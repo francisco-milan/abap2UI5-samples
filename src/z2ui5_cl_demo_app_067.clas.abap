@@ -5,9 +5,9 @@ CLASS z2ui5_cl_demo_app_067 DEFINITION PUBLIC.
 
     DATA amount            TYPE p LENGTH 14 DECIMALS 3.
     DATA currency          TYPE string.
-    DATA numeric           TYPE n length 12.
+    DATA numeric           TYPE n LENGTH 12.
 
-    DATA check_initialized TYPE abap_bool.
+
 
   PROTECTED SECTION.
 
@@ -19,8 +19,7 @@ CLASS z2ui5_cl_demo_app_067 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    IF check_initialized = abap_false.
-      check_initialized = abap_true.
+    IF client->check_on_init( ).
 
       numeric = '000000000012'.
       amount = '123456789.123'.
@@ -36,11 +35,11 @@ CLASS z2ui5_cl_demo_app_067 IMPLEMENTATION.
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page( title          = 'abap2UI5 - Currency Format'
                   navbuttonpress = client->_event( 'BACK' )
-                  shownavbutton  = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL  ) ).
+                  shownavbutton  = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
 
     page->simple_form( title    = 'Currency'
                        editable = abap_true
-     )->content( 'form'
+      )->content( 'form'
          )->title( 'Input'
          )->label( 'Documentation'
          )->link( text = 'https://sapui5.hana.ondemand.com/#/entity/sap.ui.model.type.Currency'
@@ -98,18 +97,18 @@ CLASS z2ui5_cl_demo_app_067 IMPLEMENTATION.
 
     page->simple_form( title    = 'No Zeros'
                        editable = abap_true
-)->content( 'form'
-)->title( 'Input'
-)->label( 'Documentation'
-)->link( text = 'https://sapui5.hana.ondemand.com/sdk/#/api/sap.ui.model.odata.type.String%23methods/formatValue'
-         href = 'https://sapui5.hana.ondemand.com/sdk/#/api/sap.ui.model.odata.type.String%23methods/formatValue'
-)->label( 'Numeric'
-)->input( value = client->_bind_edit( val = numeric  )
+      )->content( 'form'
+      )->title( 'Input'
+      )->label( 'Documentation'
+      )->link( text = 'https://sapui5.hana.ondemand.com/sdk/#/api/sap.ui.model.odata.type.String%23methods/formatValue'
+         href       = 'https://sapui5.hana.ondemand.com/sdk/#/api/sap.ui.model.odata.type.String%23methods/formatValue'
+      )->label( 'Numeric'
+      )->input( value = client->_bind_edit( val = numeric )
 
-)->label( `Without leading Zeros`
+      )->label( `Without leading Zeros`
 
-)->text(
-    text = |\{path : '{ client->_bind_edit(
+      )->text(
+      text = |\{path : '{ client->_bind_edit(
                             val  = numeric
                             path = abap_true ) }', type : 'sap.ui.model.odata.type.String', constraints : \{  isDigitSequence : true \} \}| ).
 

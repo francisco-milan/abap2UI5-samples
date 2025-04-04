@@ -15,7 +15,7 @@ CLASS z2ui5_cl_demo_app_301 DEFINITION
         overflow_mode TYPE string,
       END OF ty_product.
 
-    DATA check_initialized TYPE abap_bool.
+
     DATA lt_o_data TYPE TABLE OF ty_product.
   PROTECTED SECTION.
 
@@ -127,8 +127,7 @@ CLASS z2ui5_cl_demo_app_301 IMPLEMENTATION.
 
     me->client = client.
 
-    IF check_initialized = abap_false.
-      check_initialized = abap_true.
+    IF client->check_on_init( ).
       display_view( client ).
       z2ui5_set_data( ).
     ENDIF.

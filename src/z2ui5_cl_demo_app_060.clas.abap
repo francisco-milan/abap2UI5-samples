@@ -20,7 +20,7 @@ CLASS z2ui5_cl_demo_app_060 DEFINITION PUBLIC.
   PROTECTED SECTION.
 
     DATA client TYPE REF TO z2ui5_if_client.
-    DATA check_initialized TYPE abap_bool.
+
 
     METHODS z2ui5_on_event.
     METHODS z2ui5_view_display.
@@ -262,8 +262,7 @@ CLASS Z2UI5_CL_DEMO_APP_060 IMPLEMENTATION.
 
     me->client = client.
 
-    IF check_initialized = abap_false.
-
+    IF client->check_on_init( ).
 
       DATA(lv_script) = `   debugger;` && |\n| &&
                   `function setInputFIlter(){` && |\n| &&
@@ -283,8 +282,6 @@ CLASS Z2UI5_CL_DEMO_APP_060 IMPLEMENTATION.
                   ` });` && |\n| &&
                   `}`.
 
-
-      check_initialized = abap_true.
       set_data( ).
 
       client->view_display( z2ui5_cl_xml_view=>factory(

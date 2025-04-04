@@ -22,7 +22,7 @@ CLASS z2ui5_cl_demo_app_059 DEFINITION PUBLIC.
   PROTECTED SECTION.
 
     DATA client TYPE REF TO z2ui5_if_client.
-    DATA check_initialized TYPE abap_bool.
+
 
     METHODS z2ui5_on_event.
     METHODS z2ui5_set_data.
@@ -40,8 +40,7 @@ CLASS z2ui5_cl_demo_app_059 IMPLEMENTATION.
 
     me->client     = client.
 
-    IF check_initialized = abap_false.
-      check_initialized = abap_true.
+    IF client->check_on_init( ).
       z2ui5_set_data( ).
       z2ui5_view_display( ).
       RETURN.
@@ -99,10 +98,11 @@ CLASS z2ui5_cl_demo_app_059 IMPLEMENTATION.
             shownavbutton                  = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
 
     DATA(lo_box) = page1->vbox( )->text( `Search`
-        )->search_field(  width  = `17.5rem` livechange = client->_event(
+        )->search_field( width      = `17.5rem`
+                         livechange = client->_event(
             val    = 'BUTTON_SEARCH'
             t_arg  = VALUE #( ( `${$source>/value}` ) )
-            s_ctrl = VALUE #( check_allow_multi_req = abap_true ) )  ).
+            s_ctrl = VALUE #( check_allow_multi_req = abap_true ) ) ).
 
     DATA(tab) = lo_box->table( client->_bind( mt_table ) ).
     DATA(lo_columns) = tab->columns( ).

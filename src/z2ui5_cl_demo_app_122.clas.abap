@@ -12,7 +12,7 @@ CLASS z2ui5_cl_demo_app_122 DEFINITION
     DATA device_systemtype TYPE string.
     DATA device_os TYPE string.
     DATA device_browser TYPE string.
-    DATA check_initialized TYPE abap_bool.
+
     DATA device_phone   TYPE abap_bool.
     DATA device_desktop TYPE abap_bool.
     DATA device_tablet  TYPE abap_bool.
@@ -91,8 +91,7 @@ CLASS z2ui5_cl_demo_app_122 IMPLEMENTATION.
 
     me->client = client.
 
-    IF check_initialized = abap_false.
-      check_initialized = abap_true.
+    IF client->check_on_init( ).
       display_view( ).
     ENDIF.
 

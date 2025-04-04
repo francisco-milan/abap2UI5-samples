@@ -15,7 +15,7 @@ CLASS z2ui5_cl_demo_app_134 DEFINITION PUBLIC.
 
     DATA mv_scrollupdate TYPE abap_bool.
 
-    DATA check_initialized TYPE abap_bool.
+
     DATA field_01  TYPE string.
     DATA field_02 TYPE string.
     DATA focus_id TYPE string.
@@ -106,8 +106,7 @@ CLASS z2ui5_cl_demo_app_134 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    IF check_initialized = abap_false.
-      check_initialized = abap_true.
+    IF client->check_on_init( ).
       init( client ).
       RETURN.
     ENDIF.

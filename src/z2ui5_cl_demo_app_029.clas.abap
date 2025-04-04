@@ -4,7 +4,7 @@ CLASS z2ui5_cl_demo_app_029 DEFINITION PUBLIC.
 
     INTERFACES z2ui5_if_app.
 
-    DATA check_initialized TYPE abap_bool.
+
 
     DATA mv_tab_radial_active TYPE abap_bool.
 
@@ -98,8 +98,7 @@ CLASS Z2UI5_CL_DEMO_APP_029 IMPLEMENTATION.
 
     me->client = client.
 
-    IF check_initialized = abap_false.
-      check_initialized = abap_true.
+    IF client->check_on_init( ).
 
 
 

@@ -7,7 +7,7 @@ CLASS z2ui5_cl_demo_app_103 DEFINITION
     INTERFACES z2ui5_if_app.
 
     DATA client TYPE REF TO z2ui5_if_client.
-    DATA check_initialized TYPE abap_bool.
+
 
     METHODS z2ui5_on_event.
     METHODS z2ui5_view_display.
@@ -25,8 +25,7 @@ CLASS z2ui5_cl_demo_app_103 IMPLEMENTATION.
 
     me->client = client.
 
-    IF check_initialized = abap_false.
-      check_initialized = abap_true.
+    IF client->check_on_init( ).
       z2ui5_view_display( ).
       RETURN.
     ENDIF.

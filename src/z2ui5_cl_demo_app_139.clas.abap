@@ -5,7 +5,7 @@ CLASS z2ui5_cl_demo_app_139 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     DATA search  TYPE string.
-    DATA check_initialized TYPE abap_bool.
+
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
@@ -22,8 +22,7 @@ CLASS z2ui5_cl_demo_app_139 IMPLEMENTATION.
 
     me->client = client.
 
-    IF check_initialized = abap_false.
-      check_initialized = abap_true.
+    IF client->check_on_init( ).
       search = client->get( )-s_config-search && `my_search_string`.
       display_view( ).
 
