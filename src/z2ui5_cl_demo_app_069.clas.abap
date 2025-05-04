@@ -25,9 +25,6 @@ CLASS z2ui5_cl_demo_app_069 DEFINITION
       ty_t_tree TYPE STANDARD TABLE OF ty_t_tree1 WITH DEFAULT KEY.
 
     DATA mt_tree TYPE ty_t_tree.
-
-    DATA check_initialized TYPE abap_bool .
-
     DATA mv_check_enabled_01 TYPE abap_bool VALUE abap_true.
     DATA mv_check_enabled_02 TYPE abap_bool.
 
@@ -45,13 +42,12 @@ ENDCLASS.
 
 
 
-CLASS Z2UI5_CL_DEMO_APP_069 IMPLEMENTATION.
+CLASS z2ui5_cl_demo_app_069 IMPLEMENTATION.
 
 
   METHOD view_display_app_01.
 
     DATA(lo_view_nested) = z2ui5_cl_xml_view=>factory( ).
-
     DATA(page) = lo_view_nested->page( title = `APP_01` ).
 
     page->button( text  = 'Update this view'
@@ -69,7 +65,6 @@ CLASS Z2UI5_CL_DEMO_APP_069 IMPLEMENTATION.
   METHOD view_display_app_02.
 
     DATA(lo_view_nested) = z2ui5_cl_xml_view=>factory( ).
-
     DATA(page) = lo_view_nested->page( title = `APP_02` ).
 
     page->button( text  = 'Update this view'
@@ -105,15 +100,9 @@ CLASS Z2UI5_CL_DEMO_APP_069 IMPLEMENTATION.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     DATA(page) = view->shell( )->page(
-          title           = 'abap2UI5 - Master-Detail View with Nested Views'
-          navbuttonpress  = client->_event( 'BACK' )
-            shownavbutton = abap_true
-          )->header_content(
-             )->link( text   = 'Demo'
-                      target = '_blank'
-                      href   = `https://twitter.com/abap2UI5/status/1680907265891618817`
-             )->link(
-         )->get_parent( ).
+          title          = 'abap2UI5 - Master-Detail View with Nested Views'
+          navbuttonpress = client->_event( 'BACK' )
+          shownavbutton  = abap_true ).
 
     DATA(lr_master) = page->flexible_column_layout( layout = 'TwoColumnsBeginExpanded'
                                                     id     ='test' )->begin_column_pages( ).
@@ -123,7 +112,8 @@ CLASS Z2UI5_CL_DEMO_APP_069 IMPLEMENTATION.
             type  = 'Active'
             title = '{TEXT}'
             press = client->_event( val = `EVENT_ITEM`
-            t_arg                       = VALUE #( ( `${TEXT}` ) ) ) ).
+                t_arg = VALUE #( ( `${TEXT}` ) )
+                 ) ).
 
     client->view_display( page->stringify( ) ).
 
@@ -161,8 +151,7 @@ CLASS Z2UI5_CL_DEMO_APP_069 IMPLEMENTATION.
         view_display_app_01( ).
 
       WHEN `EVENT_ITEM`.
-        DATA(lt_arg) = client->get( )-t_event_arg.
-        CASE lt_arg[ 1 ].
+        CASE client->get_event_arg( 1 ).
           WHEN 'App_001'.
             view_display_app_01( ).
           WHEN 'App_002'.

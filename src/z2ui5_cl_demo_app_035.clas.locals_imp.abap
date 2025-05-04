@@ -158,7 +158,7 @@ CLASS lcl_file_api IMPLEMENTATION.
                `be withheld in a legal action, case, or discussion. The names are also used to refer to acorpse or hospital patient whose ` &&
                `identity is unknown. This practice is widely used in the United States and Canada, but is rarely used in other ` &&
                `English-speaking countries including the United Kingdom itself, from where the use of "John Doe" in a legal context ` &&
-               `originates. The names Joe Bloggs or John Smith are used in the UK instead, as well as in Australia and New Zealand.` && 
+               `originates. The names Joe Bloggs or John Smith are used in the UK instead, as well as in Australia and New Zealand.` &&
                |\n| &&
                |\n| &&
                `John Doe is sometimes used to refer to a typical male in other contexts as well, in a similar manner to John Q. Public,` &&

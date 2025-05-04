@@ -5,7 +5,7 @@ CLASS z2ui5_cl_demo_app_326 DEFINITION PUBLIC CREATE PUBLIC.
 
     DATA unit              TYPE meins.
     DATA numc              TYPE z2ui5_numc12.
-    
+
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
