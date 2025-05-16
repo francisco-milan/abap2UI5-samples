@@ -82,20 +82,18 @@ CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    me->client     = client.
+    me->client = client.
 
     IF client->check_on_init( ).
       init_data_set( ).
       client->nav_app_call( z2ui5_cl_pop_js_loader=>factory( get_custom_js( ) ) ).
-      RETURN.
     ELSEIF  check_view_loaded = abap_false.
       check_view_loaded = abap_true.
       init_data_set( ).
       z2ui5_view_display( ).
-      RETURN.
+    ELSE.
+      z2ui5_on_event( ).
     ENDIF.
-
-    z2ui5_on_event( ).
 
   ENDMETHOD.
 
@@ -121,6 +119,7 @@ CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
 
 
   METHOD z2ui5_view_display.
+
 
     client->_bind_edit( val           = mt_columns_p13n
                         custom_mapper = z2ui5_cl_ajson_mapping=>create_lower_case( ) ).
@@ -313,21 +312,21 @@ CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
                     `    var oSelectionPanel = oView.byId("columnsPanel");` && |\n| &&
                     `    var oSortPanel = oView.byId("sortPanel");` && |\n| &&
                     `    var oGroupPanel = oView.byId("groupPanel");` && |\n| &&
-                    `    oSelectionPanel.setP13nData(oView.getModel().oData.EDIT.MT_COLUMNS_P13N);` && |\n| &&
-                    `    oSortPanel.setP13nData(oView.getModel().oData.EDIT.MT_SORT_P13N);` && |\n| &&
-                    `    oGroupPanel.setP13nData(oView.getModel().oData.EDIT.MT_GROUPS_P13N);` && |\n| &&
+                    `    oSelectionPanel.setP13nData(oView.getModel().oData.XX.MT_COLUMNS_P13N);` && |\n| &&
+                    `    oSortPanel.setP13nData(oView.getModel().oData.XX.MT_SORT_P13N);` && |\n| &&
+                    `    oGroupPanel.setP13nData(oView.getModel().oData.XX.MT_GROUPS_P13N);` && |\n| &&
                     `    var oPopup = oView.byId("p13nPopup");` && |\n| &&
                     `    oPopup.open();` && |\n| &&
                     `};` && |\n| &&
                     `z2ui5.updateData = (oReason) => {` && |\n| &&
-                    `  if( oReason === "Ok" ) {` && |\n| &&
+                    `    if( oReason === "Ok" ) {` && |\n| &&
                     `    var oView = z2ui5.oView` && |\n| &&
                     `    var oSelectionPanel = oView.byId("columnsPanel");` && |\n| &&
                     `    var oSortPanel = oView.byId("sortPanel");` && |\n| &&
                     `    var oGroupPanel = oView.byId("groupPanel");` && |\n| &&
-                    `    oView.getModel().oData.EDIT.MT_COLUMNS_P13N = oSelectionPanel.getP13nData();` && |\n| &&
-                    `    oView.getModel().oData.EDIT.MT_SORT_P13N = oSortPanel.getP13nData();` && |\n| &&
-                    `    oView.getModel().oData.EDIT.MT_GROUPS_P13N = oGroupPanel.getP13nData();` && |\n| &&
+                    `    oView.getModel().oData.XX.MT_COLUMNS_P13N = oSelectionPanel.getP13nData();` && |\n| &&
+                    `    oView.getModel().oData.XX.MT_SORT_P13N = oSortPanel.getP13nData();` && |\n| &&
+                    `    oView.getModel().oData.XX.MT_GROUPS_P13N = oGroupPanel.getP13nData();` && |\n| &&
                     `  };` && |\n| &&
                     `};`.
 
