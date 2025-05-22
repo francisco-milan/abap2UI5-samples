@@ -56,6 +56,11 @@ CLASS z2ui5_cl_demo_app_024 IMPLEMENTATION.
 
     IF client->check_on_navigated( ).
       display_view( client ).
+      IF mv_backend_event = 'CALL_PREVIOUS_APP_INPUT_RETURN'.
+        DATA(lo_called_app) = CAST z2ui5_cl_demo_app_025( client->get_app_prev( ) ).
+        CLEAR mv_backend_event.
+        client->message_box_display( `Input made in the previous app:` && lo_called_app->mv_input ).
+      ENDIF.
       RETURN.
     ENDIF.
 
@@ -80,17 +85,7 @@ CLASS z2ui5_cl_demo_app_024 IMPLEMENTATION.
         client->nav_app_call( lo_app_next ).
 
       WHEN 'BACK'.
-        DATA(lo_prev_stack_app) = client->get_app( client->get( )-s_draft-id_prev_app_stack ).
-        client->nav_app_leave( lo_prev_stack_app ).
-
-      WHEN OTHERS.
-
-        CASE mv_backend_event.
-          WHEN 'CALL_PREVIOUS_APP_INPUT_RETURN'.
-            DATA(lo_called_app) = CAST z2ui5_cl_demo_app_025( client->get_app_prev( ) ).
-            CLEAR mv_backend_event.
-            client->message_box_display( `Input made in the previous app:` && lo_called_app->mv_input ).
-        ENDCASE.
+        client->nav_app_leave( ).
 
     ENDCASE.
 
