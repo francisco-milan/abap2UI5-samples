@@ -18,6 +18,5 @@ jobs:
       with:
         node-version: 20
     - run: npm ci
-    - run: npm run init_downport
     - run: npm run downport
     - run: npx abaplint .github/abaplint/abap_702.jsonc
