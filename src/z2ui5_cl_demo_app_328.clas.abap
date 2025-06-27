@@ -2,18 +2,17 @@ CLASS z2ui5_cl_demo_app_328 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
-
     DATA mt_table     TYPE REF TO data.
-
     DATA mo_table_obj TYPE REF TO z2ui5_cl_demo_app_329.
 
-    DATA client       TYPE REF TO z2ui5_if_client.
-
-  PROTECTED SECTION.
     METHODS get_data.
 
+    METHODS ui5_view_display
+      IMPORTING
+        client TYPE REF TO z2ui5_if_client.
+
+  PROTECTED SECTION.
   PRIVATE SECTION.
-    METHODS ui5_view_display.
 ENDCLASS.
 
 
@@ -21,16 +20,10 @@ CLASS z2ui5_cl_demo_app_328 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    me->client = client.
-
     IF client->check_on_init( ).
-
       get_data( ).
-
       mo_table_obj = z2ui5_cl_demo_app_329=>factory( mt_table ).
-
-      ui5_view_display( ).
-
+      ui5_view_display( client ).
     ENDIF.
 
     CASE client->get( )-event.
@@ -69,10 +62,8 @@ CLASS z2ui5_cl_demo_app_328 IMPLEMENTATION.
         IF okay = abap_true.
 
           get_data( ).
-
           mo_table_obj = z2ui5_cl_demo_app_329=>factory( mt_table ).
-
-          ui5_view_display( ).
+          ui5_view_display( client ).
 
           IF mt_table->* <> mo_table_obj->mr_data->*.
             client->message_toast_display( 'Error - MT_TABLE <> MO_TABLE_OBJ->MR_TABLE_DATA'  ).
@@ -115,6 +106,7 @@ CLASS z2ui5_cl_demo_app_328 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD get_data.
+
     DATA selkz TYPE abap_bool.
 
     FIELD-SYMBOLS <table> TYPE STANDARD TABLE.
