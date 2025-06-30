@@ -29,7 +29,9 @@ CLASS z2ui5_cl_demo_app_000 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
+
+CLASS Z2UI5_CL_DEMO_APP_000 IMPLEMENTATION.
+
 
   METHOD z2ui5_if_app~main.
 
@@ -485,6 +487,14 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
                          mode   = 'LineMode'
                          class  = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
       ).
+
+    panel->generic_tile( header    = 'ObjectPage '
+                         subheader = 'with Hidden Section Titles'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_330' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+
 
     panel = page->panel( expandable = abap_false
                          expanded   = abap_true
@@ -2036,6 +2046,7 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD expand_all.
 
     DO.
@@ -2047,5 +2058,4 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
     ENDDO.
 
   ENDMETHOD.
-
 ENDCLASS.
