@@ -17,6 +17,7 @@ CLASS z2ui5_cl_demo_app_181 DEFINITION
       END OF ty_cities.
 
     TYPES t_cities TYPE STANDARD TABLE OF ty_cities WITH DEFAULT KEY.
+    DATA mt_cities TYPE t_cities.
 
     TYPES:
       BEGIN OF ty_product_items,
@@ -28,7 +29,7 @@ CLASS z2ui5_cl_demo_app_181 DEFINITION
       END OF ty_product_items.
 
     TYPES t_product_items TYPE STANDARD TABLE OF ty_product_items WITH DEFAULT KEY.
-
+    DATA mt_products TYPE t_product_items.
 
     METHODS on_event .
     METHODS view_display .
@@ -41,7 +42,7 @@ ENDCLASS.
 
 
 
-CLASS Z2UI5_CL_DEMO_APP_181 IMPLEMENTATION.
+CLASS z2ui5_cl_demo_app_181 IMPLEMENTATION.
 
 
   METHOD on_event.
@@ -68,6 +69,21 @@ CLASS Z2UI5_CL_DEMO_APP_181 IMPLEMENTATION.
         navbuttonpress = client->_event( 'BACK' )
         shownavbutton  = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
 
+
+    mt_cities = VALUE #( ( text = `Berlin` key = `BR` )
+                                                                                                       ( text = `London` key = `LN` )
+                                                                                                       ( text = `Madrid` key = `MD` )
+                                                                                                       ( text = `Prague` key = `PR` )
+                                                                                                       ( text = `Paris`  key = `PS` )
+                                                                                                       ( text = `Sofia`  key = `SF` )
+                                                                                                       ( text = `Vienna` key = `VN` )
+                                                                                                      ).
+
+    mt_products = VALUE #( ( title = `Notebook HT` subtitle = `ID23452256-D44` revenue = `27.25K EUR` status = `success` status_schema = `Success` )
+                                                                                                 ( title = `Notebook XT` subtitle = `ID27852256-D47` revenue = `7.35K EUR` status = `exceeded` status_schema = `Error` )
+                                                                                                 ( title = `Notebook ST` subtitle = `ID123555587-I05` revenue = `22.89K EUR` status = `warning` status_schema = `Warning` )
+      ).
+
     DATA(card_1) = page->card( width = `300px`
                                class = `sapUiMediumMargin`
       )->header( ns = `f`
@@ -82,26 +98,12 @@ CLASS Z2UI5_CL_DEMO_APP_181 IMPLEMENTATION.
                         )->hbox( justifycontent = `SpaceBetween`
                           )->combobox( width       = `120px`
                                        placeholder = `From City`
-                                       items       = `{path:'` && client->_bind_local( val                   = VALUE t_cities( ( text = `Berlin` key = `BR` )
-                                                                                                       ( text = `London` key = `LN` )
-                                                                                                       ( text = `Madrid` key = `MD` )
-                                                                                                       ( text = `Prague` key = `PR` )
-                                                                                                       ( text = `Paris`  key = `PS` )
-                                                                                                       ( text = `Sofia`  key = `SF` )
-                                                                                                       ( text = `Vienna` key = `VN` )
-                                                                                                      ) path = abap_true ) && `', sorter: { path: 'TEXT' } }`
+                                       items       = `{path:'` && client->_bind( val = mt_cities path = abap_true ) && `', sorter: { path: 'TEXT' } }`
                                        )->get( )->item( key  = `{KEY}`
                                                         text = `{TEXT}` )->get_parent(
                           )->combobox( width       = `120px`
                                        placeholder = `To City`
-                                       items       = `{path:'` && client->_bind_local( val                   = VALUE t_cities( ( text = `Berlin` key = `BR` )
-                                                                                                       ( text = `London` key = `LN` )
-                                                                                                       ( text = `Madrid` key = `MD` )
-                                                                                                       ( text = `Prague` key = `PR` )
-                                                                                                       ( text = `Paris`  key = `PS` )
-                                                                                                       ( text = `Sofia`  key = `SF` )
-                                                                                                       ( text = `Vienna` key = `VN` )
-                                                                                                      ) path = abap_true ) && `', sorter: { path: 'TEXT' } }`
+                                       items       = `{path:'` && client->_bind( val = mt_cities path = abap_true ) && `', sorter: { path: 'TEXT' } }`
                                        )->get( )->item( key  = `{KEY}`
                                                         text = `{TEXT}` )->get_parent(
                       )->get_parent(
@@ -124,10 +126,7 @@ CLASS Z2UI5_CL_DEMO_APP_181 IMPLEMENTATION.
                                    )->content( ns = `f`
                                     )->list( class          = `sapUiSmallMarginBottom`
                                              showseparators = `None`
-                                             items          = client->_bind_local( VALUE t_product_items( ( title = `Notebook HT` subtitle = `ID23452256-D44` revenue = `27.25K EUR` status = `success` status_schema = `Success` )
-                                                                                                 ( title = `Notebook XT` subtitle = `ID27852256-D47` revenue = `7.35K EUR` status = `exceeded` status_schema = `Error` )
-                                                                                                 ( title = `Notebook ST` subtitle = `ID123555587-I05` revenue = `22.89K EUR` status = `warning` status_schema = `Warning` )
-      ) )
+                                             items          = client->_bind( mt_products )
                                        )->custom_list_item(
                                         )->hbox( alignitems     = `Center`
                                                  justifycontent = `SpaceBetween`
