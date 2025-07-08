@@ -36,7 +36,8 @@ CLASS z2ui5_cl_demo_app_002 DEFINITION PUBLIC.
 
 
     DATA client TYPE REF TO z2ui5_if_client.
-
+    DATA mt_combo type ty_T_combo.
+    
   PROTECTED SECTION.
 
     METHODS z2ui5_on_rendering.
@@ -177,14 +178,16 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
              text     = 'this is a checkbox'
              enabled  = abap_true ).
 
-    lv_test->label( 'Combobox'
-      )->combobox(
-          selectedkey = client->_bind_edit( screen-combo_key )
-          items       = client->_bind_local( VALUE ty_t_combo(
+    mt_combo = VALUE ty_t_combo(
                   ( key = 'BLUE'  text = 'green' )
                   ( key = 'GREEN' text = 'blue' )
                   ( key = 'BLACK' text = 'red' )
-                  ( key = 'GRAY'  text = 'gray' ) ) )
+                  ( key = 'GRAY'  text = 'gray' ) ).    
+
+    lv_test->label( 'Combobox'
+      )->combobox(
+          selectedkey = client->_bind_edit( screen-combo_key )
+          items       = client->_bind( mt_combo )
               )->item(
                   key  = '{KEY}'
                   text = '{TEXT}'
@@ -193,11 +196,7 @@ CLASS z2ui5_cl_demo_app_002 IMPLEMENTATION.
     lv_test->label( 'Combobox2'
       )->combobox(
           selectedkey = client->_bind_edit( screen-combo_key2 )
-          items       = client->_bind_local( VALUE ty_t_combo(
-                  ( key = 'BLUE'  text = 'green' )
-                  ( key = 'GREEN' text = 'blue' )
-                  ( key = 'BLACK' text = 'red' )
-                  ( key = 'GRAY'  text = 'gray' ) ) )
+          items       = client->_bind( mt_combo )
               )->item(
                   key  = '{KEY}'
                   text = '{TEXT}'

@@ -13,7 +13,7 @@ CLASS z2ui5_cl_demo_app_071 DEFINITION PUBLIC.
 
     DATA mv_set_size_limit TYPE i VALUE 100.
     DATA mv_combo_number TYPE i VALUE 105.
-
+    DATA lt_combo TYPE ty_t_combo.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -42,8 +42,6 @@ CLASS z2ui5_cl_demo_app_071 IMPLEMENTATION.
     ENDCASE.
 
 
-
-    DATA(lt_combo) = VALUE ty_t_combo( ).
     DO mv_combo_number TIMES.
       INSERT VALUE #( key = sy-index text = sy-index ) INTO TABLE lt_combo.
     ENDDO.
@@ -63,7 +61,7 @@ CLASS z2ui5_cl_demo_app_071 IMPLEMENTATION.
                      )->label( 'Number of Entries'
                      )->input( value = client->_bind_edit( mv_combo_number )
                      )->label( 'demo'
-                     )->combobox( items = client->_bind_local( lt_combo )
+                     )->combobox( items = client->_bind( lt_combo )
                         )->item( key = '{KEY}' text = '{TEXT}'
                         )->get_parent( )->get_parent(
                      )->button(
