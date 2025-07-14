@@ -3,7 +3,6 @@ CLASS z2ui5_cl_demo_app_000 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-  "test
     DATA:
       BEGIN OF ms_check_expanded,
         basics          TYPE abap_bool,
@@ -1979,6 +1978,13 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
       ).
     panel->generic_tile( header    = 'Model XII'
                          subheader = 'Many Sub Objects with Ref'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_344' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+
+    panel->generic_tile( header    = 'Model XIII'
+                         subheader = 'Check Error if Binding with Ref'
                          press     = client->_event( 'Z2UI5_CL_DEMO_APP_343' )
                          mode      = 'LineMode'
                          class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
