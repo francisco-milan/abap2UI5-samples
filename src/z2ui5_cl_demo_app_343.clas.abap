@@ -4,18 +4,6 @@ CLASS z2ui5_cl_demo_app_343 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     DATA mt_data1       TYPE REF TO data.
-*    DATA mt_data2       TYPE REF TO data.
-*    DATA mt_data3       TYPE REF TO data.
-*    DATA mt_data4       TYPE REF TO data.
-*    DATA mt_data5       TYPE REF TO data.
-*    DATA mt_data6       TYPE REF TO data.
-
-    DATA mo_layout_obj1 TYPE REF TO z2ui5_cl_demo_app_333.
-*    DATA mo_layout_obj2 TYPE REF TO z2ui5_cl_demo_app_333.
-*    DATA mo_layout_obj3 TYPE REF TO z2ui5_cl_demo_app_333.
-*    DATA mo_layout_obj4 TYPE REF TO z2ui5_cl_demo_app_333.
-*    DATA mo_layout_obj5 TYPE REF TO z2ui5_cl_demo_app_333.
-*    DATA mo_layout_obj6 TYPE REF TO z2ui5_cl_demo_app_333.
 
     METHODS get_data.
 
@@ -23,19 +11,12 @@ CLASS z2ui5_cl_demo_app_343 DEFINITION PUBLIC.
       IMPORTING
         !client TYPE REF TO z2ui5_if_client.
 
-  PROTECTED SECTION.
-
-  PRIVATE SECTION.
-    METHODS xml_table
-      IMPORTING
-        i_page   TYPE REF TO z2ui5_cl_xml_view
-        i_client TYPE REF TO z2ui5_if_client
-        i_data   TYPE REF TO data
-        i_layout TYPE REF TO z2ui5_cl_demo_app_333.
-
     METHODS get_comp
       RETURNING
         VALUE(result) TYPE abap_component_tab.
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 
 ENDCLASS.
 
@@ -98,9 +79,6 @@ CLASS z2ui5_cl_demo_app_343 IMPLEMENTATION.
       CATCH cx_root.
     ENDTRY.
 
-    mo_layout_obj1 = z2ui5_cl_demo_app_333=>factory( i_data   = mt_data1
-                                                     vis_cols = 2 ).
-
   ENDMETHOD.
 
 
@@ -110,16 +88,11 @@ CLASS z2ui5_cl_demo_app_343 IMPLEMENTATION.
                                                                 navbuttonpress = client->_event( 'BACK' )
                                                                 shownavbutton  = client->check_app_prev_stack( ) ).
 
-    page->button( text  = 'CALL Next App'
-                  press = client->_event( 'GO' )
-                  type  = 'Success' ).
-
-
     TRY.
-        xml_table( i_page   = page
-          i_client = client
-          i_data   = mt_data1
-          i_layout = mo_layout_obj1 ).
+
+        DATA(table) = page->table( width = 'auto'
+                                     items = client->_bind( mt_data1 ) ).
+
         client->message_box_display( `error - reference processed in binding without error` ).
       CATCH cx_root.
         client->message_box_display( `success - reference not allowed for binding throwed` ).
@@ -127,39 +100,6 @@ CLASS z2ui5_cl_demo_app_343 IMPLEMENTATION.
 
 
     client->view_display( page ).
-
-  ENDMETHOD.
-
-
-  METHOD xml_table.
-
-    DATA(table) = i_page->table( width = 'auto'
-                                 items = i_client->_bind( val = i_data ) ).
-
-    DATA(columns) = table->columns( ).
-
-    LOOP AT i_layout->ms_data-t_layout REFERENCE INTO DATA(layout).
-      DATA(lv_index) = sy-tabix.
-
-      columns->column( visible = i_client->_bind( val       = layout->visible
-                                                  tab       = i_layout->ms_data-t_layout
-                                                  tab_index = lv_index )
-       )->text( layout->name ).
-
-    ENDLOOP.
-
-    DATA(column_list_item) = columns->get_parent( )->items(
-                                       )->column_list_item(    ).
-
-    DATA(cells) = column_list_item->cells( ).
-
-    LOOP AT i_layout->ms_data-t_layout REFERENCE INTO layout.
-
-      lv_index = sy-tabix.
-
-      cells->object_identifier( text = |\{{ layout->name }\}| ).  "."|\{{ layout->fname }\}| ).
-
-    ENDLOOP.
 
   ENDMETHOD.
 
@@ -174,26 +114,12 @@ CLASS z2ui5_cl_demo_app_343 IMPLEMENTATION.
     CASE client->get( )-event.
       WHEN 'BACK'.
         client->nav_app_leave( ).
-      WHEN 'GO'.
-        DATA(app) = z2ui5_cl_demo_app_336=>factory( ).
-        client->nav_app_call( app ).
     ENDCASE.
-
 
     IF client->get( )-check_on_navigated = abap_true
        AND client->check_on_init( )          = abap_false.
       render_main( client ).
     ENDIF.
-
-
-    IF mo_layout_obj1->mr_data IS NOT BOUND.
-      client->message_toast_display( 'ERROR - mo_layout_obj->mr_data is not bound!' ).
-    ENDIF.
-
-    IF mo_layout_obj1->mr_data->* <> mt_data1->*.
-      client->message_toast_display( 'ERROR - mo_layout_obj_2->mr_data  <> mt_data!' ).
-    ENDIF.
-
 
   ENDMETHOD.
 ENDCLASS.
