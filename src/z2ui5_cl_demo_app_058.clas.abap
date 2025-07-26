@@ -59,7 +59,7 @@ CLASS z2ui5_cl_demo_app_058 DEFINITION PUBLIC.
     DATA mv_layout TYPE string.
     DATA mv_check_sort TYPE abap_bool.
 
-
+    DATA mt_combo type ty_T_combo.
 
   PROTECTED SECTION.
 
@@ -252,6 +252,12 @@ CLASS z2ui5_cl_demo_app_058 IMPLEMENTATION.
 
     DATA(lo_tab) = ro_popup->tab_container( ).
 
+mt_combo = VALUE ty_t_combo(
+                       ( key = 'None'  text = 'None' )
+                       ( key = 'SingleSelect' text = 'SingleSelect' )
+                       ( key = 'SingleSelectLeft' text = 'SingleSelectLeft' )
+                       ( key = 'MultiSelect'  text = 'MultiSelect' ) ).
+
     lo_tab->tab( text     = 'Table'
                  selected = client->_bind_edit( mv_check_table )
        )->simple_form( editable = abap_true
@@ -265,11 +271,7 @@ CLASS z2ui5_cl_demo_app_058 IMPLEMENTATION.
                )->label( 'sel mode'
                )->combobox(
                    selectedkey = client->_bind_edit( ms_layout-selmode )
-                   items       = client->_bind_local( VALUE ty_t_combo(
-                       ( key = 'None'  text = 'None' )
-                       ( key = 'SingleSelect' text = 'SingleSelect' )
-                       ( key = 'SingleSelectLeft' text = 'SingleSelectLeft' )
-                       ( key = 'MultiSelect'  text = 'MultiSelect' ) ) )
+                   items       = client->_bind( mt_combo )
                    )->item(
                        key  = '{KEY}'
                        text = '{TEXT}' ).

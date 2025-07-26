@@ -3,7 +3,6 @@ CLASS z2ui5_cl_demo_app_000 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-  "test
     DATA:
       BEGIN OF ms_check_expanded,
         basics          TYPE abap_bool,
@@ -960,6 +959,13 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
     panel->generic_tile( header    = 'Editable'
                          subheader = 'Set columns editable'
                          press     = client->_event( 'Z2UI5_CL_DEMO_APP_011' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+
+    panel->generic_tile( header    = 'Focus'
+                         subheader = 'Editable & focus edit controls'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_346' )
                          mode      = 'LineMode'
                          class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
       ).
@@ -1934,6 +1940,91 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
                          mode      = 'LineMode'
                          class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
       ).
+    panel->generic_tile( header    = 'Model V'
+                         subheader = 'RTTI Data - Struc'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_331' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+    panel->generic_tile( header    = 'Model VI'
+                         subheader = 'RTTI Data - Struc and Cell Binding'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_332' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+    panel->generic_tile( header    = 'Model VII'
+                         subheader = 'RTTI Data - Struc and Class Data'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_334' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+    panel->generic_tile( header    = 'Model VIII'
+                         subheader = 'RTTI Data - Struc and Class Data and Popup'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_335' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+    panel->generic_tile( header    = 'Model VIIII'
+                         subheader = 'RTTI Data - Struc/Table and Class Data and Popup'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_337' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+
+    panel->generic_tile( header    = 'Model X'
+                         subheader = 'RTTI Data - Sub Apps with deep truc'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_338' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+     panel->generic_tile( header    = 'Model XI'
+                         subheader = 'Popups Flow Logic'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_341' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+    panel->generic_tile( header    = 'Model XII'
+                         subheader = 'Many Sub Objects with Ref'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_344' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+
+    panel->generic_tile( header    = 'Model XIII'
+                         subheader = 'Check Error if Binding with Ref'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_343' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+
+
+    panel->generic_tile( header    = 'Model XIV'
+                         subheader = 'Check Error if Binding with Ref'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_345' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+
+    panel->generic_tile( header    = 'Model XV'
+                         subheader = 'Check Error Table with Ref'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_347' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+
+    panel->generic_tile( header    = 'Model XVI'
+                         subheader = 'Check Error Sruc with Ref'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_348' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+    panel->generic_tile( header    = 'Model XVII'
+                         subheader = 'Check Error Tabel and Sruc with Ref'
+                         press     = client->_event( 'z2ui5_cl_demo_app_349' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+
 
 
     panel->generic_tile( header    = 'Date Format Error in internal table'

@@ -47,6 +47,7 @@ CLASS z2ui5_cl_demo_app_085 DEFINITION
     DATA mt_table_supplier TYPE ty_t_table_supplier .
     DATA check_initialized TYPE abap_bool .
     DATA mv_search_value TYPE string.
+    DATA ls_detail TYPE ty_s_tab .
   PROTECTED SECTION.
 
     DATA client TYPE REF TO z2ui5_if_client .
@@ -60,7 +61,6 @@ CLASS z2ui5_cl_demo_app_085 DEFINITION
   PRIVATE SECTION.
 
     DATA lv_layout TYPE string .
-    DATA ls_detail TYPE ty_s_tab .
     DATA lv_sort_desc TYPE abap_bool VALUE abap_true.
     DATA c_pic_url TYPE string VALUE 'https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/documentation/sdk/images/'.
     DATA ls_detail_supplier TYPE ty_s_tab_supplier .
@@ -100,7 +100,7 @@ CLASS Z2UI5_CL_DEMO_APP_085 IMPLEMENTATION.
     header_title->expanded_heading(
             )->hbox(
 *                )->title( Text = |Product Id |
-                )->info_label( text        = |Product Id | && client->_bind_local( val = ls_detail-productid )
+                )->info_label( text        = |Product Id | && client->_bind( ls_detail-productid )
                                colorscheme = '9'
                                width       = '200px'
                                icon        = 'sap-icon://home-share' ).
@@ -109,14 +109,14 @@ CLASS Z2UI5_CL_DEMO_APP_085 IMPLEMENTATION.
             )->flex_box( alignitems = `Center`
               )->avatar( src   = c_pic_url && ls_detail-pic
                          class = 'sapUiTinyMarginEnd'
-                )->info_label( text        = |Product Id | && client->_bind_local( val = ls_detail-productid )
+                )->info_label( text        = |Product Id | && client->_bind( ls_detail-productid )
                                colorscheme = '9'
                                width       = '200px'
                                icon        = 'sap-icon://home-share' ).
 
-    header_title->expanded_content( ns = `uxap` )->text( client->_bind_local( val = ls_detail-productname ) ).
-    header_title->snapped_content( ns = `uxap` )->text( client->_bind_local( val = ls_detail-productname ) ).
-    header_title->snapped_title_on_mobile( )->title( client->_bind_local( val = ls_detail-productname ) ).
+    header_title->expanded_content( ns = `uxap` )->text( client->_bind( ls_detail-productname ) ).
+    header_title->snapped_content( ns = `uxap` )->text( client->_bind( ls_detail-productname ) ).
+    header_title->snapped_title_on_mobile( )->title( client->_bind( ls_detail-productname ) ).
 
     header_title->actions( ns = `uxap` )->overflow_toolbar(
          )->overflow_toolbar_button(

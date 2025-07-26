@@ -158,8 +158,8 @@ CLASS z2ui5_cl_demo_app_320 IMPLEMENTATION.
                                    badgetooltip = client->_bind( item-tooltip )
                                    fallbackicon = client->_bind( item-fallbackicon )
                         )->vbox( class = `sapUiTinyMarginBegin`
-                            )->title( text = client->_bind_local( item-name )
-                            )->text( text = client->_bind_local( item-jobposition )
+                            )->title( text = client->_bind( item-name )
+                            )->text( text = client->_bind( item-jobposition )
                         )->get_parent(
                     )->get_parent(
                     )->title( text = `Contact Details`

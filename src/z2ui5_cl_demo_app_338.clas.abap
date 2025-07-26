@@ -1,17 +1,16 @@
-CLASS z2ui5_cl_demo_app_185 DEFINITION
+CLASS z2ui5_cl_demo_app_338 DEFINITION
   PUBLIC
   CREATE PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_s_t002,
-      id    TYPE string,
-      count TYPE string,
-      table TYPE string,
-      class TYPE string,
+        id    TYPE string,
+        count TYPE string,
+        table TYPE string,
+        class TYPE string,
       END OF ty_s_t002.
     TYPES ty_t_t002 TYPE STANDARD TABLE OF ty_s_t002 WITH DEFAULT KEY.
 
@@ -32,12 +31,10 @@ CLASS z2ui5_cl_demo_app_185 DEFINITION
     METHODS render_sub_app.
 
   PRIVATE SECTION.
+
 ENDCLASS.
 
-
-
-CLASS Z2UI5_CL_DEMO_APP_185 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
 
   METHOD on_event.
 
@@ -55,20 +52,21 @@ CLASS Z2UI5_CL_DEMO_APP_185 IMPLEMENTATION.
 
       WHEN 'BACK'.
 
+        client->nav_app_leave( ).
+
     ENDCASE.
 
   ENDMETHOD.
 
-
   METHOD on_init.
 
-    mt_t002 = VALUE #( ( id = '1' class = 'Z2UI5_CL_DEMO_APP_184'  count = '10' table = 'Z2UI5_T_01')
-                       ( ID = '2' CLASS = 'Z2UI5_CL_DEMO_APP_184'  COUNT = '12' TABLE = 'Z2UI5_T_01') ).
+    MT_T002 = VALUE #( ( ID = '1' CLASS = 'Z2UI5_CL_DEMO_APP_339' TABLE = 'Z2UI5_T_01' )
+                       ( ID = '2' CLASS = 'Z2UI5_CL_DEMO_APP_342' TABLE = 'Z2UI5_T_01' )
+                       ( ID = '3' CLASS = 'Z2UI5_CL_DEMO_APP_339' TABLE = 'Z2UI5_T_01' ) ).
 
     mv_selectedkey = '1'.
 
   ENDMETHOD.
-
 
   METHOD render_main.
 
@@ -95,6 +93,20 @@ CLASS Z2UI5_CL_DEMO_APP_185 IMPLEMENTATION.
 
   ENDMETHOD.
 
+  METHOD z2ui5_if_app~main.
+
+    me->client = client.
+
+    IF client->check_on_init( ).
+
+      on_init( ).
+      render_main( ).
+    ENDIF.
+
+    on_event( ).
+    render_sub_app( ).
+
+  ENDMETHOD.
 
   METHOD render_sub_app.
     FIELD-SYMBOLS <view_display> TYPE any.
@@ -118,7 +130,6 @@ CLASS Z2UI5_CL_DEMO_APP_185 IMPLEMENTATION.
 
             CALL METHOD mo_app->('SET_APP_DATA')
               EXPORTING
-                count = t002->count
                 table = t002->table.
 
             render_main( ).
@@ -154,21 +165,9 @@ CLASS Z2UI5_CL_DEMO_APP_185 IMPLEMENTATION.
       mv_selectedkey_tmp = mv_selectedkey.
 
     ENDIF.
-  ENDMETHOD.
 
-
-  METHOD z2ui5_if_app~main.
-
-    me->client = client.
-
-    IF client->check_on_init( ).
-
-      on_init( ).
-      render_main( ).
-    ENDIF.
-
-    on_event( ).
-    render_sub_app( ).
+    client->view_model_update( ).
 
   ENDMETHOD.
+
 ENDCLASS.

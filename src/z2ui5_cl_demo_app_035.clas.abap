@@ -10,7 +10,7 @@ CLASS z2ui5_cl_demo_app_035 DEFINITION PUBLIC.
 
 
     DATA client            TYPE REF TO z2ui5_if_client.
-    DATA: lt_types TYPE z2ui5_if_types=>ty_t_name_value.
+    DATA lt_types TYPE z2ui5_if_types=>ty_t_name_value.
     METHODS view_display.
 
   PROTECTED SECTION.
@@ -41,7 +41,7 @@ CLASS z2ui5_cl_demo_app_035 IMPLEMENTATION.
             v = shift_right( shift_left( row ) ) ) ).
 
     DATA(temp3) = temp->input( value = client->_bind_edit( mv_type )
-                   suggestionitems   = client->_bind_local( lt_types )
+                   suggestionitems   = client->_bind( lt_types )
                     )->get( ).
 
     temp3->suggestion_items(

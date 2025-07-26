@@ -393,12 +393,13 @@ CLASS z2ui5_cl_demo_app_130 IMPLEMENTATION.
     IF mt_fields IS NOT INITIAL.
 
       LOOP AT mt_fields REFERENCE INTO DATA(lr_tab).
+        data(lv_tabix) = sy-tabix.
 
         DATA(scrtext) = get_txt( CONV #( lr_tab->field_doma ) ).
 
         content->label( text = scrtext
           )->multi_input(
-                   tokens           = client->_bind_local( lr_tab->t_token )
+                   tokens           = client->_bind( val = lr_tab->t_token tab = mt_fields tab_index = lv_tabix )
                    showclearicon    = abap_true
                    id               = lr_tab->field
                    valuehelprequest = client->_event( val = 'CALL_POPUP_FILTER' t_arg = VALUE #( ( CONV #( lr_tab->field ) ) ) )

@@ -36,6 +36,7 @@ CLASS z2ui5_cl_demo_app_080 DEFINITION
       END OF ty_s_people .
 
     DATA mt_people TYPE STANDARD TABLE OF ty_s_people.
+    DATA lv_s_date TYPE string.
 
   PROTECTED SECTION.
 
@@ -51,12 +52,12 @@ ENDCLASS.
 
 
 
-CLASS Z2UI5_CL_DEMO_APP_080 IMPLEMENTATION.
+CLASS z2ui5_cl_demo_app_080 IMPLEMENTATION.
 
 
   METHOD z2ui5_display_view.
 
-    DATA(lv_s_date) = '2023-04-22T08:15:00'.
+    lv_s_date = '2023-04-22T08:15:00'.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     view->_generic_property( VALUE #( n = `core:require` v = `{Helper:'z2ui5/Util'}` ) ).
@@ -70,8 +71,8 @@ CLASS Z2UI5_CL_DEMO_APP_080 IMPLEMENTATION.
     DATA(lo_vbox) = page->vbox( class ='sapUiSmallMargin' ).
 
     DATA(lo_planningcalendar) = lo_vbox->planning_calendar(
-                                                          startdate         = `{= Helper.DateCreateObject($` && client->_bind_local( lv_s_date ) && ') }'
-                                                          rows              = `{path: '` && client->_bind_local( val = mt_people path = abap_true ) && `'}`
+                                                          startdate         = `{= Helper.DateCreateObject($` && client->_bind( lv_s_date ) && ') }'
+                                                          rows              = `{path: '` && client->_bind( val = mt_people path = abap_true ) && `'}`
                                                           appointmentselect = client->_event( val = 'AppSelected' t_arg = VALUE #( ( `${$parameters>/appointment/mProperties/title}`) ) )
                                                           showweeknumbers   = abap_true ).
 
