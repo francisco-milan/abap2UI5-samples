@@ -20,11 +20,10 @@ CLASS z2ui5_cl_demo_app_000 DEFINITION PUBLIC.
     DATA mt_scroll     TYPE z2ui5_if_types=>ty_t_name_value.
     DATA mv_set_scroll TYPE abap_bool.
 
-  PROTECTED SECTION.
-
-  PRIVATE SECTION.
     METHODS expand_all.
 
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
