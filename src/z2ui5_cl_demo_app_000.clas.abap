@@ -238,14 +238,14 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
 
     panel->generic_tile( header    = 'Session Stickyness I'
                          subheader = 'Stateful mode'
-                         press     = client->_event( 'z2ui5_cl_demo_app_137' )
+                         press     = client->_event( 'z2ui5_cl_demo_app_s_02' )
                          mode      = 'LineMode'
                          class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
       ).
 
     panel->generic_tile( header    = 'Session Stickyness II'
                          subheader = 'Use Locks'
-                         press     = client->_event( 'z2ui5_cl_demo_app_135' )
+                         press     = client->_event( 'z2ui5_cl_demo_app_s_01' )
                          mode      = 'LineMode'
                          class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
       ).
@@ -804,7 +804,7 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
 
     panel->generic_tile( header    = 'Sound'
                          subheader = 'Play success and error sounds'
-                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_304' )
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_S_03' )
                          mode      = 'LineMode'
                          class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
       ).
@@ -1725,6 +1725,12 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
                          class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
       ).
 
+    panel->generic_tile( header    = 'Websocket'
+                         subheader = 'Consume APC-Messages with Websocket'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_S_05' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
 
     page = page2->panel( expandable = abap_true
                          expanded   = client->_bind_edit( ms_check_expanded-demos )

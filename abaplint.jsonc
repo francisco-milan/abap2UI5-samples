@@ -1,6 +1,9 @@
 {
   "global": {
-    "files": "/src/**/*.*"
+    "files": "/src/**/*.*",
+    "noIssues": [
+      "/src/00"
+    ]
   },
   "dependencies": [
     {
@@ -34,3 +37,5 @@
     "xml_consistency": true
   }
 }
+
+
