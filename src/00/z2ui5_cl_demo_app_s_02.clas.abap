@@ -1,4 +1,4 @@
-CLASS z2ui5_cl_demo_app_137 DEFINITION
+CLASS z2ui5_cl_demo_app_s_02 DEFINITION
   PUBLIC
   CREATE PUBLIC.
 
@@ -27,7 +27,7 @@ CLASS z2ui5_cl_demo_app_137 DEFINITION
 
 ENDCLASS.
 
-CLASS z2ui5_cl_demo_app_137 IMPLEMENTATION.
+CLASS z2ui5_cl_demo_app_s_02 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
     TRY.
@@ -53,7 +53,7 @@ CLASS z2ui5_cl_demo_app_137 IMPLEMENTATION.
     DATA(page) = view->shell( )->page(
       title          = `abap2UI5 - Sample: Sticky Session`
       navbuttonpress = client->_event( 'BACK' )
-      shownavbutton  = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
+      shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(vbox) = page->vbox( ).
     vbox->info_label( text = client->_bind( session_text ) ).
