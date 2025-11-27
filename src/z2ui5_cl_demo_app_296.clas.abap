@@ -54,7 +54,7 @@ CLASS z2ui5_cl_demo_app_296 IMPLEMENTATION.
               )->sub_header(
                   )->toolbar(
                       )->search_field( width  = `100%`
-                                       search = client->_event( val = `onSearch` )
+                                       search = client->_event( `onSearch` )
                       )->text( text = `Default Search`
                                id   = `idSearchListToolbar`
                   )->get_parent(

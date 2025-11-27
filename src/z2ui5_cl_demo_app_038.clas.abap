@@ -43,7 +43,7 @@ CLASS Z2UI5_CL_DEMO_APP_038 IMPLEMENTATION.
             groupitems        = abap_true
             placement         = `Top`
             initiallyexpanded = abap_true
-            beforeclose       = client->_event( val = 'POPOVER_CLOSE' )
+            beforeclose       = client->_event( 'POPOVER_CLOSE' )
         )->message_item(
             type        = `{TYPE}`
             title       = `{TITLE}`
@@ -98,7 +98,7 @@ CLASS Z2UI5_CL_DEMO_APP_038 IMPLEMENTATION.
     DATA(page) = view->shell(
         )->page(
             title           = 'abap2UI5 - List'
-            navbuttonpress  = client->_event( val = 'BACK' )
+            navbuttonpress  = client->_event( 'BACK' )
               shownavbutton = abap_true ).
     page->button( text  = 'Messages in Popup'
                   press = client->_event( 'POPUP' ) ).

@@ -27,7 +27,7 @@ CLASS Z2UI5_CL_DEMO_APP_115 IMPLEMENTATION.
     client->view_display( view->shell(
           )->page(
                   title          = 'abap2UI5 - CL_DEMO_OUTPUT - TODO uncomment the source code'
-                  navbuttonpress = client->_event( val = 'BACK' )
+                  navbuttonpress = client->_event( 'BACK' )
                   shownavbutton  = client->check_app_prev_stack( )
             )->_z2ui5( )->demo_output( mv_output
             )->stringify( ) ).

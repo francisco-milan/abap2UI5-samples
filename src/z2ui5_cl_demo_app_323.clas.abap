@@ -31,7 +31,7 @@ CLASS z2ui5_cl_demo_app_323 IMPLEMENTATION.
                          )->input( client->_bind_edit( mv_quantity )
                          )->button(
                              text  = 'share'
-                             press = client->_event( val = 'BUTTON_POST' )
+                             press = client->_event( 'BUTTON_POST' )
               )->stringify( ) ).
     ENDIF.
 

@@ -73,7 +73,7 @@ CLASS Z2UI5_CL_DEMO_APP_081 IMPLEMENTATION.
                   placement = mv_placement
               )->list(
                 items           = client->_bind_edit( mt_tab )
-*                selectionchange = client->_event( val = 'SEL_CHANGE' t_arg = VALUE #( ( `${$parameters>/listItem}` ) ) )
+*                selectionchange = client->_event( 'SEL_CHANGE' t_arg = VALUE #( ( `${$parameters>/listItem}` ) ) )
                 selectionchange = client->_event( val = 'SEL_CHANGE' )
                 mode            = `SingleSelectMaster`
                  )->standard_list_item(

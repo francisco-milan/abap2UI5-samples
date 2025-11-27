@@ -251,7 +251,7 @@ CLASS z2ui5_cl_demo_app_083 IMPLEMENTATION.
                 tokens           = client->_bind( mt_token )
                 showclearicon    = abap_true
                 value            = `{VALUE}`
-                tokenupdate      = client->_event( val = 'FILTER_UPDATE1' )
+                tokenupdate      = client->_event( 'FILTER_UPDATE1' )
                 submit           = client->_event( 'FILTER_UPDATE' )
                 id               = `FILTER`
                 valuehelprequest = client->_event( 'FILTER_VALUE_HELP' )
@@ -315,10 +315,10 @@ CLASS z2ui5_cl_demo_app_083 IMPLEMENTATION.
         )->button( text  = `Delete All`
                    icon  = 'sap-icon://delete'
                    type  = `Transparent`
-                   press = client->_event( val = `POPUP_DELETE_ALL` )
+                   press = client->_event( `POPUP_DELETE_ALL` )
         )->button( text  = `Add Item`
                    icon  = `sap-icon://add`
-                   press = client->_event( val = `POPUP_ADD` )
+                   press = client->_event( `POPUP_ADD` )
         )->toolbar_spacer(
         )->button(
             text  = 'OK'

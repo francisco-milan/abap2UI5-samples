@@ -60,7 +60,7 @@ CLASS z2ui5_cl_demo_app_001 IMPLEMENTATION.
                        )->input( value = product enabled = abap_false
                        )->button(
                            text  = 'post'
-                           press = client->_event( val = 'BUTTON_POST' )
+                           press = client->_event( 'BUTTON_POST' )
             )->stringify( ) ).
 
   ENDMETHOD.

@@ -112,7 +112,7 @@ CLASS z2ui5_cl_demo_app_114 IMPLEMENTATION.
                     enabled     = abap_true
             )->button(
                     icon      = `sap-icon://paper-plane`
-                    press     = client->_event( val = 'POST' )
+                    press     = client->_event( 'POST' )
                     iconfirst = abap_true ).
 
     page->list(

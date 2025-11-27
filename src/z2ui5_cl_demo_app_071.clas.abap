@@ -50,7 +50,7 @@ CLASS z2ui5_cl_demo_app_071 IMPLEMENTATION.
     client->view_display( val = view->shell(
          )->page(
                  title          = 'abap2UI5 - First Example'
-                 navbuttonpress = client->_event( val = 'BACK' )
+                 navbuttonpress = client->_event( 'BACK' )
                  shownavbutton  = client->check_app_prev_stack( )
              )->simple_form( title = 'Form Title' editable = abap_true
                  )->content( 'form'

@@ -41,7 +41,7 @@ CLASS Z2UI5_CL_DEMO_APP_061 IMPLEMENTATION.
                 )->toolbar_spacer(
                 )->button(
                     text  = `server <-> client`
-                    press = client->_event( val = 'SEND' )
+                    press = client->_event( 'SEND' )
         )->get_parent( )->get_parent( ).
 
     tab->columns(

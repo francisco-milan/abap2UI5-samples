@@ -37,7 +37,7 @@ CLASS zcl_2ui5_start IMPLEMENTATION.
                              )->button(
                                  text  = client->_bind_edit( text )
                                  width = '20%'
-                                 press = client->_event( val = 'CALL_BOOKING_MASK' ) ).
+                                 press = client->_event( 'CALL_BOOKING_MASK' ) ).
           client->view_display( view->stringify( ) ).
           client->set_app_state_active( ).
           RETURN.

@@ -27,7 +27,7 @@ CLASS z2ui5_cl_demo_app_106 IMPLEMENTATION.
       DATA(lo_p) = view->shell(
                   )->page(
                           title          = 'abap2UI5 - Rich Text Editor'
-                          navbuttonpress = client->_event( val = 'BACK' )
+                          navbuttonpress = client->_event( 'BACK' )
                           shownavbutton  = client->check_app_prev_stack( ) ).
 
 

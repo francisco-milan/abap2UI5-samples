@@ -28,7 +28,7 @@ CLASS z2ui5_cl_demo_app_073 IMPLEMENTATION.
     client->view_display( view->shell(
           )->page(
                   title          = 'abap2UI5 - First Example'
-                  navbuttonpress = client->_event( val = 'BACK' )
+                  navbuttonpress = client->_event( 'BACK' )
                   shownavbutton  = client->check_app_prev_stack( )
              )->_z2ui5( )->timer(
                   checkactive = client->_bind( mv_check_timer_active )

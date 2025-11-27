@@ -18,7 +18,7 @@ CLASS z2ui5_cl_demo_app_187 IMPLEMENTATION.
       client->view_display( z2ui5_cl_xml_view=>factory( )->shell(
         )->page(
             title          = 'abap2UI5 - Popup To Confirm'
-            navbuttonpress = client->_event( val = 'BACK' )
+            navbuttonpress = client->_event( 'BACK' )
             shownavbutton  = client->check_app_prev_stack( )
         )->button(
             text  = 'SY'
