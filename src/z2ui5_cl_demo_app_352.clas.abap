@@ -2,20 +2,17 @@ CLASS z2ui5_cl_demo_app_352 DEFINITION PUBLIC CREATE PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
-
     DATA input TYPE string.
-
-  PROTECTED SECTION.
-    DATA client TYPE REF TO z2ui5_if_client.
 
     METHODS display_view
       IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+        client TYPE REF TO z2ui5_if_client.
 
     METHODS on_event
       IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+        client TYPE REF TO z2ui5_if_client.
 
+  PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -24,12 +21,9 @@ CLASS z2ui5_cl_demo_app_352 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    me->client = client.
-
     IF client->check_on_init( ).
       display_view( client ).
     ENDIF.
-
     on_event( client ).
 
   ENDMETHOD.
