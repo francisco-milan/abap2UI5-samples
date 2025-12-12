@@ -285,13 +285,17 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
       ).
 
     panel->generic_tile( header    = 'Message View'
-                         " TODO: check spelling: Ouput (typo) -> Output (ABAP cleaner)
                          subheader = 'Custom Popup, Popover & Ouput'
                          press     = client->_event( 'Z2UI5_CL_DEMO_APP_038' )
                          mode      = 'LineMode'
                          class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
       ).
 
+    panel->generic_tile( header    = 'Demo Output'
+                         press     = client->_event( 'Z2UI5_CL_DEMO_APP_115' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
 
     panel = page->panel( expandable = abap_false
                          expanded   = abap_true
