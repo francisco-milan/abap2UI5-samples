@@ -57,7 +57,7 @@ CLASS z2ui5_cl_demo_app_336 IMPLEMENTATION.
                   press = client->_event( 'BACK' )
                   type  = 'Success' ).
 
-    client->view_display( page ).
+    client->view_display( page->stringify( )  ).
 
   ENDMETHOD.
 

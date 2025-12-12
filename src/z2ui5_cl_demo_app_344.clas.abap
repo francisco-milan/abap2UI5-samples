@@ -119,7 +119,7 @@ CLASS z2ui5_cl_demo_app_344 IMPLEMENTATION.
                i_data   = mt_data2
                i_layout = mo_layout_obj2 ).
 
-    client->view_display( page ).
+    client->view_display( page->stringify( )  ).
 
   ENDMETHOD.
 

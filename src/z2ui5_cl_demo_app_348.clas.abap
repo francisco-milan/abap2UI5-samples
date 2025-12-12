@@ -83,7 +83,7 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
               i_page   = page
               i_client = client ).
 
-    client->view_display( page ).
+    client->view_display( page->stringify( )  ).
 
   ENDMETHOD.
 

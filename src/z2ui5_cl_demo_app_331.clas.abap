@@ -69,7 +69,7 @@ CLASS z2ui5_cl_demo_app_331 IMPLEMENTATION.
 
     line->input( value = client->_bind( <value> ) ).
 
-    client->view_display( page ).
+    client->view_display( page->stringify( )  ).
 
   ENDMETHOD.
 

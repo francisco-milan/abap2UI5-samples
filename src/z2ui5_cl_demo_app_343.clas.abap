@@ -99,7 +99,7 @@ CLASS z2ui5_cl_demo_app_343 IMPLEMENTATION.
     ENDTRY.
 
 
-    client->view_display( page ).
+    client->view_display( page->stringify( )  ).
 
   ENDMETHOD.
 
