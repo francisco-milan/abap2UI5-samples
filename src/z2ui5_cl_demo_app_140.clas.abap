@@ -31,11 +31,6 @@ ENDCLASS.
 
 CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_DEMO_MULTICOMBOBOX_UI5->UI5_ON_EVENT
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD ui5_on_event.
 
     TRY.
@@ -52,11 +47,6 @@ CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_DEMO_MULTICOMBOBOX_UI5->UI5_ON_INIT
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD ui5_on_init.
 
     gt_multi = VALUE ty_t_combo(
@@ -71,10 +61,6 @@ CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
   ENDMETHOD.
 
 
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_DEMO_MULTICOMBOBOX_UI5->UI5_VIEW_MAIN_DISPLAY
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD ui5_view_main_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
@@ -105,12 +91,6 @@ CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_DEMO_MULTICOMBOBOX_UI5->Z2UI5_IF_APP~MAIN
-* +-------------------------------------------------------------------------------------------------+
-* | [--->] CLIENT                         TYPE REF TO Z2UI5_IF_CLIENT
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD z2ui5_if_app~main.
     me->client = client.
 

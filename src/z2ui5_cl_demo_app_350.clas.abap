@@ -22,12 +22,6 @@ ENDCLASS.
 
 CLASS z2ui5_cl_demo_app_350 IMPLEMENTATION.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method Z2UI5_CL_DEMO_APP_350->Z2UI5_IF_APP~MAIN
-* +-------------------------------------------------------------------------------------------------+
-* | [--->] CLIENT                         TYPE REF TO Z2UI5_IF_CLIENT
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD z2ui5_if_app~main.
 
     IF view_id IS INITIAL OR view_id = 1.
@@ -123,12 +117,6 @@ CLASS z2ui5_cl_demo_app_350 IMPLEMENTATION.
     ENDIF.
   ENDMETHOD.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Private Method Z2UI5_CL_DEMO_APP_350->INITIALIZE_VIEW2
-* +-------------------------------------------------------------------------------------------------+
-* | [--->] CLIENT                         TYPE REF TO Z2UI5_IF_CLIENT
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD initialize_view2.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = view->shell( )->page(
