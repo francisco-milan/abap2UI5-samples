@@ -2142,6 +2142,13 @@ CLASS z2ui5_cl_demo_app_000 IMPLEMENTATION.
                          class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
       ).
 
+    panel->generic_tile( header    = 'Hide/show Soft Tastatur'
+                         subheader = ''
+                         press     = client->_event( 'z2ui5_cl_demo_app_352' )
+                         mode      = 'LineMode'
+                         class     = 'sapUiTinyMarginEnd sapUiTinyMarginBottom'
+      ).
+
     client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
