@@ -108,7 +108,7 @@ CLASS z2ui5_cl_demo_app_170 IMPLEMENTATION.
     view->shell(
         )->page(
                 title          = 'abap2UI5 - Popup To Popup'
-                navbuttonpress = client->_event( val = 'BACK' )
+                navbuttonpress = client->_event( 'BACK' )
                 shownavbutton  = client->check_app_prev_stack( )
            )->button(
             text  = 'Open Popup...'

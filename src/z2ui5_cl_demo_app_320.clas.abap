@@ -210,7 +210,7 @@ CLASS z2ui5_cl_demo_app_320 IMPLEMENTATION.
 
     nav_container->page( id             = `detail`
                          shownavbutton  = client->check_app_prev_stack( )
-                         navbuttonpress = client->_event( val = `onNavBack` )
+                         navbuttonpress = client->_event( `onNavBack` )
                          titlealignment = `Center`
                          title          = |Team Members ({ lines( group_items ) })|
         )->card(

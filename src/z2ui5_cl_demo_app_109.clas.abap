@@ -78,7 +78,7 @@ CLASS z2ui5_cl_demo_app_109 IMPLEMENTATION.
     view->shell(
       )->page(
               title          = 'abap2UI5 - Popover Quickview Examples'
-              navbuttonpress = client->_event( val = 'BACK' )
+              navbuttonpress = client->_event( 'BACK' )
               shownavbutton  = client->check_app_prev_stack( )
           )->simple_form( 'QuickView Popover'
               )->content( 'form'

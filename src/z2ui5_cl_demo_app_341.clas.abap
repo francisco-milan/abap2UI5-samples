@@ -31,7 +31,7 @@ CLASS z2ui5_cl_demo_app_341 IMPLEMENTATION.
 
     DATA(lo_main) = z2ui5_cl_xml_view=>factory( )->shell( ).
     DATA(page) = lo_main->page( title          = 'abap2UI5 - Popups'
-                                navbuttonpress = client->_event( val = 'BACK' )
+                                navbuttonpress = client->_event( 'BACK' )
                                 shownavbutton  = client->check_app_prev_stack( ) ).
 
     " TODO: variable is assigned but never used (ABAP cleaner)
@@ -39,10 +39,10 @@ CLASS z2ui5_cl_demo_app_341 IMPLEMENTATION.
         )->simple_form( 'Popups' )->content( 'form'
             )->label( 'Demo'
             )->button( text  = 'Popup to Select'
-                       press = client->_event( val = 'BUTTON_POPUP_01' )
+                       press = client->_event( 'BUTTON_POPUP_01' )
             )->label( 'Demo'
             )->button( text  = 'other Popup'
-                       press = client->_event( val = 'BUTTON_POPUP_02' ) ).
+                       press = client->_event( 'BUTTON_POPUP_02' ) ).
 
     client->view_display( lo_main->stringify( ) ).
 
@@ -78,7 +78,7 @@ CLASS z2ui5_cl_demo_app_341 IMPLEMENTATION.
 *
 *        client->nav_app_call( z2ui5_cl_layo_pop=>factory( layout = mo_layout ) ).
 
-        mo_layout1 = z2ui5_cl_demo_app_333=>factory( i_data   = REF #( mt_table )
+        mo_layout1 = z2ui5_cl_demo_app_333=>factory( i_data  = REF #( mt_table )
                                                     vis_cols = 5 ).
 
         client->nav_app_call( z2ui5_cl_demo_app_340=>factory( io_table  = REF #( mt_table )

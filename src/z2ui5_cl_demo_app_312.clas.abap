@@ -65,8 +65,7 @@ CLASS z2ui5_cl_demo_app_312 IMPLEMENTATION.
                                cost    = '221000.00' )
                              ( week    = 'Week 13 - 16'
                                revenue = '536000.34'
-                               cost    = '280000.00' )
-                           ).
+                               cost    = '280000.00' ) ).
     " ---------- Set vizframe properties (optional) ---------------------------------------------------
     mv_prop = |\{| && |\n| &&
       |"plotArea": \{| && |\n| &&
@@ -184,8 +183,7 @@ CLASS z2ui5_cl_demo_app_312 IMPLEMENTATION.
                            ( n = 'area'
                              v = 'area' )
                            ( n = 'radar'
-                             v = 'radar' )
-      ).
+                             v = 'radar' ) ).
 
   ENDMETHOD.
 
@@ -221,7 +219,7 @@ CLASS z2ui5_cl_demo_app_312 IMPLEMENTATION.
 
     " ---------- Set combo box input field ------------------------------------------------------------
     lr_filter->combobox( selectedkey   = client->_bind_edit( me->ms_screen-viztypesel )
-                         change        = client->_event( val = 'EVT_VIZTYPE_CHANGE' )
+                         change        = client->_event( 'EVT_VIZTYPE_CHANGE' )
                          showclearicon = abap_true
                          items         = client->_bind( me->mt_viztypes )
                               )->item( key  = '{N}'

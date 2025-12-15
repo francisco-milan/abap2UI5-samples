@@ -39,11 +39,6 @@ ENDCLASS.
 
 CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Protected Method Z2UI5_CL_DEMO_APP_160->LOAD_OUTPUT_TABLE
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD load_output_table.
 
     DATA ls_output TYPE ty_output.
@@ -74,10 +69,6 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
   ENDMETHOD.
 
 
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Protected Method Z2UI5_CL_DEMO_APP_160->ON_EVENT
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD on_event.
 
     DATA: lt_event_arguments TYPE string_table,
@@ -119,11 +110,6 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Protected Method Z2UI5_CL_DEMO_APP_160->RENDER_MAIN_SCREEN
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD render_main_screen.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
@@ -193,7 +179,7 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
         ( `$event.oSource.oParent.sId` )
         ( `INPUT2` )
          ) )
-       submit   = client->_event( val = 'INPUT_SUBMIT' )
+       submit   = client->_event( 'INPUT_SUBMIT' )
        editable = abap_true
        type     = 'Number' ).
 
@@ -214,12 +200,6 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method Z2UI5_CL_DEMO_APP_160->Z2UI5_IF_APP~MAIN
-* +-------------------------------------------------------------------------------------------------+
-* | [--->] CLIENT                         TYPE REF TO Z2UI5_IF_CLIENT
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD z2ui5_if_app~main.
 
     me->client = client.
@@ -235,12 +215,6 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Protected Method Z2UI5_CL_DEMO_APP_160->CALCULATE_SUM
-* +-------------------------------------------------------------------------------------------------+
-* | [--->] I_COLUMN                       TYPE        STRING
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD calculate_sum.
 
     DATA lv_sum TYPE i.

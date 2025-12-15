@@ -31,11 +31,6 @@ ENDCLASS.
 
 CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_DEMO_MULTICOMBOBOX_UI5->UI5_ON_EVENT
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD ui5_on_event.
 
     TRY.
@@ -52,11 +47,6 @@ CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_DEMO_MULTICOMBOBOX_UI5->UI5_ON_INIT
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD ui5_on_init.
 
     gt_multi = VALUE ty_t_combo(
@@ -71,10 +61,6 @@ CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
   ENDMETHOD.
 
 
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_DEMO_MULTICOMBOBOX_UI5->UI5_VIEW_MAIN_DISPLAY
-* +-------------------------------------------------------------------------------------------------+
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD ui5_view_main_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
@@ -82,7 +68,7 @@ CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
     view->shell(
             )->page(
                     title          = 'abap2UI5 - Multi Combo Box'
-                    navbuttonpress = client->_event( val = 'BACK' )
+                    navbuttonpress = client->_event( 'BACK' )
                     shownavbutton  = client->check_app_prev_stack( )
                )->simple_form( title    = 'Form Title'
                                editable = abap_true
@@ -99,18 +85,12 @@ CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
                                   )->get_parent(
                   )->button(
                             text  = 'post'
-                            press = client->_event( val = 'BUTTON_POST' ) ).
+                            press = client->_event( 'BUTTON_POST' ) ).
 
     client->view_display( view->stringify( ) ).
 
   ENDMETHOD.
 
-
-* <SIGNATURE>---------------------------------------------------------------------------------------+
-* | Instance Public Method ZCL_DEMO_MULTICOMBOBOX_UI5->Z2UI5_IF_APP~MAIN
-* +-------------------------------------------------------------------------------------------------+
-* | [--->] CLIENT                         TYPE REF TO Z2UI5_IF_CLIENT
-* +--------------------------------------------------------------------------------------</SIGNATURE>
   METHOD z2ui5_if_app~main.
     me->client = client.
 

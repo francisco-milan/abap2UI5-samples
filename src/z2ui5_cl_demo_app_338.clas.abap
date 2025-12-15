@@ -60,9 +60,9 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
 
   METHOD on_init.
 
-    MT_T002 = VALUE #( ( ID = '1' CLASS = 'Z2UI5_CL_DEMO_APP_339' TABLE = 'Z2UI5_T_01' )
-                       ( ID = '2' CLASS = 'Z2UI5_CL_DEMO_APP_342' TABLE = 'Z2UI5_T_01' )
-                       ( ID = '3' CLASS = 'Z2UI5_CL_DEMO_APP_339' TABLE = 'Z2UI5_T_01' ) ).
+    mt_t002 = VALUE #( ( id = '1' class = 'Z2UI5_CL_DEMO_APP_339' table = 'Z2UI5_T_01' )
+                       ( id = '2' class = 'Z2UI5_CL_DEMO_APP_342' table = 'Z2UI5_T_01' )
+                       ( id = '3' class = 'Z2UI5_CL_DEMO_APP_339' table = 'Z2UI5_T_01' ) ).
 
     mv_selectedkey = '1'.
 
@@ -79,7 +79,7 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
 
     DATA(lo_items) = page->icon_tab_bar( class       = 'sapUiResponsiveContentPadding'
                                          selectedkey = client->_bind_edit( mv_selectedkey )
-                                         select      = client->_event( val = 'ONSELECTICONTABBAR' )
+                                         select      = client->_event( 'ONSELECTICONTABBAR' )
                                                        )->items( ).
 
     LOOP AT mt_t002 REFERENCE INTO DATA(line).

@@ -95,7 +95,7 @@ CLASS z2ui5_cl_demo_app_101 IMPLEMENTATION.
              shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(fi) = page->vbox(
-      )->feed_input( post                     = client->_event( val = 'POST' )
+      )->feed_input( post                     = client->_event( 'POST' )
                              growing          = abap_true
                              rows             = `4`
                              icondensityaware = abap_false

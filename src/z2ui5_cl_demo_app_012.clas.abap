@@ -64,7 +64,7 @@ CLASS Z2UI5_CL_DEMO_APP_012 IMPLEMENTATION.
     DATA(lo_main) = z2ui5_cl_xml_view=>factory( )->shell( ).
     DATA(page) = lo_main->page(
             title          = 'abap2UI5 - Popups'
-            navbuttonpress = client->_event( val = 'BACK' )
+            navbuttonpress = client->_event( 'BACK' )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(grid) = page->grid( 'L7 M12 S12' )->content( 'layout'
@@ -72,7 +72,7 @@ CLASS Z2UI5_CL_DEMO_APP_012 IMPLEMENTATION.
             )->label( 'Demo'
             )->button(
                 text  = 'popup rendering, no background rendering'
-                press = client->_event( val = 'BUTTON_POPUP_01' )
+                press = client->_event( 'BUTTON_POPUP_01' )
             )->label( 'Demo'
             )->button(
                 text  = 'popup rendering, background destroyed and rerendering'

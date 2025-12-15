@@ -38,7 +38,7 @@ CLASS Z2UI5_CL_DEMO_APP_LP_02 IMPLEMENTATION.
                          )->input( client->_bind_edit( mv_title )
                          )->label( ``
                          )->button( text  = 'Go Back'
-                                    press = client->_event( val = 'BACK' ) )->stringify( ) ).
+                                    press = client->_event( 'BACK' ) )->stringify( ) ).
 
     ENDIF.
 

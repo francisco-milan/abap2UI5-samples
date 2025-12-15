@@ -51,7 +51,7 @@ CLASS Z2UI5_CL_DEMO_APP_197 IMPLEMENTATION.
                                       type                = `Light`
                                       showpersonalization = abap_true
                                       showreset           = abap_true
-                                      reset               = client->_event( val = `RESET` )
+                                      reset               = client->_event( `RESET` )
       )->facet_filter_list( title     = `Products`
                             mode      = `MultiSelect`
                             items     = client->_bind( mt_table_products )
@@ -74,7 +74,7 @@ CLASS Z2UI5_CL_DEMO_APP_197 IMPLEMENTATION.
     DATA(lo_cells) = tab->items( )->column_list_item( ).
     lo_cells->link( id    = `link`
                     text  = '{PRODUCT}'
-                    press = client->_event( val = `POPOVER_DETAIL` ) ).
+                    press = client->_event( `POPOVER_DETAIL` ) ).
     lo_cells->text( `{CREATE_DATE}` ).
     lo_cells->text( `{CREATE_BY}` ).
     lo_cells->text( `{STORAGE_LOCATION}` ).

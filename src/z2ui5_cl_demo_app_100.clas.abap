@@ -120,7 +120,7 @@ CLASS Z2UI5_CL_DEMO_APP_100 IMPLEMENTATION.
     DATA(lo_columns) = tab->ui_columns( ).
     lo_columns->ui_column( width = '4rem' )->checkbox( selected = client->_bind_edit( lv_selkz )
                                                        enabled  = abap_true
-                                                       select   = client->_event( val = `SELKZ` ) )->ui_template( )->checkbox( selected = `{SELKZ}` ).
+                                                       select   = client->_event( `SELKZ` ) )->ui_template( )->checkbox( selected = `{SELKZ}` ).
     lo_columns->ui_column( width                         = '5rem'
                            sortproperty                  = 'ROW_ID'
                                           filterproperty = 'ROW_ID' )->text( text = `Index` )->ui_template( )->text( text = `{ROW_ID}` ).

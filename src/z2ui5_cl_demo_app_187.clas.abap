@@ -18,7 +18,7 @@ CLASS z2ui5_cl_demo_app_187 IMPLEMENTATION.
       client->view_display( z2ui5_cl_xml_view=>factory( )->shell(
         )->page(
             title          = 'abap2UI5 - Popup To Confirm'
-            navbuttonpress = client->_event( val = 'BACK' )
+            navbuttonpress = client->_event( 'BACK' )
             shownavbutton  = client->check_app_prev_stack( )
         )->button(
             text  = 'SY'
@@ -38,8 +38,8 @@ CLASS z2ui5_cl_demo_app_187 IMPLEMENTATION.
 
       WHEN 'SY'.
         DATA(ls_msg2) = z2ui5_cl_util=>msg_get_by_msg(
-                  id     = 'NET'
-                  no     = `001` ).
+                  id = 'NET'
+                  no = `001` ).
         client->message_box_display( ls_msg2 ).
 
       WHEN 'BAPIRET'.

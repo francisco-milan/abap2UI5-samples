@@ -66,12 +66,11 @@ CLASS z2ui5_cl_demo_app_153 IMPLEMENTATION.
     view->shell(
         )->page(
                 title          = 'abap2UI5 - Binding'
-                navbuttonpress = client->_event( val = 'BACK' )
+                navbuttonpress = client->_event( 'BACK' )
                 shownavbutton  = client->check_app_prev_stack( )
            )->button(
             text  = 'Rountrip...'
-            press = client->_event( 'POPUP' )
-             ).
+            press = client->_event( 'POPUP' ) ).
 
     client->view_display( view->stringify( ) ).
 

@@ -51,7 +51,7 @@ CLASS z2ui5_cl_demo_app_138 IMPLEMENTATION.
       client->view_display( view->shell(
             )->page(
                     title          = 'abap2UI5 - First Example'
-                    navbuttonpress = client->_event( val = 'BACK' )
+                    navbuttonpress = client->_event( 'BACK' )
                     shownavbutton  = client->check_app_prev_stack( )
                 )->simple_form( title    = 'Form Title'
                                 editable = abap_true
@@ -63,7 +63,7 @@ CLASS z2ui5_cl_demo_app_138 IMPLEMENTATION.
                         )->input( client->_bind_edit( ms_data-ms_data2-ms_data2-ms_data2-ms_data2-ms_data2-ms_data2-val )
                         )->button(
                             text  = 'post'
-                            press = client->_event( val = 'BUTTON_POST' )
+                            press = client->_event( 'BUTTON_POST' )
              )->stringify( ) ).
 
     ENDIF.

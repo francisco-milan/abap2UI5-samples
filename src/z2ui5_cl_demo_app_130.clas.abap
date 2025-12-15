@@ -360,7 +360,7 @@ CLASS z2ui5_cl_demo_app_130 IMPLEMENTATION.
         )->content( 'form'
             )->label( text = get_txt( 'BU_DYNID' )
              )->combobox(
-             change      = client->_event( val = 'INPUT_SCREEN_CHANGE' )
+             change      = client->_event( 'INPUT_SCREEN_CHANGE' )
              items       = client->_bind_edit( mt_screens )
              selectedkey = client->_bind_edit( mv_screen )
                  )->item(
@@ -393,7 +393,7 @@ CLASS z2ui5_cl_demo_app_130 IMPLEMENTATION.
     IF mt_fields IS NOT INITIAL.
 
       LOOP AT mt_fields REFERENCE INTO DATA(lr_tab).
-        data(lv_tabix) = sy-tabix.
+        DATA(lv_tabix) = sy-tabix.
 
         DATA(scrtext) = get_txt( CONV #( lr_tab->field_doma ) ).
 
@@ -485,10 +485,10 @@ CLASS z2ui5_cl_demo_app_130 IMPLEMENTATION.
         )->button( text = get_txt( 'FC_DELALL' )
                   icon  = 'sap-icon://delete'
                   type  = `Transparent`
-                  press = client->_event( val = `POPUP_FILTER_DELETE_ALL` )
+                  press = client->_event( `POPUP_FILTER_DELETE_ALL` )
         )->button( text  = get_txt( 'RSLPO_GUI_ADDPART' )
                    icon  = `sap-icon://add`
-                   press = client->_event( val = `POPUP_FILTER_ADD` )
+                   press = client->_event( `POPUP_FILTER_ADD` )
         )->toolbar_spacer(
         )->button(
             text  = get_txt( 'MSSRCF_ACTION' )

@@ -25,10 +25,10 @@ CLASS z2ui5_cl_demo_app_lp_01 IMPLEMENTATION.
                      )->content( 'form'
                          )->label( ``
                          )->button( text  = 'Read Parameters'
-                                    press = client->_event( val = 'READ_PARAMS' )
+                                    press = client->_event( 'READ_PARAMS' )
                          )->label( ``
                          )->button( text  = 'Go Back'
-                                    press = client->_event( val = 'BACK' ) )->stringify( ) ).
+                                    press = client->_event( 'BACK' ) )->stringify( ) ).
 
     ENDIF.
 
