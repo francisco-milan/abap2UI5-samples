@@ -60,10 +60,10 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
       client->message_toast_display( 'ERROR - ms_data is inital!' ).
     ENDIF.
 
-    ASSIGN mo_layout_obj->mr_data->* TO FIELD-SYMBOL(<val>).
-    IF <val> <> ms_struc.
-      client->message_toast_display( 'ERROR - mo_layout_obj_2->mr_data  <> ms_data!' ).
-    ENDIF.
+*    ASSIGN mo_layout_obj->mr_data->* TO FIELD-SYMBOL(<val>).
+*    IF <val> <> ms_struc.
+*      client->message_toast_display( 'ERROR - mo_layout_obj_2->mr_data  <> ms_data!' ).
+*    ENDIF.
 
     client->view_model_update( ).
 
@@ -101,33 +101,33 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
 
   METHOD xml_form.
 
-    DATA(form) = i_page->simple_form( editable        = abap_true
-                                      layout          = `ResponsiveGridLayout`
-                                      adjustlabelspan = abap_true
-                                 )->content( ns = `form` ).
-
-    DATA(index) = 0.
-
-    LOOP AT mo_layout_obj->ms_data-t_layout REFERENCE INTO DATA(layout).
-
-      index = index + 1.
-
-      ASSIGN COMPONENT layout->name OF STRUCTURE i_data->* TO FIELD-SYMBOL(<value>).
-      " assign component layout->name of structure ms_struc to field-symbol(<value>).
-      IF <value> IS NOT ASSIGNED.
-        RETURN.
-      ENDIF.
-
-      DATA(line) = form->label( wrapping = abap_false
-                                text     = layout->name ).
-
-      line->input( value   = i_client->_bind( <value> )
-                   visible = i_client->_bind( val       = layout->visible
-                                              tab       = mo_layout_obj->ms_data-t_layout
-                                              tab_index = index )
-                   enabled = abap_false ).
-    ENDLOOP.
-
+*    DATA(form) = i_page->simple_form( editable        = abap_true
+*                                      layout          = `ResponsiveGridLayout`
+*                                      adjustlabelspan = abap_true
+*                                 )->content( ns = `form` ).
+*
+*    DATA(index) = 0.
+*
+*    LOOP AT mo_layout_obj->ms_data-t_layout REFERENCE INTO DATA(layout).
+*
+*      index = index + 1.
+*
+*      ASSIGN COMPONENT layout->name OF STRUCTURE i_data->* TO FIELD-SYMBOL(<value>).
+*      " assign component layout->name of structure ms_struc to field-symbol(<value>).
+*      IF <value> IS NOT ASSIGNED.
+*        RETURN.
+*      ENDIF.
+*
+*      DATA(line) = form->label( wrapping = abap_false
+*                                text     = layout->name ).
+*
+*      line->input( value   = i_client->_bind( <value> )
+*                   visible = i_client->_bind( val       = layout->visible
+*                                              tab       = mo_layout_obj->ms_data-t_layout
+*                                              tab_index = index )
+*                   enabled = abap_false ).
+*    ENDLOOP.
+*
   ENDMETHOD.
 
 ENDCLASS.
