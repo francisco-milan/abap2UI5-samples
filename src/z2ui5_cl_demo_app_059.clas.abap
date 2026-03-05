@@ -66,10 +66,6 @@ CLASS z2ui5_cl_demo_app_059 IMPLEMENTATION.
                 tab = mt_table ).
 
         client->view_model_update( ).
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-
     ENDCASE.
 
   ENDMETHOD.
@@ -94,8 +90,8 @@ CLASS z2ui5_cl_demo_app_059 IMPLEMENTATION.
 
     DATA(page1) = view->shell( )->page( id = `page_main`
             title                          = 'abap2UI5 - Search Field with Backend Live Change'
-            navbuttonpress                 = client->_event( 'BACK' )
-            shownavbutton                  = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
+            navbuttonpress                 = client->_event_nav_app_leave( )
+            shownavbutton                  = client->check_app_prev_stack( ) ).
 
     DATA(lo_box) = page1->vbox( )->text( `Search`
         )->search_field( width      = `17.5rem`

@@ -41,9 +41,6 @@ CLASS z2ui5_cl_demo_app_162 IMPLEMENTATION.
 
       WHEN `PREVIEW_FILTER`.
         client->nav_app_call( z2ui5_cl_pop_get_range_m=>factory( mt_filter ) ).
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
     ENDCASE.
 
   ENDMETHOD.
@@ -74,8 +71,8 @@ CLASS z2ui5_cl_demo_app_162 IMPLEMENTATION.
 
     view = view->shell( )->page( id = `page_main`
              title                  = 'abap2UI5 - Select-Options'
-             navbuttonpress         = client->_event( 'BACK' )
-             shownavbutton          = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
+             navbuttonpress         = client->_event_nav_app_leave( )
+             shownavbutton          = client->check_app_prev_stack( ) ).
 
     DATA(vbox) = view->vbox( ).
 
