@@ -54,7 +54,7 @@ CLASS z2ui5_cl_demo_app_319 IMPLEMENTATION.
     DATA(l_view) = z2ui5_cl_xml_view=>factory( ).
 
     DATA(l_page) = l_view->shell( )->page( title      = 'SearchPage'
-                                       navbuttonpress = m_client->_event( 'BACK' )
+                                       navbuttonpress = m_client->_event_nav_app_leave( )
                                        shownavbutton  = m_client->check_app_prev_stack( ) ).
 
     l_page->_z2ui5( )->smartmultiinput_ext(
@@ -82,20 +82,17 @@ CLASS z2ui5_cl_demo_app_319 IMPLEMENTATION.
 
   METHOD on_event.
 
-    CASE m_client->get( )-event.
-      WHEN 'BACK'.
-        m_client->nav_app_leave( ).
-      WHEN 'PRODTYPE_CHANGED'.
-        INSERT VALUE #( operation = 'EQ' value1 = 'EUR' keyfield = 'CurrencyCode' tokentext = 'Euro (auto added line)' ) INTO TABLE m_selection-product_type-ranges.
-        m_client->view_model_update( ).
-        TRY.
-            m_client->message_box_display(
-              text  = z2ui5_cl_ajson=>new( )->set( iv_path = '/' iv_val = m_selection-product_type-ranges )->stringify( )
-              title = 'range content' ).
-          CATCH z2ui5_cx_ajson_error INTO DATA(lx_ajson).
-            m_client->message_toast_display( lx_ajson->get_text( ) ).
-        ENDTRY.
-    ENDCASE.
+    IF m_client->check_on_event( 'PRODTYPE_CHANGED' ).
+      INSERT VALUE #( operation = 'EQ' value1 = 'EUR' keyfield = 'CurrencyCode' tokentext = 'Euro (auto added line)' ) INTO TABLE m_selection-product_type-ranges.
+      m_client->view_model_update( ).
+      TRY.
+          m_client->message_box_display(
+            text  = z2ui5_cl_ajson=>new( )->set( iv_path = '/' iv_val = m_selection-product_type-ranges )->stringify( )
+            title = 'range content' ).
+        CATCH z2ui5_cx_ajson_error INTO DATA(lx_ajson).
+          m_client->message_toast_display( lx_ajson->get_text( ) ).
+      ENDTRY.
+    ENDIF.
 
   ENDMETHOD.
 ENDCLASS.

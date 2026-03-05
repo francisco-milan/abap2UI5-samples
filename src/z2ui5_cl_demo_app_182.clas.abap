@@ -34,8 +34,6 @@ CLASS z2ui5_cl_demo_app_182 DEFINITION
              nodes TYPE tt_nodes2,
              lines TYPE tt_lines4,
            END OF t_json1.
-
-    DATA mv_initialized TYPE abap_bool .
     DATA mt_data TYPE t_json1 .
 
     METHODS on_event .
@@ -104,10 +102,6 @@ CLASS Z2UI5_CL_DEMO_APP_182 IMPLEMENTATION.
 
         detail_popover( id   = lt_arg[ 1 ]
                         node = ls_node ).
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-        RETURN.
     ENDCASE.
 
   ENDMETHOD.
@@ -118,7 +112,7 @@ CLASS Z2UI5_CL_DEMO_APP_182 IMPLEMENTATION.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = view->page(
                     title          = 'abap2UI5 - Network Graph - Org Tree'
-                    navbuttonpress = client->_event( 'BACK' )
+                    navbuttonpress = client->_event_nav_app_leave( )
                     shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(graph) = page->network_graph( enablewheelzoom = abap_false
@@ -199,8 +193,7 @@ CLASS Z2UI5_CL_DEMO_APP_182 IMPLEMENTATION.
 
     me->client = client.
 
-    IF mv_initialized = abap_false.
-      mv_initialized = abap_true.
+    IF client->check_on_init( ).
 
       mt_data = VALUE #( nodes             = VALUE #( ( id = `Dinter`
                                             title          = `Sophie Dinter`

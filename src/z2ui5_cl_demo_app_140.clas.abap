@@ -16,7 +16,6 @@ CLASS z2ui5_cl_demo_app_140 DEFINITION
       ty_t_combo TYPE STANDARD TABLE OF s_combobox WITH EMPTY KEY .
 
     DATA client TYPE REF TO z2ui5_if_client .
-    DATA check_initialized TYPE abap_bool .
     DATA gt_multi TYPE ty_t_combo.
     DATA gt_sel_multi TYPE ty_t_combo.
     DATA gt_sel_multi2 TYPE string_table.
@@ -34,12 +33,9 @@ CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
   METHOD ui5_on_event.
 
     TRY.
-        DATA(ok_code) = client->get( )-event.
-        CASE ok_code.
-          WHEN 'FILTERBAR'.
-
-            client->view_model_update( ).
-        ENDCASE.
+        IF client->check_on_event( 'FILTERBAR' ).
+          client->view_model_update( ).
+        ENDIF.
       CATCH cx_root INTO DATA(x).
         client->message_box_display( text = x->get_text( )
                                      type = `error` ).

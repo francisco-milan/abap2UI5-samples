@@ -19,7 +19,6 @@ CLASS z2ui5_cl_demo_app_164 DEFINITION PUBLIC.
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
-    DATA mv_check_initialized TYPE abap_bool.
     METHODS on_event.
     METHODS view_display.
     METHODS set_data.
@@ -34,14 +33,9 @@ CLASS z2ui5_cl_demo_app_164 IMPLEMENTATION.
 
   METHOD on_event.
 
-    CASE client->get( )-event.
-
-      WHEN `BUTTON_START`.
-        client->nav_app_call( z2ui5_cl_pop_table=>factory( mt_table ) ).
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-    ENDCASE.
+    IF client->check_on_event( `BUTTON_START` ).
+      client->nav_app_call( z2ui5_cl_pop_table=>factory( mt_table ) ).
+    ENDIF.
 
   ENDMETHOD.
 
@@ -66,8 +60,8 @@ CLASS z2ui5_cl_demo_app_164 IMPLEMENTATION.
 
     view = view->shell( )->page( id = `page_main`
              title                  = 'abap2UI5 - Popup Display Table'
-             navbuttonpress         = client->_event( 'BACK' )
-             shownavbutton          = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
+             navbuttonpress         = client->_event_nav_app_leave( )
+             shownavbutton          = client->check_app_prev_stack( ) ).
 
     DATA(vbox) = view->vbox( ).
 
@@ -105,8 +99,7 @@ CLASS z2ui5_cl_demo_app_164 IMPLEMENTATION.
 
     me->client = client.
 
-    IF mv_check_initialized = abap_false.
-      mv_check_initialized = abap_true.
+    IF client->check_on_init( ).
       set_data( ).
       view_display( ).
       RETURN.

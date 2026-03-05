@@ -6,8 +6,6 @@ CLASS z2ui5_cl_demo_app_181 DEFINITION
 
 
     INTERFACES z2ui5_if_app .
-
-    DATA mv_initialized TYPE abap_bool .
     DATA mv_url TYPE string .
 
     TYPES:
@@ -47,14 +45,9 @@ CLASS z2ui5_cl_demo_app_181 IMPLEMENTATION.
 
   METHOD on_event.
 
-    CASE client->get( )-event.
-      WHEN 'BOOK'.
-        client->message_toast_display( 'BOOKED !!! ENJOY' ).
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-        RETURN.
-    ENDCASE.
+    IF client->check_on_event( 'BOOK' ).
+      client->message_toast_display( 'BOOKED !!! ENJOY' ).
+    ENDIF.
 
   ENDMETHOD.
 
@@ -66,7 +59,7 @@ CLASS z2ui5_cl_demo_app_181 IMPLEMENTATION.
     DATA(page) = view->shell( )->page(
         title          = `Cards Demo`
         class          = `sapUiContentPadding`
-        navbuttonpress = client->_event( 'BACK' )
+        navbuttonpress = client->_event_nav_app_leave( )
         shownavbutton  = client->check_app_prev_stack( ) ).
 
 
@@ -146,8 +139,7 @@ CLASS z2ui5_cl_demo_app_181 IMPLEMENTATION.
 
     me->client = client.
 
-    IF mv_initialized = abap_false.
-      mv_initialized = abap_true.
+    IF client->check_on_init( ).
 
       view_display( ).
 

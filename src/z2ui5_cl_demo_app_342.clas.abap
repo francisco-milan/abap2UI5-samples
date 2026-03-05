@@ -7,7 +7,6 @@ CLASS z2ui5_cl_demo_app_342 DEFINITION
 
     DATA mv_view_display TYPE abap_bool.
     DATA mo_parent_view  TYPE REF TO z2ui5_cl_xml_view.
-    DATA mv_init         TYPE abap_bool.
     DATA mv_table        TYPE string.
 
     DATA mt_data_tmp    TYPE REF TO data.
@@ -81,19 +80,11 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD on_event.
-    CASE client->get( )-event.
-
-      WHEN 'SELECTION_CHANGE'.
-
-        client->nav_app_call( z2ui5_cl_demo_app_340=>factory(
-                                io_table  = mt_data
-                                io_layout = mo_lay ) ).
-
-      WHEN 'BACK'.
-
-        client->nav_app_leave( ).
-
-    ENDCASE.
+    IF client->check_on_event( 'SELECTION_CHANGE' ).
+      client->nav_app_call( z2ui5_cl_demo_app_340=>factory(
+                              io_table  = mt_data
+                              io_layout = mo_lay ) ).
+    ENDIF.
   ENDMETHOD.
 
   METHOD on_init.
@@ -168,8 +159,7 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    IF mv_init IS INITIAL.
-      mv_init = abap_true.
+    IF client->check_on_init( ).
 
       get_data( ).
 

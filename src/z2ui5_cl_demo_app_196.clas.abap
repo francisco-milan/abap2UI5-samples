@@ -6,8 +6,6 @@ CLASS z2ui5_cl_demo_app_196 DEFINITION
   PUBLIC SECTION.
 
     INTERFACES z2ui5_if_app .
-
-    DATA is_initialized TYPE abap_bool .
     DATA mv_slider_value TYPE i .
 
     TYPES: BEGIN OF ty_shape,
@@ -107,14 +105,6 @@ CLASS Z2UI5_CL_DEMO_APP_196 IMPLEMENTATION.
 
 
   METHOD on_event.
-
-    CASE client->get( )-event.
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-
-    ENDCASE.
-
   ENDMETHOD.
 
 
@@ -138,7 +128,7 @@ CLASS Z2UI5_CL_DEMO_APP_196 IMPLEMENTATION.
          )->page(
             showheader     = xsdbool( abap_false = client->get( )-check_launchpad_active )
             title          = 'abap2UI5 - Status Indicators Library'
-            navbuttonpress = client->_event( 'BACK' )
+            navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(panel) = page->panel( class = `sapUiResponsiveMargin SIPanelStyle`
@@ -180,11 +170,10 @@ CLASS Z2UI5_CL_DEMO_APP_196 IMPLEMENTATION.
 
     me->client = client.
 
-    IF is_initialized = abap_false.
+    IF client->check_on_init( ).
 
       initialize( ).
       render_screen( ).
-      is_initialized = abap_true.
 
     ENDIF.
 

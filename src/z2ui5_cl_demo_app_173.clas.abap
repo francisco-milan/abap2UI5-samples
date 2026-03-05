@@ -23,8 +23,6 @@ CLASS z2ui5_cl_demo_app_173 DEFINITION
       ty_t_layout TYPE STANDARD TABLE OF ty_s_layout WITH EMPTY KEY.
 
     DATA mv_flag TYPE abap_bool. " VALUE abap_true.
-    DATA mv_initialized TYPE abap_bool.
-
     DATA mt_layout TYPE ty_t_layout.
     DATA mt_data   TYPE ty_t_data.
 
@@ -48,8 +46,8 @@ CLASS Z2UI5_CL_DEMO_APP_173 IMPLEMENTATION.
     view = view->shell( )->page( id    = `page_main`
                                  class = `sapUiContentPadding`
              title                     = 'abap2UI5 - Sample Templating I'
-             navbuttonpress            = client->_event( 'BACK' )
-             shownavbutton             = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
+             navbuttonpress            = client->_event_nav_app_leave( )
+             shownavbutton             = client->check_app_prev_stack( ) ).
 
     view->table( items = client->_bind( mt_data )
       )->columns(
@@ -88,8 +86,7 @@ CLASS Z2UI5_CL_DEMO_APP_173 IMPLEMENTATION.
 
     me->client = client.
 
-    IF mv_initialized = abap_false.
-      mv_initialized = abap_true.
+    IF client->check_on_init( ).
 
       client->_bind( mt_layout ).
 
@@ -109,10 +106,6 @@ CLASS Z2UI5_CL_DEMO_APP_173 IMPLEMENTATION.
       WHEN 'CHANGE_FLAG'.
 
         view_display( ).
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-        RETURN.
     ENDCASE.
 
 

@@ -6,8 +6,6 @@ CLASS z2ui5_cl_demo_app_258 DEFINITION
   PUBLIC SECTION.
 
     INTERFACES z2ui5_if_app .
-
-    DATA check_initialized TYPE abap_bool .
     DATA selected_menu_entry TYPE string .
   PROTECTED SECTION.
 
@@ -39,8 +37,6 @@ CLASS Z2UI5_CL_DEMO_APP_258 IMPLEMENTATION.
     "but we need it earlier
 
     CASE client->get( )-event.
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
       WHEN 'MENU_HOME'.
         client->message_toast_display( 'Home Button pressed' ).
         selected_menu_entry = 'Home'.
@@ -84,10 +80,10 @@ CLASS Z2UI5_CL_DEMO_APP_258 IMPLEMENTATION.
 
     DATA(page) = view->page(
             title           = 'abap2UI5 - Sample: Side Navigation'
-            navbuttonpress  = client->_event( 'BACK' )
+            navbuttonpress  = client->_event_nav_app_leave( )
             enablescrolling = abap_false
             class           = 'sapUiResponsivePadding--header sapUiResponsivePadding--content sapUiResponsivePadding--footer'
-            shownavbutton   = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
+            shownavbutton   = client->check_app_prev_stack( ) ).
 
     DATA(content) = page->flex_box( width      = '100%'
                                     height     = '90%'

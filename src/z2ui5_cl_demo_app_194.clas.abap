@@ -14,8 +14,6 @@ CLASS z2ui5_cl_demo_app_194 DEFINITION
     DATA ms_table_row    TYPE REF TO data.
     DATA mt_comp         TYPE abap_component_tab.
     DATA ms_fixval       TYPE REF TO data.
-    DATA mv_init         TYPE abap_bool.
-
     METHODS set_app_data
       IMPORTING
         !table TYPE string.
@@ -45,29 +43,23 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
 
     FIELD-SYMBOLS <row> TYPE any.
 
-    CASE client->get( )-event.
+    IF client->check_on_event( 'BUTTON' ).
 
-      WHEN 'BACK'.
+      LOOP AT mt_comp REFERENCE INTO DATA(comp).
 
-        client->nav_app_leave( ).
+        ASSIGN ms_table_row->* TO <row>.
+        ASSIGN COMPONENT comp->name OF STRUCTURE <row> TO FIELD-SYMBOL(<val>).
+        IF <val> IS NOT ASSIGNED.
+          CONTINUE.
+        ELSE.
 
-      WHEN 'BUTTON'.
+          client->_bind( val = <val> ).
 
-        LOOP AT mt_comp REFERENCE INTO DATA(comp).
+        ENDIF.
 
-          ASSIGN ms_table_row->* TO <row>.
-          ASSIGN COMPONENT comp->name OF STRUCTURE <row> TO FIELD-SYMBOL(<val>).
-          IF <val> IS NOT ASSIGNED.
-            CONTINUE.
-          ELSE.
+      ENDLOOP.
 
-            client->_bind( val = <val> ).
-
-          ENDIF.
-
-        ENDLOOP.
-
-    ENDCASE.
+    ENDIF.
   ENDMETHOD.
 
   METHOD on_init.
@@ -129,8 +121,7 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
     me->client = client.
 
-    IF mv_init = abap_false.
-      mv_init = abap_true.
+    IF client->check_on_init( ).
 
       on_init( ).
 

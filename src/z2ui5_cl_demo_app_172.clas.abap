@@ -20,8 +20,6 @@ CLASS z2ui5_cl_demo_app_172 DEFINITION
         bool     TYPE abap_bool,
         waers    TYPE waers,
       END OF ty_output .
-
-    DATA check_initialized TYPE abap_bool .
     DATA output TYPE STANDARD TABLE OF ty_output.
     DATA client TYPE REF TO z2ui5_if_client.
   PROTECTED SECTION.
@@ -98,11 +96,6 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
         DATA(lv_column) = lt_event_arguments[ 4 ].
 
         calculate_sum( lv_column ).
-
-      WHEN 'BACK'.
-
-        client->nav_app_leave( ).
-
     ENDCASE.
 
     client->follow_up_action( val = `sap.z2ui5.afterBE()` ).
@@ -118,8 +111,8 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
       )->page(
         id              = `page`
         title           = 'abap2UI5 - Demo ui.table'
-        navbuttonpress  = client->_event( 'BACK' )
-          shownavbutton = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL )
+        navbuttonpress  = client->_event_nav_app_leave( )
+          shownavbutton = client->check_app_prev_stack( )
         )->header_content(
         )->link(
         )->get_parent( ).

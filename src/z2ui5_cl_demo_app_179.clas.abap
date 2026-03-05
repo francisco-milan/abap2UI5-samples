@@ -28,8 +28,6 @@ CLASS z2ui5_cl_demo_app_179 DEFINITION
   PROTECTED SECTION.
 
     DATA client TYPE REF TO z2ui5_if_client .
-    DATA check_initialized TYPE abap_bool .
-
     METHODS set_view .
     METHODS z2ui5_on_event .
     METHODS set_mock_data .
@@ -155,8 +153,8 @@ CLASS Z2UI5_CL_DEMO_APP_179 IMPLEMENTATION.
 
     DATA(page) = view->page( id = `page_main`
             title               = 'abap2UI5 - Gantt'
-            navbuttonpress      = client->_event( 'BACK' )
-            shownavbutton       = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL )
+            navbuttonpress      = client->_event_nav_app_leave( )
+            shownavbutton       = client->check_app_prev_stack( )
             class               = 'sapUiContentPadding' ).
 
     DATA(cont) = page->scroll_container(
@@ -280,11 +278,5 @@ CLASS Z2UI5_CL_DEMO_APP_179 IMPLEMENTATION.
 
 
   METHOD z2ui5_on_event.
-
-    CASE client->get( )-event.
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-    ENDCASE.
-
   ENDMETHOD.
 ENDCLASS.

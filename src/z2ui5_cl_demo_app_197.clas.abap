@@ -21,7 +21,6 @@ CLASS z2ui5_cl_demo_app_197 DEFINITION
     DATA mt_table TYPE ty_t_table .
     DATA mt_table_full TYPE ty_t_table .
     DATA mt_table_products TYPE ty_t_table .
-    DATA check_initialized TYPE abap_bool .
     DATA client TYPE REF TO z2ui5_if_client .
     DATA mv_check_popover TYPE abap_bool .
     DATA mv_product TYPE string .
@@ -44,8 +43,8 @@ CLASS Z2UI5_CL_DEMO_APP_197 IMPLEMENTATION.
 
     DATA(page) = view->page( id = `page_main`
             title               = 'abap2UI5 - List Report Features'
-            navbuttonpress      = client->_event( 'BACK' )
-            shownavbutton       = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
+            navbuttonpress      = client->_event_nav_app_leave( )
+            shownavbutton       = client->check_app_prev_stack( ) ).
 
     DATA(facet) = page->facet_filter( id                  = `idFacetFilter`
                                       type                = `Light`
@@ -130,10 +129,6 @@ CLASS Z2UI5_CL_DEMO_APP_197 IMPLEMENTATION.
         ENDLOOP.
 
         client->view_model_update( ).
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-
     ENDCASE.
 
   ENDMETHOD.

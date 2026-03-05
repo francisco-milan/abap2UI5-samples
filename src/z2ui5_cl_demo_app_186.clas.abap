@@ -7,8 +7,6 @@ CLASS z2ui5_cl_demo_app_186 DEFINITION
 
 
     INTERFACES z2ui5_if_app .
-
-    DATA is_initialized TYPE abap_bool .
     DATA file_content_64 TYPE string .
     DATA file_name TYPE string .
     DATA mime_type TYPE string .
@@ -48,19 +46,9 @@ CLASS Z2UI5_CL_DEMO_APP_186 IMPLEMENTATION.
 
   METHOD on_event.
 
-    CASE client->get( )-event.
-
-      WHEN 'BUTTON_DOWNLOAD'.
-
-
-
-        client->follow_up_action( val = client->_event_client( val = client->cs_event-download_b64_file t_arg = VALUE #( ( file_content_64 ) ( file_name ) ) ) ).
-
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-
-    ENDCASE.
+    IF client->check_on_event( 'BUTTON_DOWNLOAD' ).
+      client->follow_up_action( val = client->_event_client( val = client->cs_event-download_b64_file t_arg = VALUE #( ( file_content_64 ) ( file_name ) ) ) ).
+    ENDIF.
 
   ENDMETHOD.
 
@@ -76,7 +64,7 @@ CLASS Z2UI5_CL_DEMO_APP_186 IMPLEMENTATION.
          )->page(
             showheader     = xsdbool( abap_false = client->get( )-check_launchpad_active )
             title          = 'abap2UI5 - Download Base64 File'
-            navbuttonpress = client->_event( 'BACK' )
+            navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
     page->flex_box( width          = `100%`
@@ -108,11 +96,10 @@ CLASS Z2UI5_CL_DEMO_APP_186 IMPLEMENTATION.
 
     me->client = client.
 
-    IF is_initialized = abap_false.
+    IF client->check_on_init( ).
 
       initialize( ).
       render_screen( ).
-      is_initialized = abap_true.
 
     ENDIF.
 

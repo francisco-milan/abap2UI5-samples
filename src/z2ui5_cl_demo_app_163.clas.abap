@@ -9,7 +9,6 @@ CLASS z2ui5_cl_demo_app_163 DEFINITION
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
-    DATA mv_check_initialized TYPE abap_bool.
     METHODS on_event.
     METHODS view_display.
     METHODS view_action_sheet.
@@ -25,13 +24,9 @@ CLASS Z2UI5_CL_DEMO_APP_163 IMPLEMENTATION.
 
   METHOD on_event.
 
-    CASE client->get( )-event.
-
-      WHEN 'OPEN_ACTION_SHEET'.
-        view_action_sheet( ).
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-    ENDCASE.
+    IF client->check_on_event( 'OPEN_ACTION_SHEET' ).
+      view_action_sheet( ).
+    ENDIF.
 
   ENDMETHOD.
 
@@ -75,8 +70,8 @@ CLASS Z2UI5_CL_DEMO_APP_163 IMPLEMENTATION.
 
     view = view->shell( )->page( id = `page_main`
              title                  = 'abap2UI5 - Action Sheet'
-             navbuttonpress         = client->_event( 'BACK' )
-             shownavbutton          = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
+             navbuttonpress         = client->_event_nav_app_leave( )
+             shownavbutton          = client->check_app_prev_stack( ) ).
 
     DATA(vbox) = view->vbox( ).
 
@@ -94,8 +89,7 @@ CLASS Z2UI5_CL_DEMO_APP_163 IMPLEMENTATION.
 
     me->client = client.
 
-    IF mv_check_initialized = abap_false.
-      mv_check_initialized = abap_true.
+    IF client->check_on_init( ).
       view_display( ).
       RETURN.
     ENDIF.

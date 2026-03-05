@@ -28,7 +28,6 @@ CLASS z2ui5_cl_demo_app_104 DEFINITION
       t_tab2 TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY .
     DATA mv_layout TYPE string .
     DATA mv_title TYPE string .
-    DATA check_initialized TYPE abap_bool .
     DATA mv_check_enabled_01 TYPE abap_bool VALUE abap_true.
     DATA mv_check_enabled_02 TYPE abap_bool .
     DATA mo_grid_sub TYPE REF TO z2ui5_cl_xml_view .
@@ -91,7 +90,7 @@ CLASS z2ui5_cl_demo_app_104 IMPLEMENTATION.
     DATA(page) = z2ui5_cl_xml_view=>factory(
        )->page(
           title           = 'abap2UI5 - Master Detail Page with Nested View'
-          navbuttonpress  = client->_event( 'BACK' )
+          navbuttonpress  = client->_event_nav_app_leave( )
             shownavbutton = abap_true ).
 
     DATA(col_layout) = page->flexible_column_layout( layout = client->_bind_edit( mv_layout )
@@ -158,10 +157,6 @@ CLASS z2ui5_cl_demo_app_104 IMPLEMENTATION.
           id             = `test`
           method_insert  = 'addMidColumnPage'
           method_destroy = 'removeAllMidColumnPages' ).
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-
     ENDCASE.
 
     on_event_sub( ).

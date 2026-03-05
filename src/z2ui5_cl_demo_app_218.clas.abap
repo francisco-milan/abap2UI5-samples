@@ -5,8 +5,6 @@ CLASS z2ui5_cl_demo_app_218 DEFINITION
   PUBLIC SECTION.
 
     INTERFACES z2ui5_if_app .
-
-    DATA check_initialized TYPE abap_bool .
   PROTECTED SECTION.
 
     METHODS display_view
@@ -29,7 +27,7 @@ CLASS z2ui5_cl_demo_app_218 IMPLEMENTATION.
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
             title          = `abap2UI5 - Sample: Flex Box - Opposing Alignment`
-            navbuttonpress = client->_event( 'BACK' )
+            navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(layout) = page->panel( headertext = `Horizontally opposing flex items`
@@ -46,12 +44,6 @@ CLASS z2ui5_cl_demo_app_218 IMPLEMENTATION.
 
 
   METHOD on_event.
-
-    CASE client->get( )-event.
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-    ENDCASE.
-
   ENDMETHOD.
 
 

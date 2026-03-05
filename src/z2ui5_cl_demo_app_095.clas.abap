@@ -21,7 +21,6 @@ CLASS z2ui5_cl_demo_app_095 DEFINITION PUBLIC.
     DATA mo_app_sub TYPE REF TO z2ui5_cl_demo_app_096.
 
     DATA client      TYPE REF TO z2ui5_if_client.
-    DATA mv_init     TYPE abap_bool.
     DATA mo_grid_sub TYPE REF TO z2ui5_cl_xml_view.
 
     DATA mr_input  TYPE REF TO data.
@@ -46,15 +45,9 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
 
   METHOD on_event.
 
-    CASE client->get( )-event.
-
-      WHEN 'BUTTON_SAVE'.
-        client->message_box_display( `event main app` ).
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-
-    ENDCASE.
+    IF client->check_on_event( 'BUTTON_SAVE' ).
+      client->message_box_display( `event main app` ).
+    ENDIF.
 
   ENDMETHOD.
 
@@ -91,7 +84,7 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
     page = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
             title           = 'abap2UI5 - Main App with Sub App'
-            navbuttonpress  = client->_event( 'BACK' )
+            navbuttonpress  = client->_event_nav_app_leave( )
               shownavbutton = abap_true ).
 
     DATA(o_grid) = page->grid( 'L6 M12 S12'
@@ -131,8 +124,7 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
 
     me->client = client.
 
-    IF mv_init = abap_false.
-      mv_init = abap_true.
+    IF client->check_on_init( ).
       on_init( ).
       on_init_sub( ).
       client->view_display( page->get_root( )->xml_get( ) ).

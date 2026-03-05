@@ -37,8 +37,6 @@ CLASS z2ui5_cl_demo_app_072 DEFINITION
   PROTECTED SECTION.
 
     DATA client TYPE REF TO z2ui5_if_client .
-    DATA check_initialized TYPE abap_bool .
-
     METHODS z2ui5_on_init .
     METHODS z2ui5_on_event .
     METHODS z2ui5_set_data .
@@ -68,14 +66,11 @@ CLASS Z2UI5_CL_DEMO_APP_072 IMPLEMENTATION.
 
   METHOD z2ui5_on_event.
 
-    CASE client->get( )-event.
-      WHEN 'OnSelectIconTabBar'.
-        client->message_toast_display( |Event SelectedTabBar Key { lv_selectedkey  } | ).
-        set_filter( ).
-        client->view_model_update( ).
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-    ENDCASE.
+    IF client->check_on_event( 'OnSelectIconTabBar' ).
+      client->message_toast_display( |Event SelectedTabBar Key { lv_selectedkey  } | ).
+      set_filter( ).
+      client->view_model_update( ).
+    ENDIF.
 
   ENDMETHOD.
 
@@ -88,8 +83,8 @@ CLASS Z2UI5_CL_DEMO_APP_072 IMPLEMENTATION.
     DATA(page) = view->shell( )->page( id = `page_main`
            showheader                     = xsdbool( abap_false = client->get( )-check_launchpad_active )
             title                         = 'abap2UI5 - IconTabBar'
-            navbuttonpress                = client->_event( 'BACK' )
-            shownavbutton                 = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL )
+            navbuttonpress                = client->_event_nav_app_leave( )
+            shownavbutton                 = client->check_app_prev_stack( )
             class                         = 'sapUiContentPadding' ).
 
     DATA(lo_items) = page->icon_tab_bar( class       = 'sapUiResponsiveContentPadding'

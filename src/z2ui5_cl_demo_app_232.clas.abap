@@ -5,8 +5,6 @@ CLASS z2ui5_cl_demo_app_232 DEFINITION
   PUBLIC SECTION.
 
     INTERFACES z2ui5_if_app .
-
-    DATA check_initialized TYPE abap_bool .
   PROTECTED SECTION.
 
     METHODS display_view
@@ -29,7 +27,7 @@ CLASS z2ui5_cl_demo_app_232 IMPLEMENTATION.
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
             title          = 'Sample: MultiInput - Suggestions wrapping'
-            navbuttonpress = client->_event( 'BACK' )
+            navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(layout) = page->vertical_layout( class = `sapUiContentPadding`
@@ -61,12 +59,6 @@ CLASS z2ui5_cl_demo_app_232 IMPLEMENTATION.
 
 
   METHOD on_event.
-
-    CASE client->get( )-event.
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-    ENDCASE.
-
   ENDMETHOD.
 
 

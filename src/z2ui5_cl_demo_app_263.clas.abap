@@ -5,8 +5,6 @@ CLASS z2ui5_cl_demo_app_263 DEFINITION
   PUBLIC SECTION.
 
     INTERFACES z2ui5_if_app .
-
-    DATA check_initialized TYPE abap_bool .
   PROTECTED SECTION.
 
     DATA client TYPE REF TO z2ui5_if_client.
@@ -34,7 +32,7 @@ CLASS z2ui5_cl_demo_app_263 IMPLEMENTATION.
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
             title          = 'abap2UI5 - Sample: Numeric Content with Icon'
-            navbuttonpress = client->_event( 'BACK' )
+            navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
     page->header_content(
@@ -72,8 +70,6 @@ CLASS z2ui5_cl_demo_app_263 IMPLEMENTATION.
   METHOD on_event.
 
     CASE client->get( )-event.
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
       WHEN 'press'.
         client->message_toast_display( `The numeric content is pressed.` ).
       WHEN 'POPOVER'.

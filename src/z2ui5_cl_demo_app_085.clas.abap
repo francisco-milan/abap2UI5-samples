@@ -45,7 +45,6 @@ CLASS z2ui5_cl_demo_app_085 DEFINITION
 
     DATA mt_table TYPE ty_t_table .
     DATA mt_table_supplier TYPE ty_t_table_supplier .
-    DATA check_initialized TYPE abap_bool .
     DATA mv_search_value TYPE string.
     DATA ls_detail TYPE ty_s_tab .
   PROTECTED SECTION.
@@ -323,7 +322,7 @@ CLASS Z2UI5_CL_DEMO_APP_085 IMPLEMENTATION.
 
     DATA(page) = view->shell( )->page(
           title           = 'abap2UI5 - Master Detail'
-          navbuttonpress  = client->_event( 'BACK' )
+          navbuttonpress  = client->_event_nav_app_leave( )
             shownavbutton = abap_true
           ).
 
@@ -474,8 +473,6 @@ CLASS Z2UI5_CL_DEMO_APP_085 IMPLEMENTATION.
         z2ui5_set_search( ).
         client->view_model_update( ).
         client->nest_view_model_update( ).
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
     ENDCASE.
   ENDMETHOD.
 

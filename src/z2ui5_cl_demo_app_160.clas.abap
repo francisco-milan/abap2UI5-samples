@@ -38,8 +38,6 @@ CLASS z2ui5_cl_demo_app_160 DEFINITION
         pl_q04         TYPE i,
         per_cent_q04   TYPE p LENGTH 2 DECIMALS 1,
       END OF s_output .
-
-    DATA check_initialized TYPE abap_bool .
     DATA mt_output TYPE STANDARD TABLE OF s_output.
     DATA client TYPE REF TO z2ui5_if_client.
 
@@ -82,24 +80,18 @@ CLASS z2ui5_cl_demo_app_160 IMPLEMENTATION.
 
     DATA lt_event_arguments TYPE string_table.
 
-    CASE client->get( )-event.
+    IF client->check_on_event( 'PL_TOTAL_CHANGE' ).
 
-      WHEN 'PL_TOTAL_CHANGE'.
+      lt_event_arguments = client->get( )-t_event_arg.
+      DATA(lv_id_event) = lt_event_arguments[ 1 ].
 
-        lt_event_arguments = client->get( )-t_event_arg.
-        DATA(lv_id_event) = lt_event_arguments[ 1 ].
+      DATA(lv_tab_index) = lt_event_arguments[ 2 ].
+      DATA(ls_row_submit) = mt_output[ lv_tab_index ].
 
-        DATA(lv_tab_index) = lt_event_arguments[ 2 ].
-        DATA(ls_row_submit) = mt_output[ lv_tab_index ].
+      DATA(lv_id_parent) = lt_event_arguments[ 3 ].
 
-        DATA(lv_id_parent) = lt_event_arguments[ 3 ].
-
-        client->message_box_display( lv_tab_index && lv_id_event && lv_id_parent ).
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-
-    ENDCASE.
+      client->message_box_display( lv_tab_index && lv_id_event && lv_id_parent ).
+    ENDIF.
 
     client->view_model_update( ).
 
@@ -113,8 +105,8 @@ CLASS z2ui5_cl_demo_app_160 IMPLEMENTATION.
     DATA(page) = view->shell(
       )->page(
         title           = 'abap2UI5 - Event on cell level'
-        navbuttonpress  = client->_event( 'BACK' )
-          shownavbutton = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL )
+        navbuttonpress  = client->_event_nav_app_leave( )
+          shownavbutton = client->check_app_prev_stack( )
         )->header_content(
             )->link(
       )->get_parent( ).

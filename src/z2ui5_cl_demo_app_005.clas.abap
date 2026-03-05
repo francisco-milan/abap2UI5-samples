@@ -6,8 +6,6 @@ CLASS z2ui5_cl_demo_app_005 DEFINITION PUBLIC.
 
     DATA value1 TYPE int4.
     DATA value2 TYPE int4.
-    DATA initialized TYPE abap_bool.
-
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
@@ -19,17 +17,12 @@ CLASS z2ui5_cl_demo_app_005 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    IF initialized = abap_false.
-      initialized = abap_true.
+    IF client->check_on_init( ).
       value1 = 10.
       value2 = 90.
     ENDIF.
 
     CASE client->get( )-event.
-
-      WHEN 'BACK'.
-        client->nav_app_leave( ).
-
       WHEN 'SLIDER_CHANGE'.
 
         client->message_toast_display( |Range Slider { cl_abap_char_utilities=>newline }value1 { value1 } { cl_abap_char_utilities=>newline }value2 { value2 }| ).
@@ -40,8 +33,8 @@ CLASS z2ui5_cl_demo_app_005 IMPLEMENTATION.
     DATA(page) = view->shell(
         )->page(
                 title          = 'abap2UI5 - Range Slider Example'
-                navbuttonpress = client->_event( 'BACK' )
-                 shownavbutton = xsdbool( client->get( )-s_draft-id_prev_app_stack IS NOT INITIAL ) ).
+                navbuttonpress = client->_event_nav_app_leave( )
+                 shownavbutton = client->check_app_prev_stack( ) ).
 
     DATA(grid) = page->grid( 'L12 M12 S12' )->content( 'layout' ).
 

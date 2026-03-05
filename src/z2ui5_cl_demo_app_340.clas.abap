@@ -4,8 +4,6 @@ CLASS z2ui5_cl_demo_app_340 DEFINITION
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
-
-    DATA mv_init     TYPE abap_bool.
     DATA mt_data_tmp TYPE REF TO data.
     DATA mt_data     TYPE REF TO data.
     DATA ms_data_row TYPE REF TO data.
@@ -32,19 +30,10 @@ ENDCLASS.
 CLASS z2ui5_cl_demo_app_340 IMPLEMENTATION.
 
   METHOD on_event.
-    CASE client->get( )-event.
-
-      WHEN 'POPUP_CLOSE'.
-
-        client->popup_destroy( ).
-
-        client->nav_app_leave( client->get_app( client->get( )-s_draft-id_prev_app_stack ) ).
-
-      WHEN 'BACK'.
-
-        client->nav_app_leave( ).
-
-    ENDCASE.
+    IF client->check_on_event( 'POPUP_CLOSE' ).
+      client->popup_destroy( ).
+      client->nav_app_leave( client->get_app( client->get( )-s_draft-id_prev_app_stack ) ).
+    ENDIF.
   ENDMETHOD.
 
   METHOD on_init.
@@ -70,8 +59,7 @@ CLASS z2ui5_cl_demo_app_340 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    IF mv_init IS INITIAL.
-      mv_init = abap_true.
+    IF client->check_on_init( ).
 
       render_main( client ).
 

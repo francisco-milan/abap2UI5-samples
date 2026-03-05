@@ -9,7 +9,6 @@ CLASS z2ui5_cl_demo_app_105 DEFINITION
     DATA client TYPE REF TO z2ui5_if_client .
     DATA mo_view_parent TYPE REF TO z2ui5_cl_xml_view .
     DATA mv_class_1 TYPE string .
-    DATA mv_init TYPE abap_bool .
     DATA mr_data TYPE REF TO data .
 
     METHODS on_init .
@@ -36,12 +35,9 @@ CLASS Z2UI5_CL_DEMO_APP_105 IMPLEMENTATION.
 
   METHOD on_event.
 
-    CASE client->get( )-event.
-
-      WHEN 'MESSAGE_SUB'.
-        client->message_box_display( `event sub app` ).
-
-    ENDCASE.
+    IF client->check_on_event( 'MESSAGE_SUB' ).
+      client->message_box_display( `event sub app` ).
+    ENDIF.
 
   ENDMETHOD.
 
@@ -57,8 +53,7 @@ CLASS Z2UI5_CL_DEMO_APP_105 IMPLEMENTATION.
 
     me->client = client.
 
-    IF mv_init = abap_false.
-      mv_init = abap_true.
+    IF client->check_on_init( ).
       on_init( ).
       RETURN.
     ENDIF.
