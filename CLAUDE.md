@@ -22,6 +22,16 @@ abap2UI5 Samples - Collection of demo apps for the abap2UI5 framework.
 - Follow the [SAP ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md).
 - Never use an init flag attribute (`check_initialized`, `mv_init`, `is_initialized`, etc.). Always use `client->check_on_init( )` instead.
 - Use backticks for all string literals, not single quotes.
+- Class names are always written in **lowercase** in both `DEFINITION` and `IMPLEMENTATION` — never uppercase.
+- Classes are **not** `FINAL` — do not add the `FINAL` keyword to class definitions.
+- Always include `PROTECTED SECTION.` and `PRIVATE SECTION.` in the class definition, even if empty.
+- No blank lines between `SECTION.` keywords, between methods, or between `CLASS`/`ENDCLASS` — use compact formatting without extra empty lines.
+- Always run `abaplint` after every change. It must report 0 issues before committing.
+- Before starting app development, read all active rules in `abaplint.jsonc` and follow them throughout.
+
+## Framework Reference
+
+For deeper information about how the abap2UI5 framework works internally — architecture, roundtrip processing, data binding engine, session persistence, and core classes — refer to the [abap2UI5 repository](https://github.com/abap2UI5/abap2UI5) and its `CLAUDE.md`.
 
 ## How Apps Work
 
@@ -30,6 +40,17 @@ Every abap2UI5 app implements `z2ui5_if_app` with a single `main()` method. The 
 - `client->check_on_init( )` — true on the very first call
 - `client->check_on_navigated( )` — true when returning from a sub-app or popup
 - `client->check_on_event( )` — true when a user triggered an event
+
+Always use `ELSEIF` to chain these checks — never separate `IF` blocks:
+```abap
+IF client->check_on_init( ).
+  ...
+ELSEIF client->check_on_navigated( ).
+  ...
+ELSEIF client->check_on_event( ).
+  ...
+ENDIF.
+```
 
 ### Client API (`z2ui5_if_client`)
 
@@ -51,9 +72,9 @@ Every abap2UI5 app implements `z2ui5_if_app` with a single `main()` method. The 
 
 ## App Structure
 
-### Simple apps (< 50 lines total)
+### Simple apps (< 50 lines in `main`)
 
-Write everything directly in `main` — no method encapsulation needed.
+Write everything directly in `main` — no method encapsulation needed. Count only the lines inside the `main` method, not the total class length.
 
 ### Larger apps — canonical template
 
@@ -61,27 +82,21 @@ The following is the **maximum structure**. Only add methods that are actually n
 
 ```abap
 CLASS z2ui5_cl_app_xxx DEFINITION PUBLIC CREATE PUBLIC.
-
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
     " bound data (DATA attributes for _bind/_bind_edit)...
-
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
-
     METHODS on_init.        " first call: load data, display view
     METHODS on_event.       " user triggered an event
     METHODS on_navigation.  " returned from sub-app or popup
     METHODS view_display.   " build and render the view
     METHODS data_read.      " SELECT from database
     METHODS data_update.    " INSERT / UPDATE / DELETE
-
   PRIVATE SECTION.
-
 ENDCLASS.
 
 CLASS z2ui5_cl_app_xxx IMPLEMENTATION.
-
   METHOD z2ui5_if_app~main.
     me->client = client.
     IF client->check_on_init( ).
@@ -92,17 +107,14 @@ CLASS z2ui5_cl_app_xxx IMPLEMENTATION.
       on_event( ).
     ENDIF.
   ENDMETHOD.
-
   METHOD on_init.
     data_read( ).
     view_display( ).
   ENDMETHOD.
-
   METHOD on_navigation.
     data_read( ).
     client->view_model_update( ).
   ENDMETHOD.
-
   METHOD on_event.
     CASE client->get( )-event.
       WHEN `SAVE`.
@@ -111,20 +123,16 @@ CLASS z2ui5_cl_app_xxx IMPLEMENTATION.
         client->nav_app_leave( ).
     ENDCASE.
   ENDMETHOD.
-
   METHOD view_display.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     " ...
     client->view_display( view->stringify( ) ).
   ENDMETHOD.
-
   METHOD data_read.
     " SELECT ...
   ENDMETHOD.
-
   METHOD data_update.
     " INSERT / UPDATE / DELETE ...
   ENDMETHOD.
-
 ENDCLASS.
 ```
