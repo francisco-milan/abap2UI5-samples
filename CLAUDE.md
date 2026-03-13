@@ -84,6 +84,46 @@ ENDIF.
 | Info | `get()`, `get_event_arg()`, `get_app(id)` | Request/context data |
 | Constants | `cs_event`, `cs_view` | Predefined event IDs and view names |
 
+## Building Views
+
+Views are XML strings passed to `client->view_display()`. There are two ways to build them:
+
+### 1. `z2ui5_cl_xml_view` — typed fluent API
+Pre-built methods for common UI5 controls (`shell`, `page`, `simple_form`, `input`, `button`, etc.). Use this for standard layouts.
+
+### 2. `z2ui5_cl_util_xml` — generic XML builder
+Builds any XML structure directly from element names, namespaces and attributes. **Look up the control in the [UI5 API Reference](https://ui5.sap.com/#/api) and translate 1:1 to ABAP** — no wrapper, no abstraction layer.
+
+**UI5 XML:**
+```xml
+<form:SimpleForm title="T" editable="true">
+  <form:content>
+    <Label text="qty"/>
+    <Input value="{...}"/>
+  </form:content>
+</form:SimpleForm>
+```
+
+**ABAP:**
+```abap
+->_( n = `SimpleForm` ns = `form` p = VALUE #(
+        ( n = `title`    v = `T` )
+        ( n = `editable` v = abap_true ) )
+)->_( n = `content` ns = `form`
+)->__( n = `Label` a = `text` v = `qty`
+)->__( n = `Input` a = `value` v = client->_bind_edit( qty ) )
+```
+
+Key rules for `z2ui5_cl_util_xml`:
+- `_( n, ns, p )` — add child element, navigate **into** it
+- `__( n, ns, a, v, p )` — add child element, **stay** at current level
+- `p( n, v )` — add a single attribute to current element
+- Single attribute: use `a = ... v = ...` parameters directly
+- Multiple attributes: use `p = VALUE #( ( n = ... v = ... ) ... )`
+- Namespace declarations go on the root `mvc:View` element as regular attributes (`xmlns:form`, etc.)
+- Only declare namespaces that are actually used in the view
+- `stringify()` on the factory root produces the complete XML string
+
 ## App Structure
 
 ### Simple apps (< 50 lines in `main`)
