@@ -17,13 +17,25 @@ abap2UI5 Samples - Collection of demo apps for the abap2UI5 framework.
 - Install: `npm install -g @abaplint/cli`
 - Run: `abaplint`
 
+### abapGit file consistency
+
+All serialized files (`.abap`, `.xml`, and any other abapGit-managed file types) must conform to the abapGit file format:
+- **Encoding**: UTF-8 (with optional BOM: `xEF BB BF`)
+- **Line endings**: LF (`x0A`) only — never CRLF
+- **Final newline**: every file must end with a single newline character after the last line
+- **Indentation**: 2 spaces — never tabs
+
+**Always verify consistency for all file types before committing**, not just `.abap` files. abaplint covers `.abap` files; for `.xml` and other files, check manually or via editor tooling that the above rules are met.
+
 ### Code Conventions
 
 - Follow the [SAP ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md).
 - Never use an init flag attribute (`check_initialized`, `mv_init`, `is_initialized`, etc.). Always use `client->check_on_init( )` instead.
 - Use backticks for all string literals, not single quotes.
+- Do not use Hungarian notation — no type prefixes on variable or attribute names (e.g. `product` not `lv_product`, `client` not `mo_client`).
 - Class names are always written in **lowercase** in both `DEFINITION` and `IMPLEMENTATION` — never uppercase.
 - Classes are **not** `FINAL` — do not add the `FINAL` keyword to class definitions.
+- Use `DEFINITION PUBLIC.` — never `DEFINITION PUBLIC CREATE PUBLIC.` (`CREATE PUBLIC` is the default and adds unnecessary overhead).
 - Always include `PROTECTED SECTION.` and `PRIVATE SECTION.` in the class definition, even if empty.
 - **Blank lines — class definition** (`EMPTY_LINES_IN_CLASS_DEFINITION`):
   - Add one blank line above each section keyword (`PUBLIC SECTION.`, `PROTECTED SECTION.`, `PRIVATE SECTION.`) — unless the preceding section is empty.
@@ -39,7 +51,7 @@ abap2UI5 Samples - Collection of demo apps for the abap2UI5 framework.
   - Always add exactly 1 blank line at the very start of a method body (after `METHOD`).
   - Always add exactly 1 blank line at the very end of a method body (before `ENDMETHOD`).
   - Max 1 consecutive blank line inside a method body.
-  - Always add 1 blank line **before** an `IF` block.
+  - Always add 1 blank line **before** an `IF` block — **except** when the method is a pure dispatcher (its only purpose is to jump to other methods, with no own logic before the `IF`). In that case, omit the blank line between the opening assignment and the `IF`.
   - Always add 1 blank line **before** `ELSEIF` and `ELSE`.
   - If a branch (`IF`, `ELSEIF`, `ELSE`) contains **more than one statement**, add 1 blank line directly after the condition line as well:
     ```abap
@@ -260,7 +272,7 @@ The following is the **maximum structure**. Only add methods that are actually n
 When the body of a single `WHEN` branch in `on_event` grows too long, extract it into a dedicated method named `on_event_<event>` (e.g. `on_event_save`, `on_event_delete`). The `on_event` method then stays a thin dispatcher — one call per branch — and all the logic lives in the sub-method.
 
 ```abap
-CLASS z2ui5_cl_app_xxx DEFINITION PUBLIC CREATE PUBLIC.
+CLASS z2ui5_cl_app_xxx DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
     " bound data (DATA attributes for _bind/_bind_edit)...
