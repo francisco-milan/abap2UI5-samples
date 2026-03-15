@@ -32,14 +32,13 @@ abap2UI5 Samples - Collection of demo apps for the abap2UI5 framework.
   - Max 1 consecutive blank line inside the definition block.
   - Add one blank line between groups of different declaration types (e.g. between `INTERFACES` and `DATA`, or `DATA` and `METHODS`).
 - **Blank lines — outside methods** (`EMPTY_LINES_OUTSIDE_METHODS`):
-  - Exactly 1 blank line between `ENDCLASS.` and the next `CLASS … IMPLEMENTATION.` (i.e. between the definition and the implementation block).
-  - Exactly 1 blank line between two `METHOD … ENDMETHOD.` blocks.
+  - Exactly 2 blank lines between `ENDCLASS.` and the next `CLASS … IMPLEMENTATION.` (i.e. between the definition and the implementation block).
+  - Exactly 2 blank lines between two `METHOD … ENDMETHOD.` blocks.
   - Exactly 2 blank lines between two top-level class blocks.
 - **Blank lines — inside methods** (`EMPTY_LINES_WITHIN_METHODS`):
+  - Always add exactly 1 blank line at the very start of a method body (after `METHOD`).
+  - Always add exactly 1 blank line at the very end of a method body (before `ENDMETHOD`).
   - Max 1 consecutive blank line inside a method body.
-  - At most 1 blank line at the very start of a method body (after `METHOD`).
-  - At most 1 blank line at the very end of a method body (before `ENDMETHOD`).
-  - One blank line above the first executable statement is allowed.
 - Always run `abaplint` after every change. It must report 0 issues before committing.
 - Before starting app development, read all active rules in `abaplint.jsonc` and follow them throughout.
 
@@ -92,12 +91,14 @@ Always use `client->_event_nav_app_leave()` to bind the back button event direct
 
 ```abap
 METHOD view_display.
+
   DATA(view) = z2ui5_cl_xml_view=>factory( ).
   DATA(page) = view->page( title = `My App`
                             shownavbutton = client->check_app_prev_stack( )
                             navbuttonpress = client->_event_nav_app_leave( ) ).
   " ...
   client->view_display( view->stringify( ) ).
+
 ENDMETHOD.
 ```
 
@@ -105,12 +106,14 @@ Only use the manual pattern (handling `BACK` in `on_event`) when you need to do 
 
 ```abap
 METHOD on_event.
+
   CASE client->get( )-event.
     WHEN `BACK`.
       " interact with previous app instance first
       CAST z2ui5_cl_app_parent( client->get_app_prev( ) )->set_result( ms_result ).
       client->nav_app_leave( ).
   ENDCASE.
+
 ENDMETHOD.
 ```
 
@@ -120,6 +123,60 @@ Views are XML strings passed to `client->view_display()`. There are two ways to 
 
 ### 1. `z2ui5_cl_xml_view` — typed fluent API
 Pre-built methods for common UI5 controls (`shell`, `page`, `simple_form`, `input`, `button`, etc.). Use this for standard layouts.
+
+#### View structure and indentation
+
+Always build the view in `view_display` and call `client->view_display( view->stringify( ) )` as a **standalone statement at the end** — never nested inside the chain.
+
+Indent the fluent chain to reflect the XML hierarchy:
+- Each method that **navigates into a child element** (returns a child node) is indented **4 spaces deeper** than its parent call.
+- Methods that **add a sibling** within the same container (and return the container) stay at the **same indentation level**.
+
+#### Parameter formatting
+
+- **Single parameter**: write inline — `)->label( `Quantity` )` or `)->input( client->_bind_edit( qty ) )`.
+- **More than one parameter**: always split across multiple lines — one parameter per line, aligned below the opening `(`, closing `)` on its own line:
+
+```abap
+)->input(
+    value   = product
+    enabled = abap_false
+)->button(
+    text  = `Post`
+    press = client->_event( `POST` ) ).
+```
+
+Never put two or more named parameters on the same line.
+
+```abap
+METHOD view_display.
+
+  DATA(view) = z2ui5_cl_xml_view=>factory( ).
+  view->shell(
+      )->page(
+          title          = `My App`
+          navbuttonpress = client->_event_nav_app_leave( )
+          shownavbutton  = client->check_app_prev_stack( )
+          )->simple_form(
+              title    = `Form Title`
+              editable = abap_true
+              )->content( `form`
+              )->label( `Quantity`
+              )->input( client->_bind_edit( quantity )
+              )->label( `Product`
+              )->input(
+                  value   = product
+                  enabled = abap_false
+              )->button(
+                  text  = `Post`
+                  press = client->_event( `POST` ) ).
+  client->view_display( view->stringify( ) ).
+
+ENDMETHOD.
+```
+
+The hierarchy above is: `shell` → `page` → `simple_form` → `content` → (leaf elements).
+`label`, `input`, `button` are siblings inside `content`, so they stay at the same indent level as `)->content(`.
 
 ### 2. `z2ui5_cl_util_xml` — generic XML builder
 Builds any XML structure directly from element names, namespaces and attributes. **Look up the control in the [UI5 API Reference](https://ui5.sap.com/#/api) and translate 1:1 to ABAP** — no wrapper, no abstraction layer.
@@ -184,8 +241,11 @@ CLASS z2ui5_cl_app_xxx DEFINITION PUBLIC CREATE PUBLIC.
   PRIVATE SECTION.
 ENDCLASS.
 
+
 CLASS z2ui5_cl_app_xxx IMPLEMENTATION.
+
   METHOD z2ui5_if_app~main.
+
     me->client = client.
     IF client->check_on_init( ).
       on_init( ).
@@ -194,36 +254,66 @@ CLASS z2ui5_cl_app_xxx IMPLEMENTATION.
     ELSEIF client->check_on_event( ).
       on_event( ).
     ENDIF.
+
   ENDMETHOD.
+
+
   METHOD on_init.
+
     data_read( ).
     view_display( ).
+
   ENDMETHOD.
+
+
   METHOD on_navigation.
+
     data_read( ).
     client->view_model_update( ).
+
   ENDMETHOD.
+
+
   METHOD on_event.
+
     CASE client->get( )-event.
       WHEN `SAVE`.
         on_event_save( ).
       WHEN `BACK`.
         client->nav_app_leave( ).
     ENDCASE.
+
   ENDMETHOD.
+
+
   METHOD on_event_save.
+
     data_update( ).
+
   ENDMETHOD.
+
+
   METHOD view_display.
+
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     " ...
     client->view_display( view->stringify( ) ).
+
   ENDMETHOD.
+
+
   METHOD data_read.
+
     " SELECT ...
+
   ENDMETHOD.
+
+
   METHOD data_update.
+
     " INSERT / UPDATE / DELETE ...
+
   ENDMETHOD.
+
 ENDCLASS.
 ```
