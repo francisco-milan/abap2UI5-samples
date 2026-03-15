@@ -39,6 +39,22 @@ abap2UI5 Samples - Collection of demo apps for the abap2UI5 framework.
   - Always add exactly 1 blank line at the very start of a method body (after `METHOD`).
   - Always add exactly 1 blank line at the very end of a method body (before `ENDMETHOD`).
   - Max 1 consecutive blank line inside a method body.
+  - Always add 1 blank line **before** an `IF` block.
+  - Always add 1 blank line **before** `ELSEIF` and `ELSE`.
+  - If a branch (`IF`, `ELSEIF`, `ELSE`) contains **more than one statement**, add 1 blank line directly after the condition line as well:
+    ```abap
+    me->client = client.
+
+    IF client->check_on_init( ).
+
+      product  = `products`.
+      quantity = `500`.
+      view_display( ).
+
+    ELSEIF client->check_on_event( `SAVE` ).
+      data_update( ).
+    ENDIF.
+    ```
 - Always run `abaplint` after every change. It must report 0 issues before committing.
 - Before starting app development, read all active rules in `abaplint.jsonc` and follow them throughout.
 
@@ -64,6 +80,22 @@ ELSEIF client->check_on_event( ).
   ...
 ENDIF.
 ```
+
+### Event checking — inline vs. CASE
+
+`check_on_event( )` accepts an optional event name argument. Use it to check for a specific event directly in the `ELSEIF` chain when there are **2–3 events** and no complex dispatch logic is needed:
+
+```abap
+IF client->check_on_init( ).
+  ...
+ELSEIF client->check_on_event( `SAVE` ).
+  data_update( ).
+ELSEIF client->check_on_event( `DELETE` ).
+  data_delete( ).
+ENDIF.
+```
+
+Use a `CASE` statement (inside an `ELSEIF client->check_on_event( )` block) only when there are **4 or more events**, or when a dedicated `on_event` method is extracted for a larger app.
 
 ### Client API (`z2ui5_if_client`)
 
@@ -125,6 +157,8 @@ Views are XML strings passed to `client->view_display()`. There are two ways to 
 Pre-built methods for common UI5 controls (`shell`, `page`, `simple_form`, `input`, `button`, etc.). Use this for standard layouts.
 
 #### View structure and indentation
+
+Always add 1 blank line before `DATA(view) = z2ui5_cl_xml_view=>factory( ).` to visually separate view construction from preceding logic.
 
 Always build the view in `view_display` and call `client->view_display( view->stringify( ) )` as a **standalone statement at the end** — never nested inside the chain.
 
