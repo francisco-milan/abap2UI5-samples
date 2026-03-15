@@ -32,12 +32,16 @@ All serialized files (`.abap`, `.xml`, and any other abapGit-managed file types)
 - Follow the [SAP ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md).
 - Never use an init flag attribute (`check_initialized`, `mv_init`, `is_initialized`, etc.). Always use `client->check_on_init( )` instead.
 - Use backticks for all string literals, not single quotes.
+- Use string templates (`|...|` with `{ }` for embedded expressions) instead of `&&` for string concatenation (e.g. `|item { name }|` not `` `item ` && name ``).
 - Prefer functional to procedural language constructs — use `var = VALUE #( ).` to reset a variable, never `CLEAR var.`.
-- Do not use Hungarian notation — no type prefixes on variable or attribute names (e.g. `product` not `lv_product`, `client` not `mo_client`).
+- Use type prefixes only for tables and structures: prefix table variables/attributes with `t_` (e.g. `t_items`) and structure variables/attributes with `s_` (e.g. `s_screen`). Do not add prefixes to scalar variables or object references.
+- Name local types with a `ty_s_` prefix for structure types (e.g. `ty_s_row`) and `ty_t_` for table types (e.g. `ty_t_rows`). Only define a `ty_t_` table type when it is used more than once — for a single-use table, declare it inline with `STANDARD TABLE OF ty_s_xxx`.
+- No blank line between a `TYPES` definition and the `DATA` declaration that directly uses it.
 - Class names are always written in **lowercase** in both `DEFINITION` and `IMPLEMENTATION` — never uppercase.
 - Classes are **not** `FINAL` — do not add the `FINAL` keyword to class definitions.
 - Use `DEFINITION PUBLIC.` — never `DEFINITION PUBLIC CREATE PUBLIC.` (`CREATE PUBLIC` is the default and adds unnecessary overhead).
 - Always include `PROTECTED SECTION.` and `PRIVATE SECTION.` in the class definition, even if empty.
+- In every section (`PUBLIC SECTION.`, `PROTECTED SECTION.`), always follow this declaration order: `TYPES` first, then `DATA`, then `METHODS`.
 - **Blank lines — class definition** (`EMPTY_LINES_IN_CLASS_DEFINITION`):
   - Add one blank line above each section keyword (`PUBLIC SECTION.`, `PROTECTED SECTION.`, `PRIVATE SECTION.`) — unless the preceding section is empty.
   - No blank line directly below a section keyword.
@@ -138,9 +142,11 @@ Always use `client->_event_nav_app_leave()` to bind the back button event direct
 METHOD view_display.
 
   DATA(view) = z2ui5_cl_xml_view=>factory( ).
-  DATA(page) = view->page( title = `My App`
-                            shownavbutton = client->check_app_prev_stack( )
-                            navbuttonpress = client->_event_nav_app_leave( ) ).
+  DATA(page) = view->shell(
+      )->page(
+          title          = `My App`
+          shownavbutton  = client->check_app_prev_stack( )
+          navbuttonpress = client->_event_nav_app_leave( ) ).
   " ...
   client->view_display( view->stringify( ) ).
 
@@ -155,7 +161,7 @@ METHOD on_event.
   CASE client->get( )-event.
     WHEN `BACK`.
       " interact with previous app instance first
-      CAST z2ui5_cl_app_parent( client->get_app_prev( ) )->set_result( ms_result ).
+      CAST z2ui5_cl_app_parent( client->get_app_prev( ) )->set_result( s_result ).
       client->nav_app_leave( ).
   ENDCASE.
 
@@ -268,6 +274,8 @@ Write everything directly in `main` — no method encapsulation needed. Count on
 
 ### Larger apps — canonical template
 
+When the logic no longer fits inside `main`, always extract exactly `on_init` and `on_event` as the first step — never use other method names for this purpose. `main` then becomes a pure dispatcher that calls these two methods. Only add further methods (`view_display`, `data_read`, etc.) when they are actually needed.
+
 The following is the **maximum structure**. Only add methods that are actually needed.
 
 ### Event handler sub-methods
@@ -281,6 +289,7 @@ CLASS z2ui5_cl_app_xxx DEFINITION PUBLIC.
     " bound data (DATA attributes for _bind/_bind_edit)...
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS on_init.        " first call: load data, display view
     METHODS on_event.       " user triggered an event
     METHODS on_navigation.  " returned from sub-app or popup
