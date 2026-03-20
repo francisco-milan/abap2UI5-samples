@@ -17,14 +17,32 @@ abap2UI5 Samples - Collection of demo apps for the abap2UI5 framework.
 - Install: `npm install -g @abaplint/cli`
 - Run: `abaplint`
 
+### abapGit file consistency
+
+All serialized files (`.abap`, `.xml`, and any other abapGit-managed file types) must conform to the abapGit file format:
+- **Encoding**: UTF-8 (with optional BOM: `xEF BB BF`)
+- **Line endings**: LF (`x0A`) only — never CRLF
+- **Final newline**: every file must end with a single newline character after the last line
+- **Indentation**: 2 spaces — never tabs
+
+**Always verify consistency for all file types before committing**, not just `.abap` files. abaplint covers `.abap` files; for `.xml` and other files, check manually or via editor tooling that the above rules are met.
+
 ### Code Conventions
 
 - Follow the [SAP ABAP Style Guide](https://github.com/SAP/styleguides/blob/main/clean-abap/CleanABAP.md).
 - Never use an init flag attribute (`check_initialized`, `mv_init`, `is_initialized`, etc.). Always use `client->check_on_init( )` instead.
 - Use backticks for all string literals, not single quotes.
+- Use string templates (`|...|` with `{ }` for embedded expressions) instead of `&&` for string concatenation (e.g. `|item { name }|` not `` `item ` && name ``).
+- Prefer functional to procedural language constructs — use `var = VALUE #( ).` to reset a variable, never `CLEAR var.`.
+- Use type prefixes only for tables and structures: prefix table variables/attributes with `t_` (e.g. `t_items`) and structure variables/attributes with `s_` (e.g. `s_screen`). Do not add prefixes to scalar variables or object references.
+- Name local types with a `ty_s_` prefix for structure types (e.g. `ty_s_row`) and `ty_t_` for table types (e.g. `ty_t_rows`). Only define a `ty_t_` table type when it is used more than once — for a single-use table, declare it inline with `STANDARD TABLE OF ty_s_xxx`.
+- No blank line between a `TYPES` definition and the `DATA` declaration that directly uses it.
 - Class names are always written in **lowercase** in both `DEFINITION` and `IMPLEMENTATION` — never uppercase.
 - Classes are **not** `FINAL` — do not add the `FINAL` keyword to class definitions.
+- Use `DEFINITION PUBLIC.` — never `DEFINITION PUBLIC CREATE PUBLIC.` (`CREATE PUBLIC` is the default and adds unnecessary overhead).
 - Always include `PROTECTED SECTION.` and `PRIVATE SECTION.` in the class definition, even if empty.
+- Keep `PRIVATE SECTION.` always empty — declare everything at `PROTECTED SECTION.` level at most.
+- In every section (`PUBLIC SECTION.`, `PROTECTED SECTION.`), always follow this declaration order: `TYPES` first, then `DATA`, then `METHODS`.
 - **Blank lines — class definition** (`EMPTY_LINES_IN_CLASS_DEFINITION`):
   - Add one blank line above each section keyword (`PUBLIC SECTION.`, `PROTECTED SECTION.`, `PRIVATE SECTION.`) — unless the preceding section is empty.
   - No blank line directly below a section keyword.
@@ -32,14 +50,40 @@ abap2UI5 Samples - Collection of demo apps for the abap2UI5 framework.
   - Max 1 consecutive blank line inside the definition block.
   - Add one blank line between groups of different declaration types (e.g. between `INTERFACES` and `DATA`, or `DATA` and `METHODS`).
 - **Blank lines — outside methods** (`EMPTY_LINES_OUTSIDE_METHODS`):
-  - Exactly 1 blank line between `ENDCLASS.` and the next `CLASS … IMPLEMENTATION.` (i.e. between the definition and the implementation block).
-  - Exactly 1 blank line between two `METHOD … ENDMETHOD.` blocks.
+  - Exactly 2 blank lines between `ENDCLASS.` and the next `CLASS … IMPLEMENTATION.` (i.e. between the definition and the implementation block).
+  - Exactly 2 blank lines between two `METHOD … ENDMETHOD.` blocks.
   - Exactly 2 blank lines between two top-level class blocks.
 - **Blank lines — inside methods** (`EMPTY_LINES_WITHIN_METHODS`):
+  - Always add exactly 1 blank line at the very start of a method body (after `METHOD`).
+  - Always add exactly 1 blank line at the very end of a method body (before `ENDMETHOD`).
   - Max 1 consecutive blank line inside a method body.
-  - At most 1 blank line at the very start of a method body (after `METHOD`).
-  - At most 1 blank line at the very end of a method body (before `ENDMETHOD`).
-  - One blank line above the first executable statement is allowed.
+  - Always add 1 blank line **before** an `IF` block — **except** when the method is a pure dispatcher (its only purpose is to jump to other methods, with no own logic before the `IF`). In that case, omit the blank line between the opening assignment and the `IF`.
+  - Always add 1 blank line **before** `ELSEIF` and `ELSE`.
+  - In setup methods (`on_init` and similar), add 1 blank line between the last data assignment and the first non-assignment statement (e.g. before `view_display( )`):
+    ```abap
+    METHOD on_init.
+
+      price    = `1234`.
+      currency = `EUR`.
+
+      view_display( ).
+
+    ENDMETHOD.
+    ```
+  - If a branch (`IF`, `ELSEIF`, `ELSE`) contains **more than one statement**, add 1 blank line directly after the condition line as well:
+    ```abap
+    me->client = client.
+
+    IF client->check_on_init( ).
+
+      product  = `products`.
+      quantity = `500`.
+      view_display( ).
+
+    ELSEIF client->check_on_event( `SAVE` ).
+      data_update( ).
+    ENDIF.
+    ```
 - Always run `abaplint` after every change. It must report 0 issues before committing.
 - Before starting app development, read all active rules in `abaplint.jsonc` and follow them throughout.
 
@@ -65,6 +109,22 @@ ELSEIF client->check_on_event( ).
   ...
 ENDIF.
 ```
+
+### Event checking — inline vs. CASE
+
+`check_on_event( )` accepts an optional event name argument. Use it to check for a specific event directly in the `ELSEIF` chain when there are **2–3 events** and no complex dispatch logic is needed:
+
+```abap
+IF client->check_on_init( ).
+  ...
+ELSEIF client->check_on_event( `SAVE` ).
+  data_update( ).
+ELSEIF client->check_on_event( `DELETE` ).
+  data_delete( ).
+ENDIF.
+```
+
+Use a `CASE` statement (inside an `ELSEIF client->check_on_event( )` block) only when there are **4 or more events**, or when a dedicated `on_event` method is extracted for a larger app.
 
 ### Client API (`z2ui5_if_client`)
 
@@ -92,12 +152,16 @@ Always use `client->_event_nav_app_leave()` to bind the back button event direct
 
 ```abap
 METHOD view_display.
+
   DATA(view) = z2ui5_cl_xml_view=>factory( ).
-  DATA(page) = view->page( title = `My App`
-                            shownavbutton = client->check_app_prev_stack( )
-                            navbuttonpress = client->_event_nav_app_leave( ) ).
+  DATA(page) = view->shell(
+      )->page(
+          title          = `My App`
+          shownavbutton  = client->check_app_prev_stack( )
+          navbuttonpress = client->_event_nav_app_leave( ) ).
   " ...
   client->view_display( view->stringify( ) ).
+
 ENDMETHOD.
 ```
 
@@ -105,12 +169,14 @@ Only use the manual pattern (handling `BACK` in `on_event`) when you need to do 
 
 ```abap
 METHOD on_event.
+
   CASE client->get( )-event.
     WHEN `BACK`.
       " interact with previous app instance first
-      CAST z2ui5_cl_app_parent( client->get_app_prev( ) )->set_result( ms_result ).
+      CAST z2ui5_cl_app_parent( client->get_app_prev( ) )->set_result( s_result ).
       client->nav_app_leave( ).
   ENDCASE.
+
 ENDMETHOD.
 ```
 
@@ -120,6 +186,62 @@ Views are XML strings passed to `client->view_display()`. There are two ways to 
 
 ### 1. `z2ui5_cl_xml_view` — typed fluent API
 Pre-built methods for common UI5 controls (`shell`, `page`, `simple_form`, `input`, `button`, etc.). Use this for standard layouts.
+
+#### View structure and indentation
+
+Always add 1 blank line before `DATA(view) = z2ui5_cl_xml_view=>factory( ).` to visually separate view construction from preceding logic.
+
+Always build the view in `view_display` and call `client->view_display( view->stringify( ) )` as a **standalone statement at the end** — never nested inside the chain.
+
+Indent the fluent chain to reflect the XML hierarchy:
+- Each method that **navigates into a child element** (returns a child node) is indented **4 spaces deeper** than its parent call.
+- Methods that **add a sibling** within the same container (and return the container) stay at the **same indentation level**.
+
+#### Parameter formatting
+
+- **Single parameter**: write inline — `)->label( `Quantity` )` or `)->input( client->_bind_edit( qty ) )`.
+- **More than one parameter**: always split across multiple lines — one parameter per line, aligned below the opening `(`, closing `)` on its own line:
+
+```abap
+)->input(
+    value   = product
+    enabled = abap_false
+)->button(
+    text  = `Post`
+    press = client->_event( `POST` ) ).
+```
+
+Never put two or more named parameters on the same line.
+
+```abap
+METHOD view_display.
+
+  DATA(view) = z2ui5_cl_xml_view=>factory( ).
+  view->shell(
+      )->page(
+          title          = `My App`
+          navbuttonpress = client->_event_nav_app_leave( )
+          shownavbutton  = client->check_app_prev_stack( )
+          )->simple_form(
+              title    = `Form Title`
+              editable = abap_true
+              )->content( `form`
+              )->label( `Quantity`
+              )->input( client->_bind_edit( quantity )
+              )->label( `Product`
+              )->input(
+                  value   = product
+                  enabled = abap_false
+              )->button(
+                  text  = `Post`
+                  press = client->_event( `POST` ) ).
+  client->view_display( view->stringify( ) ).
+
+ENDMETHOD.
+```
+
+The hierarchy above is: `shell` → `page` → `simple_form` → `content` → (leaf elements).
+`label`, `input`, `button` are siblings inside `content`, so they stay at the same indent level as `)->content(`.
 
 ### 2. `z2ui5_cl_util_xml` — generic XML builder
 Builds any XML structure directly from element names, namespaces and attributes. **Look up the control in the [UI5 API Reference](https://ui5.sap.com/#/api) and translate 1:1 to ABAP** — no wrapper, no abstraction layer.
@@ -154,13 +276,76 @@ Key rules for `z2ui5_cl_util_xml`:
 - Only declare namespaces that are actually used in the view
 - `stringify()` on the factory root produces the complete XML string
 
+#### Method chaining
+
+Each call in a chain must start on its own line — never place two `->_()` / `->__()` calls on the same line:
+
+```abap
+" Wrong
+DATA(page) = root->__( `Shell` )->__( n = `Page`
+
+" Correct
+DATA(page) = root->__( `Shell`
+   )->__( n = `Page`
+```
+
+Chain continuations (`)->`) are indented 3 spaces relative to the statement's base indentation.
+
+#### Parameter alignment
+
+When `p` appears on a continuation line, align it directly under `n` — one space after the opening `(`:
+
+```abap
+" Wrong — p is one space too far right
+)->_( n = `Input`
+              p = VALUE #( ... ) ).
+
+" Correct — p directly under n
+)->_( n = `Input`
+             p = VALUE #( ... ) ).
+```
+
+Continuation lines inside `VALUE #( )` align with the first tuple `(`:
+
+```abap
+)->_( n = `Input`
+      p = VALUE #( ( n = `type`  v = `Number` )
+                   ( n = `value` v = client->_bind_edit( qty ) ) ) ).
+```
+
+#### VALUE #( ) formatting
+
+In `VALUE #( )` constructor expressions with named fields, use **either** entirely inline (all fields on one line) **or** each field on its own line — never mix both styles in the same expression:
+
+```abap
+" Wrong — mixed
+t_products = VALUE #(
+  ( name = `Notebook Basic 15`  product_id = `HT-1000` supplier_name = `Very Best Screens`
+    dimensions = `30 x 18 x 3 cm` weight_measure = `4.2` weight_unit = `KG` ) ).
+
+" Correct — one field per line, = signs aligned
+t_products = VALUE #(
+  ( name           = `Notebook Basic 15`
+    product_id     = `HT-1000`
+    supplier_name  = `Very Best Screens`
+    dimensions     = `30 x 18 x 3 cm`
+    weight_measure = `4.2`
+    weight_unit    = `KG` ) ).
+```
+
 ## App Structure
 
 ### Simple apps (< 50 lines in `main`)
 
 Write everything directly in `main` — no method encapsulation needed. Count only the lines inside the `main` method, not the total class length.
 
+**Do not extract `view_display` or any other helper method just because the app has a view.** A separate `view_display` method is only justified when the app is large enough to warrant the full canonical structure (≥ 50 lines in `main`). Extracting it in a simple app adds unnecessary indirection.
+
 ### Larger apps — canonical template
+
+When the logic no longer fits inside `main`, always extract exactly `on_init` and `on_event` as the first step — never use other method names for this purpose. `main` then becomes a pure dispatcher that calls these two methods. Only add further methods (`view_display`, `data_read`, etc.) when they are actually needed.
+
+**Never create a pass-through method with only one statement.** If an extracted method (e.g. `on_init`) would contain only a single call, replace the method call in the dispatcher with that single call directly — and omit the pass-through method entirely. For example, if `on_init` would only call `view_display( )`, write `view_display( )` directly in the `IF client->check_on_init( ).` branch instead.
 
 The following is the **maximum structure**. Only add methods that are actually needed.
 
@@ -169,12 +354,13 @@ The following is the **maximum structure**. Only add methods that are actually n
 When the body of a single `WHEN` branch in `on_event` grows too long, extract it into a dedicated method named `on_event_<event>` (e.g. `on_event_save`, `on_event_delete`). The `on_event` method then stays a thin dispatcher — one call per branch — and all the logic lives in the sub-method.
 
 ```abap
-CLASS z2ui5_cl_app_xxx DEFINITION PUBLIC CREATE PUBLIC.
+CLASS z2ui5_cl_app_xxx DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
     " bound data (DATA attributes for _bind/_bind_edit)...
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS on_init.        " first call: load data, display view
     METHODS on_event.       " user triggered an event
     METHODS on_navigation.  " returned from sub-app or popup
@@ -184,8 +370,11 @@ CLASS z2ui5_cl_app_xxx DEFINITION PUBLIC CREATE PUBLIC.
   PRIVATE SECTION.
 ENDCLASS.
 
+
 CLASS z2ui5_cl_app_xxx IMPLEMENTATION.
+
   METHOD z2ui5_if_app~main.
+
     me->client = client.
     IF client->check_on_init( ).
       on_init( ).
@@ -194,36 +383,66 @@ CLASS z2ui5_cl_app_xxx IMPLEMENTATION.
     ELSEIF client->check_on_event( ).
       on_event( ).
     ENDIF.
+
   ENDMETHOD.
+
+
   METHOD on_init.
+
     data_read( ).
     view_display( ).
+
   ENDMETHOD.
+
+
   METHOD on_navigation.
+
     data_read( ).
     client->view_model_update( ).
+
   ENDMETHOD.
+
+
   METHOD on_event.
+
     CASE client->get( )-event.
       WHEN `SAVE`.
         on_event_save( ).
       WHEN `BACK`.
         client->nav_app_leave( ).
     ENDCASE.
+
   ENDMETHOD.
+
+
   METHOD on_event_save.
+
     data_update( ).
+
   ENDMETHOD.
+
+
   METHOD view_display.
+
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     " ...
     client->view_display( view->stringify( ) ).
+
   ENDMETHOD.
+
+
   METHOD data_read.
+
     " SELECT ...
+
   ENDMETHOD.
+
+
   METHOD data_update.
+
     " INSERT / UPDATE / DELETE ...
+
   ENDMETHOD.
+
 ENDCLASS.
 ```

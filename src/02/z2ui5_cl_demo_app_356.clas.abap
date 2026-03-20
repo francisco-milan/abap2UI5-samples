@@ -1,4 +1,4 @@
-CLASS z2ui5_cl_demo_app_356 DEFINITION PUBLIC CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_356 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
@@ -10,6 +10,7 @@ CLASS z2ui5_cl_demo_app_356 DEFINITION PUBLIC CREATE PUBLIC.
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
+
 
 CLASS z2ui5_cl_demo_app_356 IMPLEMENTATION.
 
@@ -23,41 +24,42 @@ CLASS z2ui5_cl_demo_app_356 IMPLEMENTATION.
                      ( n = `xmlns:l`      v = `sap.ui.layout` )
                      ( n = `xmlns:mvc`    v = `sap.ui.core.mvc` ) ) ).
 
-    DATA(page) = root->__( `Shell` )->__( n = `Page`
-        p = VALUE #( ( n = `navButtonPress` v = client->_event_nav_app_leave( ) )
-                     ( n = `showNavButton`  v = client->check_app_prev_stack( ) )
-                     ( n = `title`          v = `abap2UI5 - Label` ) ) ).
+    DATA(page) = root->__( `Shell`
+       )->__( n = `Page`
+              p = VALUE #( ( n = `navButtonPress` v = client->_event_nav_app_leave( ) )
+                           ( n = `showNavButton`  v = client->check_app_prev_stack( ) )
+                           ( n = `title`          v = `abap2UI5 - Label` ) ) ).
 
     page->__( `headerContent`
        )->_( n = `Link`
-              p = VALUE #( ( n = `href`   v = `https://ui5.sap.com/sdk/#/entity/sap.m.Label/sample/sap.m.sample.Label` )
-                           ( n = `target` v = `_blank` )
-                           ( n = `text`   v = `UI5 Demo Kit` ) ) ).
+             p = VALUE #( ( n = `href`   v = `https://ui5.sap.com/sdk/#/entity/sap.m.Label/sample/sap.m.sample.Label` )
+                          ( n = `target` v = `_blank` )
+                          ( n = `text`   v = `UI5 Demo Kit` ) ) ).
 
     DATA(layout) = page->__( n = `VerticalLayout` ns = `l`
         p = VALUE #( ( n = `class` v = `sapUiContentPadding` )
                      ( n = `width` v = `100%` ) ) ).
 
     layout->_( n = `Label`
-                p = VALUE #( ( n = `labelFor` v = `input-a` )
-                             ( n = `text`     v = `Label A (required)` ) )
+               p = VALUE #( ( n = `labelFor` v = `input-a` )
+                            ( n = `text`     v = `Label A (required)` ) )
            )->_( n = `Input`
-                  p = VALUE #( ( n = `id`       v = `input-a` )
-                               ( n = `required` v = abap_true )
-                               ( n = `value`    v = client->_bind_edit( input_a ) ) )
+                 p = VALUE #( ( n = `id`       v = `input-a` )
+                              ( n = `required` v = abap_true )
+                              ( n = `value`    v = client->_bind_edit( input_a ) ) )
            )->_( n = `Label`
-                  p = VALUE #( ( n = `design`   v = `Bold` )
-                               ( n = `labelFor` v = `input-b` )
-                               ( n = `text`     v = `Label B (bold)` ) )
+                 p = VALUE #( ( n = `design`   v = `Bold` )
+                              ( n = `labelFor` v = `input-b` )
+                              ( n = `text`     v = `Label B (bold)` ) )
            )->_( n = `Input`
-                  p = VALUE #( ( n = `id`    v = `input-b` )
-                               ( n = `value` v = client->_bind_edit( input_b ) ) )
+                 p = VALUE #( ( n = `id`    v = `input-b` )
+                              ( n = `value` v = client->_bind_edit( input_b ) ) )
            )->_( n = `Label`
-                  p = VALUE #( ( n = `labelFor` v = `input-c` )
-                               ( n = `text`     v = `Label C (normal)` ) )
+                 p = VALUE #( ( n = `labelFor` v = `input-c` )
+                              ( n = `text`     v = `Label C (normal)` ) )
            )->_( n = `Input`
-                  p = VALUE #( ( n = `id`    v = `input-c` )
-                               ( n = `value` v = client->_bind_edit( input_c ) ) ) ).
+                 p = VALUE #( ( n = `id`    v = `input-c` )
+                              ( n = `value` v = client->_bind_edit( input_c ) ) ) ).
 
     client->view_display( view->stringify( ) ).
 
