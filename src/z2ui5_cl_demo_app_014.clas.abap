@@ -57,7 +57,7 @@ CLASS z2ui5_cl_demo_app_014 IMPLEMENTATION.
       )->items( )->interact_line_chart(
             selectionchanged = client->_event( `LINE_CHANGED` )
             precedingpoint   = `15`
-            succeddingpoint  = `89`
+            succeedingpoint  = `89`
         )->points( ).
     point->interact_line_chart_point(
         selected       = client->_bind( sel7 )
