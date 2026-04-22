@@ -1,7 +1,6 @@
 CLASS z2ui5_cl_demo_app_056 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     TYPES:
@@ -20,21 +19,19 @@ CLASS z2ui5_cl_demo_app_056 DEFINITION PUBLIC.
 
     DATA mt_tokens_added TYPE z2ui5_cl_util=>ty_t_token.
     DATA mt_tokens_removed TYPE z2ui5_cl_util=>ty_t_token.
-
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
+
+    DATA mt_range TYPE z2ui5_cl_pop_get_range=>ty_s_result-t_range.
+
     METHODS on_event.
     METHODS view_display.
     METHODS set_data.
-
   PRIVATE SECTION.
-    DATA mt_range TYPE z2ui5_cl_pop_get_range=>ty_s_result-t_range.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_056 IMPLEMENTATION.
-
 
   METHOD on_event.
 
@@ -53,8 +50,8 @@ CLASS z2ui5_cl_demo_app_056 IMPLEMENTATION.
           INSERT VALUE #( key = ls_token-key text = ls_token-text visible = abap_true editable = abap_true ) INTO TABLE mt_token.
         ENDLOOP.
 
-        CLEAR mt_tokens_removed.
-        CLEAR mt_tokens_added.
+        mt_tokens_removed = VALUE #( ).
+        mt_tokens_added = VALUE #( ).
 
         mt_range = z2ui5_cl_util=>filter_get_range_t_by_token_t( mt_token ).
         set_data( ).
@@ -70,12 +67,12 @@ CLASS z2ui5_cl_demo_app_056 IMPLEMENTATION.
   METHOD set_data.
 
     mt_table = VALUE #(
-        ( product = 'table'    create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'chair'    create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'sofa'     create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'computer' create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'oven'     create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'table2'   create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 ) ).
+        ( product = `table`    create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `chair`    create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `sofa`     create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `computer` create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `oven`     create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `table2`   create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 ) ).
 
     DELETE mt_table WHERE product NOT IN mt_range.
 
@@ -87,7 +84,7 @@ CLASS z2ui5_cl_demo_app_056 IMPLEMENTATION.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     view = view->shell( )->page( id = `page_main`
-             title                  = 'abap2UI5 - Select-Options'
+             title                  = `abap2UI5 - Select-Options`
              navbuttonpress         = client->_event_nav_app_leave( )
              shownavbutton          = client->check_app_prev_stack( )
         )->get_parent( ).
@@ -96,7 +93,7 @@ CLASS z2ui5_cl_demo_app_056 IMPLEMENTATION.
     vbox->_z2ui5( )->multiinput_ext(
                        addedtokens   = client->_bind_edit( mt_tokens_added )
                        removedtokens = client->_bind_edit( mt_tokens_removed )
-                       change        = client->_event( 'UPDATE_TOKENS' )
+                       change        = client->_event( `UPDATE_TOKENS` )
                        multiinputid  = `MultiInput` ).
 
     DATA(tab) = vbox->table(
@@ -109,7 +106,7 @@ CLASS z2ui5_cl_demo_app_056 IMPLEMENTATION.
                 id               = `MultiInput`
                 tokens           = client->_bind( mt_token )
                 showclearicon    = abap_true
-                valuehelprequest = client->_event( 'FILTER_VALUE_HELP' )
+                valuehelprequest = client->_event( `FILTER_VALUE_HELP` )
             )->item(
                     key  = `{KEY}`
                     text = `{TEXT}`
@@ -159,6 +156,7 @@ CLASS z2ui5_cl_demo_app_056 IMPLEMENTATION.
     IF client->get( )-check_on_navigated = abap_true.
       TRY.
           DATA(lo_value_help) = CAST z2ui5_cl_pop_get_range( client->get_app( client->get( )-s_draft-id_prev_app ) ).
+
           IF lo_value_help->result( )-check_confirmed = abap_false.
             RETURN.
           ENDIF.
@@ -178,4 +176,5 @@ CLASS z2ui5_cl_demo_app_056 IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
+
 ENDCLASS.

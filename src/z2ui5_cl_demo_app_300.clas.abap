@@ -1,24 +1,18 @@
-CLASS z2ui5_cl_demo_app_300 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_300 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
-
-
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS display_view
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
     METHODS on_event
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_display_popover
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
@@ -26,11 +20,9 @@ CLASS z2ui5_cl_demo_app_300 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_300 IMPLEMENTATION.
 
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(page_01) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
@@ -42,13 +34,13 @@ CLASS z2ui5_cl_demo_app_300 IMPLEMENTATION.
        )->button( id = `button_hint_id`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = client->_event( 'CLICK_HINT_ICON' ) ).
+           press     = client->_event( `CLICK_HINT_ICON` ) ).
 
     page_01->header_content(
        )->link(
-           text   = 'UI5 Demo Kit'
-           target = '_blank'
-           href   = 'https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.ObjectStatus/sample/sap.m.sample.ObjectStatus' ).
+           text   = `UI5 Demo Kit`
+           target = `_blank`
+           href   = `https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.ObjectStatus/sample/sap.m.sample.ObjectStatus` ).
 
     page_01->vertical_layout(
               width = `100%`
@@ -385,9 +377,9 @@ CLASS z2ui5_cl_demo_app_300 IMPLEMENTATION.
   METHOD on_event.
 
     CASE client->get( )-event.
-      WHEN 'CLICK_HINT_ICON'.
-        z2ui5_display_popover( `button_hint_id` ).
-      WHEN 'handleStatusPressed'.
+      WHEN `CLICK_HINT_ICON`.
+        popover_display( `button_hint_id` ).
+      WHEN `handleStatusPressed`.
         client->message_box_display( title   = `Error description`
                                      type    = ``  "Keep this empty to use the custom title instead of the default message type as title
                                      text    = `Product was damaged along transportation.`
@@ -397,7 +389,7 @@ CLASS z2ui5_cl_demo_app_300 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
@@ -418,10 +410,11 @@ CLASS z2ui5_cl_demo_app_300 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
     ENDIF.
 
     on_event( client ).
 
   ENDMETHOD.
+
 ENDCLASS.

@@ -1,28 +1,21 @@
-CLASS z2ui5_cl_demo_app_088 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_088 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
+
     DATA mv_selected_key TYPE string.
-
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS z2ui5_view_display.
-    METHODS z2ui5_on_event.
-
-  PRIVATE SECTION.
     DATA mv_page TYPE string.
 
+    METHODS view_display.
+    METHODS on_event.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_088 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
@@ -30,28 +23,28 @@ CLASS z2ui5_cl_demo_app_088 IMPLEMENTATION.
 
     IF client->check_on_init( ).
       mv_page = `page1`.
-      z2ui5_view_display( ).
-      RETURN.
-    ENDIF.
+      view_display( ).
 
-    z2ui5_on_event( ).
+    ELSE.
+      on_event( ).
+    ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
     CASE client->get( )-event.
       WHEN OTHERS.
         mv_page = client->get( )-event.
-        z2ui5_view_display( ).
+        view_display( ).
 
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_display.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page(
@@ -76,19 +69,19 @@ CLASS z2ui5_cl_demo_app_088 IMPLEMENTATION.
                          defaulttransitionname = `flip`
                                      )->pages(
                                      )->page(
-                                       title = 'first page'
+                                       title = `first page`
                                        id    = `page1`
                                     )->get_parent(
                                      )->page(
-                                       title = 'second page'
+                                       title = `second page`
                                        id    = `page2`
                                     )->get_parent(
                                      )->page(
-                                       title = 'third page'
+                                       title = `third page`
                                        id    = `page3` ).
-
 
     client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

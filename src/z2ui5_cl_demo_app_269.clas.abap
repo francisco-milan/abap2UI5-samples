@@ -1,32 +1,30 @@
-CLASS z2ui5_cl_demo_app_269 DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_269 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
   PROTECTED SECTION.
-
-
-    METHODS display_view.
-    METHODS on_event.
-
     DATA client TYPE REF TO z2ui5_if_client.
+
+    METHODS view_display.
+
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 CLASS z2ui5_cl_demo_app_269 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
+
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( ).
+      view_display( ).
     ENDIF.
 
-    on_event( ).
   ENDMETHOD.
 
-  METHOD display_view.
+
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
@@ -51,7 +49,7 @@ CLASS z2ui5_cl_demo_app_269 IMPLEMENTATION.
         )->_generic( name = `profile`
                      ns   = `f`
             )->avatar( ns       = `f`
-                       initials = 'UI' ).
+                       initials = `UI` ).
 
     DATA(xml) = view->stringify( ).
 
@@ -59,6 +57,4 @@ CLASS z2ui5_cl_demo_app_269 IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD on_event.
-  ENDMETHOD.
 ENDCLASS.

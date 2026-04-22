@@ -1,7 +1,6 @@
 CLASS z2ui5_cl_demo_app_134 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     TYPES:
@@ -15,7 +14,6 @@ CLASS z2ui5_cl_demo_app_134 DEFINITION PUBLIC.
 
     DATA mv_scrollupdate TYPE abap_bool.
 
-
     DATA field_01  TYPE string.
     DATA field_02 TYPE string.
     DATA focus_id TYPE string.
@@ -26,7 +24,7 @@ CLASS z2ui5_cl_demo_app_134 DEFINITION PUBLIC.
     DATA mt_scroll TYPE z2ui5_if_types=>ty_t_name_value.
 
   PROTECTED SECTION.
-    METHODS display_view
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
 
@@ -38,21 +36,19 @@ CLASS z2ui5_cl_demo_app_134 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_134 IMPLEMENTATION.
 
+  METHOD view_display.
 
-  METHOD display_view.
-
-    DATA(ls_row) = VALUE ty_row( title = 'Peter'  value = 'red' info = 'completed'  descr = 'this is a description' ).
+    DATA(ls_row) = VALUE ty_row( title = `Peter`  value = `red` info = `completed`  descr = `this is a description` ).
     DO 100 TIMES.
       INSERT ls_row INTO TABLE t_tab.
     ENDDO.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( )->shell( ).
     DATA(page) = view->page(
-        id             = 'id_page'
-        title          = 'abap2ui5 - Scrolling (use Chrome to avoid incompatibilities)'
+        id             = `id_page`
+        title          = `abap2ui5 - Scrolling (use Chrome to avoid incompatibilities)`
         navbuttonpress = client->_event_nav_app_leave( )
         shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -60,31 +56,31 @@ CLASS z2ui5_cl_demo_app_134 IMPLEMENTATION.
           setupdate = client->_bind_edit( mv_scrollupdate )
           items     = client->_bind_edit( mt_scroll ) ).
 
-    DATA(tab) = page->table( sticky     = 'ColumnHeaders,HeaderToolbar'
-                             headertext = 'Table with some entries'
+    DATA(tab) = page->table( sticky     = `ColumnHeaders,HeaderToolbar`
+                             headertext = `Table with some entries`
                              items      = client->_bind( t_tab ) ).
 
     tab->columns(
-        )->column( )->text( 'Title' )->get_parent(
-        )->column( )->text( 'Color' )->get_parent(
-        )->column( )->text( 'Info' )->get_parent(
-        )->column( )->text( 'Description' ).
+        )->column( )->text( `Title` )->get_parent(
+        )->column( )->text( `Color` )->get_parent(
+        )->column( )->text( `Info` )->get_parent(
+        )->column( )->text( `Description` ).
 
     tab->items( )->column_list_item( )->cells(
-       )->text( '{TITLE}'
-       )->text( '{VALUE}'
-       )->text( '{INFO}'
-      )->text( '{DESCR}' ).
+       )->text( `{TITLE}`
+       )->text( `{VALUE}`
+       )->text( `{INFO}`
+      )->text( `{DESCR}` ).
 
     page->footer( )->overflow_toolbar(
-         )->button( text  = 'Scroll Top'
-                    press = client->_event( 'BUTTON_SCROLL_TOP' )
-         )->button( text  = 'Scroll 500 up'
-                    press = client->_event( 'BUTTON_SCROLL_UP' )
-         )->button( text  = 'Scroll 500 down'
-                    press = client->_event( 'BUTTON_SCROLL_DOWN' )
-         )->button( text  = 'Scroll Bottom'
-                    press = client->_event( 'BUTTON_SCROLL_BOTTOM' ) ).
+         )->button( text  = `Scroll Top`
+                    press = client->_event( `BUTTON_SCROLL_TOP` )
+         )->button( text  = `Scroll 500 up`
+                    press = client->_event( `BUTTON_SCROLL_UP` )
+         )->button( text  = `Scroll 500 down`
+                    press = client->_event( `BUTTON_SCROLL_DOWN` )
+         )->button( text  = `Scroll Bottom`
+                    press = client->_event( `BUTTON_SCROLL_BOTTOM` ) ).
 
     client->view_display( view->stringify( ) ).
 
@@ -98,8 +94,8 @@ CLASS z2ui5_cl_demo_app_134 IMPLEMENTATION.
     selstart = `3`.
     selend = `7`.
 
-    INSERT VALUE #( n = 'id_page' ) INTO TABLE mt_scroll.
-    display_view( client ).
+    INSERT VALUE #( n = `id_page` ) INTO TABLE mt_scroll.
+    view_display( client ).
 
   ENDMETHOD.
 
@@ -111,43 +107,46 @@ CLASS z2ui5_cl_demo_app_134 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    client->message_toast_display( 'server roundtrip' ).
+    client->message_toast_display( `server roundtrip` ).
     CASE client->get( )-event.
-      WHEN 'BUTTON_SCROLL_TOP'.
-        CLEAR mt_scroll.
-        INSERT VALUE #( n = 'id_page' v = '0' ) INTO TABLE mt_scroll.
+      WHEN `BUTTON_SCROLL_TOP`.
+        mt_scroll = VALUE #( ).
+        INSERT VALUE #( n = `id_page` v = `0` ) INTO TABLE mt_scroll.
         mv_scrollupdate = abap_true.
         client->view_model_update( ).
 
-      WHEN 'BUTTON_SCROLL_UP'.
+      WHEN `BUTTON_SCROLL_UP`.
 
-        DATA(lv_pos) = CONV i( mt_scroll[ n = 'id_page' ]-v ).
+        DATA(lv_pos) = CONV i( mt_scroll[ n = `id_page` ]-v ).
         lv_pos = lv_pos - 500.
+
         IF lv_pos < 0.
           lv_pos = 0.
         ENDIF.
-        mt_scroll[ n = 'id_page' ]-v = shift_left( shift_right( CONV string( lv_pos ) ) ).
+        mt_scroll[ n = `id_page` ]-v = shift_left( shift_right( CONV string( lv_pos ) ) ).
         mv_scrollupdate = abap_true.
         client->view_model_update( ).
 
-      WHEN 'BUTTON_SCROLL_DOWN'.
+      WHEN `BUTTON_SCROLL_DOWN`.
 
-        lv_pos = mt_scroll[ n = 'id_page' ]-v.
+        lv_pos = mt_scroll[ n = `id_page` ]-v.
         lv_pos = lv_pos + 500.
+
         IF lv_pos < 0.
           lv_pos = 0.
         ENDIF.
-        mt_scroll[ n = 'id_page' ]-v = shift_left( shift_right( CONV string( lv_pos ) ) ).
+        mt_scroll[ n = `id_page` ]-v = shift_left( shift_right( CONV string( lv_pos ) ) ).
         mv_scrollupdate = abap_true.
         client->view_model_update( ).
 
-      WHEN 'BUTTON_SCROLL_BOTTOM'.
-        CLEAR mt_scroll.
-        INSERT VALUE #( n = 'id_page' v = '99999' ) INTO TABLE mt_scroll.
+      WHEN `BUTTON_SCROLL_BOTTOM`.
+        mt_scroll = VALUE #( ).
+        INSERT VALUE #( n = `id_page` v = `99999` ) INTO TABLE mt_scroll.
         mv_scrollupdate = abap_true.
         client->view_model_update( ).
 
     ENDCASE.
 
   ENDMETHOD.
+
 ENDCLASS.

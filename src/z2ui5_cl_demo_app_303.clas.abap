@@ -1,14 +1,16 @@
-CLASS z2ui5_cl_demo_app_303 DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_303 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
+
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 CLASS z2ui5_cl_demo_app_303 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
+
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(object_page_layout) = view->object_page_layout( showtitleinheadercontent = `Title`
                                                          uppercaseanchorbar       = abap_false ).
@@ -36,7 +38,7 @@ CLASS z2ui5_cl_demo_app_303 IMPLEMENTATION.
     header_title->snapped_title_on_mobile(
         )->title( `Object Page Header with Header Container` ).
 
-    header_title->actions( 'uxap'
+    header_title->actions( `uxap`
         )->button( text = `Edit`
                    type = `Emphasized`
         )->button( text = `Delete`
@@ -46,7 +48,7 @@ CLASS z2ui5_cl_demo_app_303 IMPLEMENTATION.
                                     text    = `Share`
                                     tooltip = `action` ).
 
-    DATA(header_content) = object_page_layout->header_content( 'uxap'
+    DATA(header_content) = object_page_layout->header_content( `uxap`
         )->header_container_control( id           = `headerContainer`
                                      scrollstep   = `200`
                                      showdividers = abap_false ).
@@ -411,5 +413,7 @@ CLASS z2ui5_cl_demo_app_303 IMPLEMENTATION.
                             )->text( `No` ).
 
     client->view_display( view->stringify( ) ).
+
   ENDMETHOD.
+
 ENDCLASS.

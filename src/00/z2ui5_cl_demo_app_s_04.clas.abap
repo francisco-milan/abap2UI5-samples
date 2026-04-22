@@ -1,4 +1,4 @@
-CLASS z2ui5_cl_demo_app_s_04 DEFINITION PUBLIC CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_s_04 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
@@ -7,19 +7,14 @@ CLASS z2ui5_cl_demo_app_s_04 DEFINITION PUBLIC CREATE PUBLIC.
     DATA numc              TYPE z2ui5_numc12.
     DATA numc_out          TYPE c LENGTH 12.
 
-
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS z2ui5_set_data.
+    METHODS set_data.
 
-    METHODS display_view
+    METHODS view_display
       IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
-
-    METHODS on_event
-      IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+        client TYPE REF TO z2ui5_if_client.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -32,27 +27,26 @@ CLASS z2ui5_cl_demo_app_s_04 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
-      z2ui5_set_data( ).
+      view_display( client ).
+      set_data( ).
     ENDIF.
-
-    on_event( client ).
 
   ENDMETHOD.
 
-  METHOD display_view.
+
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     client->view_display( val = view->shell(
-           )->page( title          = 'abap2UI5 - Conversion Exit'
+           )->page( title          = `abap2UI5 - Conversion Exit`
                     navbuttonpress = client->_event_nav_app_leave( )
                     shownavbutton  = client->check_app_prev_stack( )
-        )->simple_form( title    = 'Form Title'
+        )->simple_form( title    = `Form Title`
                         editable = abap_true
-                   )->content( 'form'
-                       )->title( 'Conversion'
-                       )->label( 'Numeric'
+                   )->content( `form`
+                       )->title( `Conversion`
+                       )->label( `Numeric`
                        )->input( value   = client->_bind_edit( numc_out )
                                  enabled = abap_false
                        )->label( `Unit`
@@ -62,12 +56,10 @@ CLASS z2ui5_cl_demo_app_s_04 IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD on_event.
-  ENDMETHOD.
 
-  METHOD z2ui5_set_data.
+  METHOD set_data.
 
-    unit = 'ST'.   " internal ST -> external PC (if logged in in english)
+    unit = `ST`.   " internal ST -> external PC (if logged in in english)
     numc = 10.     " internal 0000000010 -> external 10
 
     TRY.

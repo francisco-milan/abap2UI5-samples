@@ -1,10 +1,7 @@
-CLASS z2ui5_cl_demo_app_122 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_122 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     DATA ui5_version TYPE string.
     DATA ui5_theme TYPE string.
@@ -20,25 +17,23 @@ CLASS z2ui5_cl_demo_app_122 DEFINITION
     DATA device_height  TYPE string.
     DATA device_width   TYPE string.
 
-
-
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
-    METHODS display_view.
+
+    METHODS view_display.
+
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_122 IMPLEMENTATION.
 
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     client->view_display( view->shell(
           )->page(
-                  title          = 'abap2UI5'
+                  title          = `abap2UI5`
                   navbuttonpress = client->_event_nav_app_leave( )
                   shownavbutton  = client->check_app_prev_stack( )
               )->_z2ui5( )->info_frontend(
@@ -55,10 +50,10 @@ CLASS z2ui5_cl_demo_app_122 IMPLEMENTATION.
                                         device_combi      = client->_bind_edit( device_combi )
                                         device_height     = client->_bind_edit( device_height )
                                         device_width      = client->_bind_edit( device_width )
-              )->simple_form( title    = 'Information'
+              )->simple_form( title    = `Information`
                               editable = abap_true
-                  )->content( 'form'
-                      )->label( 'device_browser'
+                  )->content( `form`
+                      )->label( `device_browser`
                       )->input( client->_bind_edit( device_browser )
                       )->label( `device_os`
                       )->input( client->_bind_edit( device_os )
@@ -92,7 +87,9 @@ CLASS z2ui5_cl_demo_app_122 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( ).
+      view_display( ).
     ENDIF.
+
   ENDMETHOD.
+
 ENDCLASS.

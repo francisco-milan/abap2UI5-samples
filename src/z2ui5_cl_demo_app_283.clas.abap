@@ -1,24 +1,18 @@
-CLASS z2ui5_cl_demo_app_283 DEFINITION
-   PUBLIC
-   CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_283 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
-
-
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS display_view
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
     METHODS on_event
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_display_popover
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
@@ -26,17 +20,16 @@ CLASS z2ui5_cl_demo_app_283 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_283 IMPLEMENTATION.
 
+  METHOD view_display.
 
-  METHOD display_view.
     " Define the base URL for the server
-    DATA base_url TYPE string VALUE 'https://sapui5.hana.ondemand.com/'.
+    DATA base_url TYPE string VALUE `https://sapui5.hana.ondemand.com/`.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
-            title          = 'abap2UI5 - Sample: Feed Input'
+            title          = `abap2UI5 - Sample: Feed Input`
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -44,13 +37,13 @@ CLASS z2ui5_cl_demo_app_283 IMPLEMENTATION.
        )->button( id = `button_hint_id`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = client->_event( 'CLICK_HINT_ICON' ) ).
+           press     = client->_event( `CLICK_HINT_ICON` ) ).
 
     page->header_content(
        )->link(
-           text   = 'UI5 Demo Kit'
-           target = '_blank'
-           href   = base_url && 'sdk/#/entity/sap.m.FeedInput/sample/sap.m.sample.FeedInput' ).
+           text   = `UI5 Demo Kit`
+           target = `_blank`
+           href   = base_url && `sdk/#/entity/sap.m.FeedInput/sample/sap.m.sample.FeedInput` ).
 
     page->label( text  = `Without Icon`
                  class = `sapUiSmallMarginTop sapUiTinyMarginBottom` ).
@@ -106,16 +99,16 @@ CLASS z2ui5_cl_demo_app_283 IMPLEMENTATION.
   METHOD on_event.
 
     CASE client->get( )-event.
-      WHEN 'CLICK_HINT_ICON'.
-        z2ui5_display_popover( `button_hint_id` ).
-      WHEN 'onPost'.
+      WHEN `CLICK_HINT_ICON`.
+        popover_display( `button_hint_id` ).
+      WHEN `onPost`.
         client->message_toast_display( `Posted new feed entry: ` && client->get_event_arg( 1 ) ).
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
@@ -136,10 +129,11 @@ CLASS z2ui5_cl_demo_app_283 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
     ENDIF.
 
     on_event( client ).
 
   ENDMETHOD.
+
 ENDCLASS.

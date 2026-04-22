@@ -1,9 +1,6 @@
-CLASS z2ui5_cl_demo_app_299 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_299 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     TYPES:
@@ -11,23 +8,20 @@ CLASS z2ui5_cl_demo_app_299 DEFINITION
         product_id TYPE string,
         name       TYPE string,
       END OF ty_product_collection.
-
-
     DATA lt_product_collection  TYPE TABLE OF ty_product_collection.
     DATA lt_product_collection2 TYPE TABLE OF ty_product_collection.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS z2ui5_set_data.
-    METHODS display_view
+    METHODS set_data.
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
     METHODS on_event
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_display_popover
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
@@ -35,11 +29,9 @@ CLASS z2ui5_cl_demo_app_299 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_299 IMPLEMENTATION.
 
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(page_01) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
@@ -51,29 +43,29 @@ CLASS z2ui5_cl_demo_app_299 IMPLEMENTATION.
        )->button( id = `button_hint_id`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = client->_event( 'CLICK_HINT_ICON' ) ).
+           press     = client->_event( `CLICK_HINT_ICON` ) ).
 
     page_01->header_content(
        )->link(
-           text   = 'UI5 Demo Kit'
-           target = '_blank'
-           href   = 'https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.Select/sample/sap.m.sample.SelectWithWrappedItemText' ).
+           text   = `UI5 Demo Kit`
+           target = `_blank`
+           href   = `https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.Select/sample/sap.m.sample.SelectWithWrappedItemText` ).
 
     page_01->select(
                 width         = `300px`
                 wrapitemstext = abap_true
                 class         = `sapUiLargeMargin`
                 items         = client->_bind( lt_product_collection )
-                )->item( key  = '{PRODUCT_ID}'
-                         text = '{NAME}'
+                )->item( key  = `{PRODUCT_ID}`
+                         text = `{NAME}`
              )->get_parent(
              )->select(
                 width         = `300px`
                 wrapitemstext = abap_true
                 class         = `sapUiLargeMargin`
                 items         = client->_bind( lt_product_collection2 )
-                )->item( key  = '{PRODUCT_ID}'
-                         text = '{NAME}'
+                )->item( key  = `{PRODUCT_ID}`
+                         text = `{NAME}`
              )->get_parent( ).
 
     client->view_display( page_01->stringify( ) ).
@@ -83,14 +75,14 @@ CLASS z2ui5_cl_demo_app_299 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'CLICK_HINT_ICON' ).
-      z2ui5_display_popover( `button_hint_id` ).
+    IF client->check_on_event( `CLICK_HINT_ICON` ).
+      popover_display( `button_hint_id` ).
     ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
@@ -111,8 +103,8 @@ CLASS z2ui5_cl_demo_app_299 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
-      z2ui5_set_data( ).
+      view_display( client ).
+      set_data( ).
     ENDIF.
 
     on_event( client ).
@@ -120,28 +112,29 @@ CLASS z2ui5_cl_demo_app_299 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_set_data.
+  METHOD set_data.
 
-    CLEAR lt_product_collection.
-    CLEAR lt_product_collection2.
+    lt_product_collection = VALUE #( ).
+    lt_product_collection2 = VALUE #( ).
 
     " Populating lt_product_collection
     lt_product_collection = VALUE #(
-      ( product_id = 'HT-1001' name = 'Select option 1' )
-      ( product_id = 'HT-1002' name = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry.' )
-      ( product_id = 'HT-1003' name = 'Select option 3' )
-      ( product_id = 'HT-1007' name = 'Select option 4' )
-      ( product_id = 'HT-1010' name = 'Select option 5' ) ).
+      ( product_id = `HT-1001` name = `Select option 1` )
+      ( product_id = `HT-1002` name = `Lorem Ipsum is simply dummy text of the printing and typesetting industry.` )
+      ( product_id = `HT-1003` name = `Select option 3` )
+      ( product_id = `HT-1007` name = `Select option 4` )
+      ( product_id = `HT-1010` name = `Select option 5` ) ).
     SORT lt_product_collection BY name.
 
     " Populating lt_product_collection2
     lt_product_collection2 = VALUE #(
-      ( product_id = 'key1' name = 'Select option 1' )
-      ( product_id = 'key2' name = 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.' )
-      ( product_id = 'key3' name = 'Select option 3' )
-      ( product_id = 'key4' name = 'Select option 4' )
-      ( product_id = 'key5' name = 'Select option 5' ) ).
+      ( product_id = `key1` name = `Select option 1` )
+      ( product_id = `key2` name = `Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum is simply dummy text of the printing and typesetting industry.` )
+      ( product_id = `key3` name = `Select option 3` )
+      ( product_id = `key4` name = `Select option 4` )
+      ( product_id = `key5` name = `Select option 5` ) ).
     SORT lt_product_collection2 BY name.
 
   ENDMETHOD.
+
 ENDCLASS.

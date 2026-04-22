@@ -1,49 +1,36 @@
-CLASS z2ui5_cl_demo_app_103 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_103 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     DATA client TYPE REF TO z2ui5_if_client.
 
-
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_view_display.
+    METHODS view_display.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_103 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
     me->client = client.
 
     IF client->check_on_init( ).
-      z2ui5_view_display( ).
+      view_display( ).
       RETURN.
     ENDIF.
 
-    z2ui5_on_event( ).
-
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
-  ENDMETHOD.
-
-  METHOD z2ui5_view_display.
-
+  METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
            )->page(
-              title           = 'abap2UI5 - Side Panel Example'
+              title           = `abap2UI5 - Side Panel Example`
               navbuttonpress  = client->_event_nav_app_leave( )
                 shownavbutton = abap_true ).
 
@@ -67,8 +54,8 @@ CLASS z2ui5_cl_demo_app_103 IMPLEMENTATION.
                )->splitter_layout_data( size = `auto` )->get_parent( )->get_parent(
              )->panel( headertext = `second pane` ).
 
-
     client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

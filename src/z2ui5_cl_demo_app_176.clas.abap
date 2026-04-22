@@ -1,7 +1,6 @@
 CLASS z2ui5_cl_demo_app_176 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     TYPES:
@@ -36,9 +35,7 @@ CLASS z2ui5_cl_demo_app_176 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_176 IMPLEMENTATION.
-
 
   METHOD main_view.
 
@@ -60,12 +57,12 @@ CLASS z2ui5_cl_demo_app_176 IMPLEMENTATION.
 
     i_client->_bind( mt_layout ).
 
-    mt_data = VALUE #( ( name = 'Theo' date = '01.01.2000' age = '5' )
-                       ( name = 'Lore' date = '01.01.2000' age = '1' ) ).
+    mt_data = VALUE #( ( name = `Theo` date = `01.01.2000` age = `5` )
+                       ( name = `Lore` date = `01.01.2000` age = `1` ) ).
 
-    mt_layout = VALUE #( ( fname = 'NAME' merge = 'false' visible = 'true'  binding = '{NAME}' )
-                         ( fname = 'DATE' merge = 'false' visible = 'true'  binding = '{DATE}' )
-                         ( fname = 'AGE'  merge = 'false' visible = 'false' binding = '{AGE}' ) ).
+    mt_layout = VALUE #( ( fname = `NAME` merge = `false` visible = `true`  binding = `{NAME}` )
+                         ( fname = `DATE` merge = `false` visible = `true`  binding = `{DATE}` )
+                         ( fname = `AGE`  merge = `false` visible = `false` binding = `{AGE}` ) ).
 
     DATA(lo_view_nested) = z2ui5_cl_xml_view=>factory( ).
 
@@ -86,14 +83,16 @@ CLASS z2ui5_cl_demo_app_176 IMPLEMENTATION.
 
     i_client->nest_view_display( val           = lo_view_nested->stringify( )
                                  id            = `test`
-                                 method_insert = 'addContent' ).
+                                 method_insert = `addContent` ).
 
   ENDMETHOD.
 
 
   METHOD z2ui5_if_app~main.
+
     main_view( client ).
     nest_view( client ).
 
   ENDMETHOD.
+
 ENDCLASS.

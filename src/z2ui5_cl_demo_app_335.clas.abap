@@ -9,14 +9,14 @@ CLASS z2ui5_cl_demo_app_335 DEFINITION PUBLIC.
 
     METHODS get_data.
 
-    METHODS ui5_view_display
+    METHODS view_display
       IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+        client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
+    METHODS get_data_2.
 
   PRIVATE SECTION.
-    METHODS get_data_2.
 ENDCLASS.
 
 
@@ -35,17 +35,17 @@ CLASS z2ui5_cl_demo_app_335 IMPLEMENTATION.
       mo_layout_obj_2 = z2ui5_cl_demo_app_333=>factory( i_data   = REF #( ms_struc )
                                                         vis_cols = 3 ).
 
-      ui5_view_display( client ).
+      view_display( client ).
 
     ENDIF.
 
     CASE client->get( )-event.
-      WHEN 'GO'.
+      WHEN `GO`.
 
         DATA(app) = z2ui5_cl_demo_app_336=>factory( ).
         client->nav_app_call( app ).
 
-      WHEN 'CHANGE'.
+      WHEN `CHANGE`.
 
         get_data_2( ).
 
@@ -53,50 +53,51 @@ CLASS z2ui5_cl_demo_app_335 IMPLEMENTATION.
 
     IF     client->get( )-check_on_navigated = abap_true
        AND client->check_on_init( )          = abap_false.
-      ui5_view_display( client ).
+      view_display( client ).
     ENDIF.
 
     IF ms_struc IS INITIAL.
-      client->message_toast_display( 'ERROR - MS_STRUC is initial!' ).
+      client->message_toast_display( `ERROR - MS_STRUC is initial!` ).
     ENDIF.
 
     IF mo_layout_obj->mr_data IS NOT BOUND.
-      client->message_toast_display( 'ERROR - mo_layout_obj->mr_data is not bound!' ).
+      client->message_toast_display( `ERROR - mo_layout_obj->mr_data is not bound!` ).
     ENDIF.
 
     IF mo_layout_obj_2->mr_data IS NOT BOUND.
-      client->message_toast_display( 'ERROR - mo_layout_obj_2->mr_data  is not bound!' ).
+      client->message_toast_display( `ERROR - mo_layout_obj_2->mr_data  is not bound!` ).
     ENDIF.
 
     ASSIGN mo_layout_obj_2->mr_data->* TO <row>.
 
     IF <row>-id <> ms_struc-id.
-      client->message_toast_display( 'ERROR - mo_layout_obj_2->mr_data->id  does not match ms_struc-id!' ).
+      client->message_toast_display( `ERROR - mo_layout_obj_2->mr_data->id  does not match ms_struc-id!` ).
     ENDIF.
 
     ASSIGN mo_layout_obj->mr_data->* TO <row>.
 
     IF <row>-id <> ms_struc-id.
-      client->message_toast_display( 'ERROR - mo_layout_obj->mr_data->id  does not match ms_struc-id!' ).
+      client->message_toast_display( `ERROR - mo_layout_obj->mr_data->id  does not match ms_struc-id!` ).
     ENDIF.
 
     client->view_model_update( ).
 
   ENDMETHOD.
 
-  METHOD ui5_view_display.
 
-    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = 'RTTI IV'
+  METHOD view_display.
+
+    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = `RTTI IV`
                                                                 navbuttonpress = client->_event_nav_app_leave( )
                                                                 shownavbutton  = client->check_app_prev_stack( ) ).
 
-    page->button( text  = 'CALL Next App'
-                  press = client->_event( 'GO' )
-                  type  = 'Success' ).
+    page->button( text  = `CALL Next App`
+                  press = client->_event( `GO` )
+                  type  = `Success` ).
 
-    page->button( text  = 'Change Data'
-                  press = client->_event( 'CHANGE' )
-                  type  = 'Success' ).
+    page->button( text  = `Change Data`
+                  press = client->_event( `CHANGE` )
+                  type  = `Success` ).
 
     DATA(form) = page->simple_form( editable        = abap_true
                                     layout          = `ResponsiveGridLayout`
@@ -112,6 +113,7 @@ CLASS z2ui5_cl_demo_app_335 IMPLEMENTATION.
       ASSIGN mo_layout_obj->mr_data->* TO FIELD-SYMBOL(<val>).
       ASSIGN COMPONENT layout->name OF STRUCTURE <val> TO FIELD-SYMBOL(<value>).
       " assign component layout->name of structure ms_struc to field-symbol(<value>).
+
       IF <value> IS NOT ASSIGNED.
         RETURN.
       ENDIF.
@@ -130,12 +132,14 @@ CLASS z2ui5_cl_demo_app_335 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD get_data.
 
     SELECT SINGLE * FROM z2ui5_t_01
       INTO CORRESPONDING FIELDS OF @ms_struc.
 
   ENDMETHOD.
+
 
   METHOD get_data_2.
 

@@ -20,6 +20,7 @@ CLASS z2ui5_cl_demo_app_319 DEFINITION PUBLIC.
         tokenlongkey TYPE string,
       END OF t_range,
       t_ranges TYPE STANDARD TABLE OF t_range WITH EMPTY KEY.
+
     DATA:
       BEGIN OF m_selection,
         BEGIN OF product_type,
@@ -28,11 +29,16 @@ CLASS z2ui5_cl_demo_app_319 DEFINITION PUBLIC.
           ranges         TYPE t_ranges,
         END OF product_type,
       END OF m_selection.
+
   PROTECTED SECTION.
     DATA m_client TYPE REF TO z2ui5_if_client.
+
     METHODS on_init.
     METHODS on_event.
+
+  PRIVATE SECTION.
 ENDCLASS.
+
 
 CLASS z2ui5_cl_demo_app_319 IMPLEMENTATION.
 
@@ -49,11 +55,12 @@ CLASS z2ui5_cl_demo_app_319 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD on_init.
 
     DATA(l_view) = z2ui5_cl_xml_view=>factory( ).
 
-    DATA(l_page) = l_view->shell( )->page( title      = 'SearchPage'
+    DATA(l_page) = l_view->shell( )->page( title      = `SearchPage`
                                        navbuttonpress = m_client->_event_nav_app_leave( )
                                        shownavbutton  = m_client->check_app_prev_stack( ) ).
 
@@ -61,16 +68,16 @@ CLASS z2ui5_cl_demo_app_319 IMPLEMENTATION.
                           addedtokens   = m_client->_bind_edit( val = m_selection-product_type-tokens_added switch_default_model = abap_true )
                           removedtokens = m_client->_bind_edit( val = m_selection-product_type-tokens_removed switch_default_model = abap_true )
                           rangedata     = m_client->_bind_edit( val = m_selection-product_type-ranges switch_default_model = abap_true )
-                          change        = m_client->_event( 'PRODTYPE_CHANGED' )
+                          change        = m_client->_event( `PRODTYPE_CHANGED` )
                           multiinputid  = `ProductTypeMultiInput` ).
 
     l_page->smart_multi_input(
-      id                = 'ProductTypeMultiInput'
+      id                = `ProductTypeMultiInput`
 *     value             = '{ProductType}'
-      value             = '{CurrencyCode}'
-      entityset         = 'Booking'
-      supportranges     = 'true'
-      enableodataselect = 'true' ).
+      value             = `{CurrencyCode}`
+      entityset         = `Booking`
+      supportranges     = `true`
+      enableodataselect = `true` ).
 
     m_client->view_display( val      = l_page->stringify( )
 *       switch_default_model_path = `/sap/opu/odata/sap/UI_PRODUCTLIST`
@@ -80,19 +87,21 @@ CLASS z2ui5_cl_demo_app_319 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD on_event.
 
-    IF m_client->check_on_event( 'PRODTYPE_CHANGED' ).
-      INSERT VALUE #( operation = 'EQ' value1 = 'EUR' keyfield = 'CurrencyCode' tokentext = 'Euro (auto added line)' ) INTO TABLE m_selection-product_type-ranges.
+    IF m_client->check_on_event( `PRODTYPE_CHANGED` ).
+      INSERT VALUE #( operation = `EQ` value1 = `EUR` keyfield = `CurrencyCode` tokentext = `Euro (auto added line)` ) INTO TABLE m_selection-product_type-ranges.
       m_client->view_model_update( ).
       TRY.
           m_client->message_box_display(
-            text  = z2ui5_cl_ajson=>new( )->set( iv_path = '/' iv_val = m_selection-product_type-ranges )->stringify( )
-            title = 'range content' ).
+            text  = z2ui5_cl_ajson=>new( )->set( iv_path = `/` iv_val = m_selection-product_type-ranges )->stringify( )
+            title = `range content` ).
         CATCH z2ui5_cx_ajson_error INTO DATA(lx_ajson).
           m_client->message_toast_display( lx_ajson->get_text( ) ).
       ENDTRY.
     ENDIF.
 
   ENDMETHOD.
+
 ENDCLASS.

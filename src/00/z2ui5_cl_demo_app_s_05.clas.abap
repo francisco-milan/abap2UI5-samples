@@ -1,6 +1,7 @@
 CLASS z2ui5_cl_demo_app_s_05 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF t_news,
@@ -10,21 +11,17 @@ CLASS z2ui5_cl_demo_app_s_05 DEFINITION PUBLIC.
       tt_news TYPE STANDARD TABLE OF t_news
                    WITH NON-UNIQUE DEFAULT KEY.
 
-    INTERFACES z2ui5_if_app.
     DATA news_input TYPE string.
     DATA author_input TYPE string.
     DATA news_list TYPE tt_news.
     DATA connections TYPE int8.
-
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_on_render.
-    METHODS z2ui5_display_popover.
-
+    METHODS on_event.
+    METHODS view_display.
+    METHODS popover_display.
   PRIVATE SECTION.
-
 ENDCLASS.
 
 
@@ -34,49 +31,50 @@ CLASS z2ui5_cl_demo_app_s_05 IMPLEMENTATION.
 
     me->client = client.
 
-    IF me->z2ui5_if_app~check_initialized = abap_false.
+    IF client->check_on_init( ).
       connections = z2ui5_cl_demo_app_s_05_ws=>get_active_connections( ).
     ENDIF.
 
     IF client->get( )-event IS NOT INITIAL.
-      z2ui5_on_event( ).
+      on_event( ).
       client->view_model_update( ).
       RETURN.
     ENDIF.
 
-    z2ui5_on_render( ).
+    view_display( ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
-    DATA: news TYPE t_news.
+  METHOD on_event.
+
+    DATA news TYPE t_news.
 
     CASE client->get( )-event.
       WHEN `CLEAR`.
 
         CLEAR: news_list.
-      WHEN 'CLICK_HINT_ICON'.
+      WHEN `CLICK_HINT_ICON`.
 
-        z2ui5_display_popover( ).
+        popover_display( ).
 
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_render.
+  METHOD view_display.
 
     SELECT
       SINGLE FROM icfservloc
       FIELDS icfactive
-      WHERE icf_name = 'Z2UI5_SAMPLE'
+      WHERE icf_name = `Z2UI5_SAMPLE`
       INTO @DATA(icfactive).
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = view->shell(
                     )->page(
-                       title          = 'abap2UI5 - Sample: News Feed over WebSocket'
+                       title          = `abap2UI5 - Sample: News Feed over WebSocket`
                        navbuttonpress = client->_event_nav_app_leave( )
                        shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -84,7 +82,7 @@ CLASS z2ui5_cl_demo_app_s_05 IMPLEMENTATION.
        )->button( id = `button_hint_id`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = client->_event( 'CLICK_HINT_ICON' ) ).
+           press     = client->_event( `CLICK_HINT_ICON` ) ).
 
     IF icfactive = abap_false.
       page->message_strip(
@@ -128,7 +126,7 @@ CLASS z2ui5_cl_demo_app_s_05 IMPLEMENTATION.
         icon  = `sap-icon://clear-all`
         press = client->_event( `CLEAR` ) ).
 
-    IF me->z2ui5_if_app~check_initialized = abap_false.
+    IF client->check_on_init( ).
       view->_generic( name = `script`
                       ns   = `html`
          )->_cc_plain_xml(
@@ -177,7 +175,7 @@ CLASS z2ui5_cl_demo_app_s_05 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`

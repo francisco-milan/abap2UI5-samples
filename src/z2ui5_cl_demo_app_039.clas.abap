@@ -1,72 +1,65 @@
 CLASS z2ui5_cl_demo_app_039 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     DATA mv_value    TYPE string.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
     DATA:
-      BEGIN OF app,
-        check_initialized TYPE abap_bool,
-        get               TYPE z2ui5_if_types=>ty_s_get,
+      BEGIN OF app,        get               TYPE z2ui5_if_types=>ty_s_get,
       END OF app.
 
-    METHODS z2ui5_on_init.
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_on_render_main.
-    METHODS z2ui5_on_render_popup.
+    METHODS on_init.
+    METHODS on_event.
+    METHODS view_display_main.
+    METHODS popup_display_view.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_039 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_039 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
     app-get = client->get( ).
     me->client = client.
 
-    IF app-check_initialized = abap_false.
-      app-check_initialized = abap_true.
-      z2ui5_on_init( ).
+    IF client->check_on_init( ).
+      on_init( ).
     ENDIF.
 
     IF app-get-event IS NOT INITIAL.
-      z2ui5_on_event( ).
+      on_event( ).
     ENDIF.
 
-    z2ui5_on_render_main( ).
-    z2ui5_on_render_popup( ).
+    view_display_main( ).
+    popup_display_view( ).
 
-    CLEAR app-get.
+    app-get = VALUE #( ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
-    IF client->check_on_event( 'POPUP' ).
-      client->message_box_display( 'Event raised value:' && mv_value ).
+    IF client->check_on_event( `POPUP` ).
+      client->message_box_display( `Event raised value:` && mv_value ).
     ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_init.
+  METHOD on_init.
 
-    mv_value  = '200'.
+    mv_value  = `200`.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_render_main.
+  METHOD view_display_main.
 
     DATA(lv_xml) = `<mvc:View` && |\n| &&
                         `xmlns="sap.m" xmlns:mvc="sap.ui.core.mvc"` && |\n| &&
@@ -153,7 +146,7 @@ CLASS Z2UI5_CL_DEMO_APP_039 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_render_popup.
+  METHOD popup_display_view.
 
     client->popup_display( `<core:FragmentDefinition` && |\n| &&
                          `  xmlns="sap.m"` && |\n| &&
@@ -197,4 +190,5 @@ CLASS Z2UI5_CL_DEMO_APP_039 IMPLEMENTATION.
                          `</core:FragmentDefinition>` ).
 
   ENDMETHOD.
+
 ENDCLASS.

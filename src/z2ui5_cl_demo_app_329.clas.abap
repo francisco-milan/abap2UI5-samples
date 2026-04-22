@@ -1,7 +1,6 @@
 CLASS z2ui5_cl_demo_app_329 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES if_serializable_object.
 
     DATA mr_data TYPE REF TO data.
@@ -17,8 +16,7 @@ CLASS z2ui5_cl_demo_app_329 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_329 IMPLEMENTATION.
+CLASS z2ui5_cl_demo_app_329 IMPLEMENTATION.
 
   METHOD factory.
 
@@ -26,8 +24,6 @@ CLASS Z2UI5_CL_DEMO_APP_329 IMPLEMENTATION.
 
     result->mr_data = i_data.
 
-
   ENDMETHOD.
 
 ENDCLASS.
-

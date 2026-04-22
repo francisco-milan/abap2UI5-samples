@@ -1,9 +1,6 @@
-CLASS z2ui5_cl_demo_app_166 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_166 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     TYPES:
@@ -27,8 +24,8 @@ CLASS z2ui5_cl_demo_app_166 DEFINITION
         INCLUDE TYPE ty_struc_incl.
     DATA END OF ms_struc2.
 
-
     DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS set_view.
 
   PROTECTED SECTION.
@@ -36,16 +33,14 @@ CLASS z2ui5_cl_demo_app_166 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_166 IMPLEMENTATION.
-
 
   METHOD set_view.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = view->shell(
         )->page(
-                title          = 'abap2UI5 - Binding Structure Level'
+                title          = `abap2UI5 - Binding Structure Level`
                 navbuttonpress = client->_event_nav_app_leave( )
                 shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -76,7 +71,6 @@ CLASS z2ui5_cl_demo_app_166 IMPLEMENTATION.
       ms_struc-value  = `val01`.
       ms_struc-value2 = `val02`.
 
-
       ms_struc2-title  = `title`.
       ms_struc2-value  = `val01`.
       ms_struc2-value2 = `val02`.
@@ -89,4 +83,5 @@ CLASS z2ui5_cl_demo_app_166 IMPLEMENTATION.
     client->view_model_update( ).
 
   ENDMETHOD.
+
 ENDCLASS.

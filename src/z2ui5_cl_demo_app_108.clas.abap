@@ -1,72 +1,59 @@
-CLASS z2ui5_cl_demo_app_108 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_108 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     DATA:
       BEGIN OF screen,
         input1 TYPE string,
         input2 TYPE string,
         input3 TYPE string,
-      END OF screen .
-  PROTECTED SECTION.
+      END OF screen.
 
-    METHODS z2ui5_on_rendering
+  PROTECTED SECTION.
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_on_event
+    METHODS on_event
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_on_init.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_108 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_108 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
     IF client->check_on_init( ).
-      z2ui5_on_init( ).
-      z2ui5_on_rendering( client ).
+      view_display( client ).
     ENDIF.
 
-    z2ui5_on_event( client ).
+    on_event( client ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
     CASE client->get( )-event.
 
-      WHEN 'BUTTON_SEND'.
-        client->message_box_display( 'success - values send to the server' ).
-      WHEN 'BUTTON_CLEAR'.
-        CLEAR screen.
-        client->message_toast_display( 'View initialized' ).
+      WHEN `BUTTON_SEND`.
+        client->message_box_display( `success - values send to the server` ).
+      WHEN `BUTTON_CLEAR`.
+        screen = VALUE #( ).
+        client->message_toast_display( `View initialized` ).
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_init.
-
-  ENDMETHOD.
-
-
-  METHOD z2ui5_on_rendering.
+  METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
-            title           = 'abap2UI5 - Side Panel Example'
+            title           = `abap2UI5 - Side Panel Example`
             navbuttonpress  = client->_event_nav_app_leave( )
               shownavbutton = abap_true ).
 
@@ -113,4 +100,5 @@ CLASS Z2UI5_CL_DEMO_APP_108 IMPLEMENTATION.
     client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

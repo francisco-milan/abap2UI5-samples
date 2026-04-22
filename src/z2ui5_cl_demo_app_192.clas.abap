@@ -3,8 +3,6 @@ CLASS z2ui5_cl_demo_app_192 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-    DATA client TYPE REF TO z2ui5_if_client.
-
     TYPES: BEGIN OF ty_s_key_value,
              fname   TYPE string,
              value   TYPE string,
@@ -20,8 +18,6 @@ CLASS z2ui5_cl_demo_app_192 DEFINITION PUBLIC.
            END OF ty_s_merged_data,
            ty_t_merged_data TYPE STANDARD TABLE OF ty_s_merged_data WITH EMPTY KEY.
 
-    DATA mt_new_data2 TYPE STANDARD TABLE OF REF TO z2ui5_cl_demo_app_193 WITH EMPTY KEY.
-
     TYPES:
       BEGIN OF ty_s_out,
         aa TYPE string,
@@ -30,29 +26,29 @@ CLASS z2ui5_cl_demo_app_192 DEFINITION PUBLIC.
       END OF ty_s_out,
       ty_t_out TYPE STANDARD TABLE OF ty_s_out WITH EMPTY KEY.
 
+    DATA client TYPE REF TO z2ui5_if_client.
+
+    DATA mt_new_data2 TYPE STANDARD TABLE OF REF TO z2ui5_cl_demo_app_193 WITH EMPTY KEY.
+
     DATA mt_out TYPE ty_t_out.
 
-    METHODS ui5_display.
-    METHODS ui5_event.
-
+    METHODS view_display.
   PROTECTED SECTION.
     METHODS get_data.
     METHODS xml_parse.
     METHODS xml_stringify.
-
   PRIVATE SECTION.
 ENDCLASS.
 
+
 CLASS z2ui5_cl_demo_app_192 IMPLEMENTATION.
 
-  METHOD ui5_event.
-  ENDMETHOD.
 
-  METHOD ui5_display.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     view->shell(
-        )->page( title          = 'xxx'
+        )->page( title          = `xxx`
                  navbuttonpress = client->_event_nav_app_leave( )
                  shownavbutton  = client->check_app_prev_stack( )
             )->header_content( ).
@@ -60,28 +56,30 @@ CLASS z2ui5_cl_demo_app_192 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD z2ui5_if_app~main.
 
     xml_parse( ).
     me->client = client.
     get_data( ).
-    ui5_display( ).
+    view_display( ).
     xml_stringify( ).
 
   ENDMETHOD.
 
+
   METHOD get_data.
+
     DATA lr_structdescr TYPE REF TO cl_abap_structdescr.
     DATA lr_tabdescr TYPE REF TO cl_abap_tabledescr.
     FIELD-SYMBOLS <fs_s_head> TYPE any.
     FIELD-SYMBOLS <fs_t_head_new> TYPE STANDARD TABLE.
     FIELD-SYMBOLS <fs_s_head_new> TYPE any.
 
-    mt_out = VALUE #( ( aa = 'aa' bb = 'bb' cc = 'cc' )
-                      ( aa = 'a1' bb = 'b1' cc = 'c1' ) ).
+    mt_out = VALUE #( ( aa = `aa` bb = `bb` cc = `cc` )
+                      ( aa = `a1` bb = `b1` cc = `c1` ) ).
 
     DATA(kopf) = REF #( mt_out ).
-
 
     LOOP AT kopf->* ASSIGNING <fs_s_head>.
 

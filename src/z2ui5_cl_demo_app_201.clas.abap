@@ -1,10 +1,7 @@
-CLASS z2ui5_cl_demo_app_201 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_201 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_s_currency,
@@ -12,28 +9,27 @@ CLASS z2ui5_cl_demo_app_201 DEFINITION
         currency          TYPE string,
         currencyname      TYPE string,
         currencyshortname TYPE string,
-      END OF ty_s_currency .
+      END OF ty_s_currency.
 
     DATA
-      mt_suggestion_out TYPE STANDARD TABLE OF ty_s_currency .
+      mt_suggestion_out TYPE STANDARD TABLE OF ty_s_currency.
     DATA
-      mt_suggestion TYPE STANDARD TABLE OF ty_s_currency .
-    DATA input TYPE string .
+      mt_suggestion TYPE STANDARD TABLE OF ty_s_currency.
+
+    DATA input TYPE string.
+
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_view_display.
+    METHODS on_event.
+    METHODS view_display.
     METHODS set_data.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_201 IMPLEMENTATION.
+CLASS z2ui5_cl_demo_app_201 IMPLEMENTATION.
 
   METHOD set_data.
 
@@ -258,6 +254,7 @@ CLASS Z2UI5_CL_DEMO_APP_201 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD z2ui5_if_app~main.
 
     me->client = client.
@@ -284,54 +281,52 @@ CLASS Z2UI5_CL_DEMO_APP_201 IMPLEMENTATION.
     ENDIF.
 
     IF client->get( )-event IS NOT INITIAL.
-      z2ui5_on_event( ).
+      on_event( ).
     ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
+
     DATA lt_range TYPE RANGE OF string.
 
     CASE client->get( )-event.
-      WHEN 'START'.
-        z2ui5_view_display( ).
-      WHEN 'ON_SUGGEST'.
-
+      WHEN `START`.
+        view_display( ).
+      WHEN `ON_SUGGEST`.
 
         lt_range = VALUE #( (  sign = 'I' option = 'CP' low = `*` && input && `*` ) ).
 
-        CLEAR mt_suggestion_out.
+        mt_suggestion_out = VALUE #( ).
         LOOP AT mt_suggestion INTO DATA(ls_sugg)
             WHERE currencyname IN lt_range.
           INSERT ls_sugg INTO TABLE mt_suggestion_out.
         ENDLOOP.
-
-
 
         client->view_model_update( ).
     ENDCASE.
 
   ENDMETHOD.
 
-  METHOD z2ui5_view_display.
+
+  METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page(
-       title          = 'abap2UI5 - Live Suggestion Event'
+       title          = `abap2UI5 - Live Suggestion Event`
        navbuttonpress = client->_event_nav_app_leave( )
        shownavbutton  = client->check_app_prev_stack( ) ).
 
-
     DATA(grid) = page->grid( 'L6 M12 S12'
-        )->content( 'layout' ).
+        )->content( `layout` ).
 
     DATA(input) = grid->simple_form( 'Input'
-        )->content( 'form'
-            )->label( 'Input with value help'
+        )->content( `form`
+            )->label( `Input with value help`
             )->input(
                     id                           = `suggInput`
                     value                        = client->_bind_edit( input )
-                    suggest                      = client->_event( 'ON_SUGGEST' )
+                    suggest                      = client->_event( `ON_SUGGEST` )
                     showtablesuggestionvaluehelp = abap_false
                     suggestionrows               = client->_bind( mt_suggestion_out )
                     showsuggestion               = abap_true
@@ -340,13 +335,13 @@ CLASS Z2UI5_CL_DEMO_APP_201 IMPLEMENTATION.
                  )->get( ).
 
     input->suggestion_columns(
-        )->column( )->label( 'Name' )->get_parent(
-        )->column( )->label( 'Currency' ).
+        )->column( )->label( `Name` )->get_parent(
+        )->column( )->label( `Currency` ).
 
     input->suggestion_rows(
         )->column_list_item(
-            )->label( '{CURRENCYNAME}'
-            )->label( '{CURRENCY}' ).
+            )->label( `{CURRENCYNAME}`
+            )->label( `{CURRENCY}` ).
 
     page->_generic( name = `script`
                     ns   = `html` )->_cc_plain_xml( `setInputFIlter()` ).
@@ -354,4 +349,5 @@ CLASS Z2UI5_CL_DEMO_APP_201 IMPLEMENTATION.
     client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

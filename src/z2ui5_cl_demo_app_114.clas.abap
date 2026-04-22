@@ -1,10 +1,7 @@
-CLASS z2ui5_cl_demo_app_114 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_114 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_feed,
@@ -14,7 +11,6 @@ CLASS z2ui5_cl_demo_app_114 DEFINITION
         date      TYPE string,
         text      TYPE string,
       END OF ty_feed.
-
     DATA mt_feed TYPE TABLE OF ty_feed.
     DATA ms_feed TYPE ty_feed.
     DATA mv_value TYPE string.
@@ -22,41 +18,39 @@ CLASS z2ui5_cl_demo_app_114 DEFINITION
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
-
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_set_data.
-    METHODS z2ui5_view_display.
+    METHODS on_event.
+    METHODS set_data.
+    METHODS view_display.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_114 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
     me->client = client.
 
     IF client->check_on_init( ).
-      z2ui5_set_data( ).
-      z2ui5_view_display( ).
-      RETURN.
-    ENDIF.
+      set_data( ).
+      view_display( ).
 
-    z2ui5_on_event( ).
+    ELSE.
+      on_event( ).
+    ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
-    IF client->check_on_event( 'POST' ).
+  METHOD on_event.
+
+    IF client->check_on_event( `POST` ).
 
       IF mv_value IS NOT INITIAL.
-        CLEAR ms_feed.
+        ms_feed = VALUE #( ).
         ms_feed-author = sy-uname.
-        ms_feed-type = 'Respond'.
+        ms_feed-type = `Respond`.
         ms_feed-text = mv_value.
         mv_value = ``.
         INSERT ms_feed INTO mt_feed INDEX 1.
@@ -64,10 +58,11 @@ CLASS z2ui5_cl_demo_app_114 IMPLEMENTATION.
 
       ENDIF.
     ENDIF.
+
   ENDMETHOD.
 
 
-  METHOD z2ui5_set_data.
+  METHOD set_data.
 
     mt_feed = VALUE #(
                       ( author = `choper725` authorpic = `employee` type = `Request` date = `August 26 2023`
@@ -83,12 +78,12 @@ CLASS z2ui5_cl_demo_app_114 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_display.
+  METHOD view_display.
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
 
     DATA(page) = lo_view->shell( )->page(
-             title          = 'Feed Input'
+             title          = `Feed Input`
              navbuttonpress = client->_event_nav_app_leave( )
              shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -108,7 +103,7 @@ CLASS z2ui5_cl_demo_app_114 IMPLEMENTATION.
                     enabled     = abap_true
             )->button(
                     icon      = `sap-icon://paper-plane`
-                    press     = client->_event( 'POST' )
+                    press     = client->_event( `POST` )
                     iconfirst = abap_true ).
 
     page->list(
@@ -116,8 +111,8 @@ CLASS z2ui5_cl_demo_app_114 IMPLEMENTATION.
       showseparators = `Inner`
         )->feed_list_item(
           sender                   = `{AUTHOR}`
-          senderpress              = client->_event( 'SENDER_PRESS' )
-          iconpress                = client->_event( 'ICON_PRESS' )
+          senderpress              = client->_event( `SENDER_PRESS` )
+          iconpress                = client->_event( `ICON_PRESS` )
           icondensityaware         = abap_false
           showicon                 = abap_false
           info                     = `Reply`
@@ -127,4 +122,5 @@ CLASS z2ui5_cl_demo_app_114 IMPLEMENTATION.
     client->view_display( lo_view->stringify( ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

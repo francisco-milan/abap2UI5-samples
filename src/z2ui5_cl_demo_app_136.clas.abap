@@ -1,7 +1,6 @@
 CLASS z2ui5_cl_demo_app_136 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     DATA mv_path TYPE string.
@@ -11,33 +10,28 @@ CLASS z2ui5_cl_demo_app_136 DEFINITION PUBLIC.
     DATA mv_check_download TYPE abap_bool.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
+    METHODS on_event.
 
-    METHODS ui5_on_event.
-
-    METHODS ui5_view_main_display.
-
-    METHODS ui5_view_init_display.
+    METHODS view_display.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_136 IMPLEMENTATION.
 
+  METHOD on_event.
 
-  METHOD ui5_on_event.
     TRY.
 
         CASE client->get( )-event.
 
-          WHEN 'START' OR 'CHANGE'.
-            ui5_view_main_display( ).
+          WHEN `START` OR `CHANGE`.
+            view_display( ).
 
-          WHEN 'UPLOAD'.
+          WHEN `UPLOAD`.
 
             SPLIT mv_value AT `;` INTO DATA(lv_dummy) DATA(lv_data).
             SPLIT lv_data AT `,` INTO lv_dummy lv_data.
@@ -48,10 +42,10 @@ CLASS z2ui5_cl_demo_app_136 IMPLEMENTATION.
             mr_table = z2ui5_cl_util=>itab_get_itab_by_csv( lv_ready ).
             client->message_box_display( `CSV loaded to table` ).
 
-            ui5_view_main_display( ).
+            view_display( ).
 
-            CLEAR mv_value.
-            CLEAR mv_path.
+            mv_value = VALUE #( ).
+            mv_path = VALUE #( ).
         ENDCASE.
 
       CATCH cx_root INTO DATA(x).
@@ -62,25 +56,16 @@ CLASS z2ui5_cl_demo_app_136 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD ui5_view_init_display.
-
-    ui5_view_main_display( ).
-
-
-  ENDMETHOD.
-
-
-  METHOD ui5_view_main_display.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = view->shell( )->page(
-            title          = 'abap2UI5 - CSV to ABAP internal Table'
+            title          = `abap2UI5 - CSV to ABAP internal Table`
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
     FIELD-SYMBOLS <tab> TYPE table.
 
     IF mr_table IS NOT INITIAL.
-
 
       ASSIGN mr_table->* TO <tab>.
 
@@ -88,10 +73,9 @@ CLASS z2ui5_cl_demo_app_136 IMPLEMENTATION.
               COND #( WHEN mv_check_edit = abap_true THEN client->_bind_edit( <tab> ) ELSE client->_bind_edit( <tab> ) )
           )->header_toolbar(
               )->overflow_toolbar(
-                  )->title( 'CSV Content'
+                  )->title( `CSV Content`
                   )->toolbar_spacer(
           )->get_parent( )->get_parent( ).
-
 
       DATA(lr_fields) = z2ui5_cl_util=>rtti_get_t_attri_by_any( <tab> ).
       DATA(lo_cols) = tab->columns( ).
@@ -109,8 +93,8 @@ CLASS z2ui5_cl_demo_app_136 IMPLEMENTATION.
     footer->_z2ui5( )->file_uploader(
       value       = client->_bind_edit( mv_value )
       path        = client->_bind_edit( mv_path )
-      placeholder = 'filepath here...'
-      upload      = client->_event( 'UPLOAD' ) ).
+      placeholder = `filepath here...`
+      upload      = client->_event( `UPLOAD` ) ).
 
     client->view_display( view->stringify( ) ).
 
@@ -122,15 +106,16 @@ CLASS z2ui5_cl_demo_app_136 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      ui5_view_init_display( ).
+      view_display( ).
       RETURN.
     ENDIF.
 
     IF client->get( )-check_on_navigated = abap_true.
-      ui5_view_main_display( ).
+      view_display( ).
     ENDIF.
 
-    ui5_on_event( ).
+    on_event( ).
 
   ENDMETHOD.
+
 ENDCLASS.

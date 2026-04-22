@@ -1,11 +1,7 @@
-CLASS z2ui5_cl_demo_app_320 DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_320 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
-
-    DATA viewportpercentwidth TYPE i VALUE 100.
 
     TYPES: BEGIN OF ty_item,
              id           TYPE string,
@@ -21,35 +17,36 @@ CLASS z2ui5_cl_demo_app_320 DEFINITION
            END OF ty_item.
     TYPES ty_items TYPE STANDARD TABLE OF ty_item WITH DEFAULT KEY.
 
+    DATA viewportpercentwidth TYPE i VALUE 100.
+
     DATA item           TYPE ty_item.
     DATA items          TYPE ty_items.
     DATA group_items    TYPE ty_items.
     DATA content_height TYPE string.
     DATA content_width  TYPE string.
-
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
     METHODS display_avatar_group_view.
 
     METHODS display_individual_popover
-      IMPORTING !id TYPE string.
+      IMPORTING id TYPE string.
 
     METHODS display_group_popover
-      IMPORTING !id TYPE string.
+      IMPORTING id TYPE string.
 
     METHODS on_event.
 
-  PRIVATE SECTION.
     METHODS calculate_content_height
-      IMPORTING !lines        TYPE i
+      IMPORTING lines        TYPE i
       RETURNING VALUE(result) TYPE string.
-
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 CLASS z2ui5_cl_demo_app_320 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
+
     me->client = client.
 
     IF client->check_on_init( ).
@@ -85,12 +82,15 @@ CLASS z2ui5_cl_demo_app_320 IMPLEMENTATION.
     ENDIF.
 
     on_event( ).
+
   ENDMETHOD.
 
+
   METHOD display_avatar_group_view.
+
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     view->_z2ui5( )->title( `Avatar Group Sample` ).
-    view->page( title          = 'abap2UI5 - Sample: Avatar Group'
+    view->page( title          = `abap2UI5 - Sample: Avatar Group`
                 navbuttonpress = client->_event_nav_app_leave( )
                 shownavbutton  = client->check_app_prev_stack( )
         )->slider( value = client->_bind_edit( viewportpercentwidth )
@@ -138,9 +138,12 @@ CLASS z2ui5_cl_demo_app_320 IMPLEMENTATION.
                                           fallbackicon = `{FALLBACKICON}`
                                           src          = `{SRC}` ).
     client->view_display( view->stringify( ) ).
+
   ENDMETHOD.
 
+
   METHOD display_individual_popover.
+
     DATA(individual_popover) = z2ui5_cl_xml_view=>factory_popup( ).
     individual_popover->popover( id             = `individualPopover`
                                  class          = `sapFAvatarGroupPopover`
@@ -172,9 +175,12 @@ CLASS z2ui5_cl_demo_app_320 IMPLEMENTATION.
 
     client->popover_display( xml   = individual_popover->stringify( )
                              by_id = id ).
+
   ENDMETHOD.
 
+
   METHOD display_group_popover.
+
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
 
     DATA(nav_container) = view->popover( id            = `groupPopover`
@@ -236,16 +242,19 @@ CLASS z2ui5_cl_demo_app_320 IMPLEMENTATION.
 
     client->popover_display( xml   = view->stringify( )
                              by_id = id ).
+
   ENDMETHOD.
 
+
   METHOD on_event.
+
     DATA(lt_arg) = client->get( )-t_event_arg.
     CASE client->get( )-event.
       WHEN `onGroupPress`.
         DATA(group_id) = lt_arg[ 1 ].
         group_items = items.
         content_height = calculate_content_height( lines( group_items ) ).
-        content_width = '450px'.
+        content_width = `450px`.
 
         display_group_popover( group_id ).
         client->popover_destroy( ).
@@ -259,10 +268,11 @@ CLASS z2ui5_cl_demo_app_320 IMPLEMENTATION.
         group_items = VALUE ty_items( FOR itm IN items FROM items_displayed + 1
                                       ( itm ) ).
         content_height = calculate_content_height( lines( group_items ) ).
-        content_width = '450px'.
+        content_width = `450px`.
 
         IF overflow_button_pressed = abap_true.
           display_group_popover( item_id ).
+
         ELSE.
           item = VALUE #( items[ item_table_index + 1 ] OPTIONAL ).
           display_individual_popover( item_id ).
@@ -286,11 +296,16 @@ CLASS z2ui5_cl_demo_app_320 IMPLEMENTATION.
         client->follow_up_action( client->_event_client( val   = `POPOVER_NAV_CONTAINER_TO`
                                                          t_arg = VALUE #( ( `navContainer` ) ( `main` ) ) ) ).
     ENDCASE.
+
   ENDMETHOD.
 
+
   METHOD calculate_content_height.
+
     DATA(lv_floor) = floor( ( lines / 2 ) ) * 68 + 48.
     DATA(lv_string) = CONV string( lv_floor ).
     result = |{ condense( lv_string ) }px|.
+
   ENDMETHOD.
+
 ENDCLASS.

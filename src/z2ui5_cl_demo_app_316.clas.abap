@@ -1,12 +1,8 @@
-CLASS z2ui5_cl_demo_app_316 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_316 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES if_serializable_object.
     INTERFACES z2ui5_if_app.
-
-
 
     DATA phone  TYPE string.
     DATA mobile TYPE string.
@@ -26,19 +22,16 @@ CLASS z2ui5_cl_demo_app_316 DEFINITION
           END OF url.
 
   PROTECTED SECTION.
-    METHODS display_view
-      IMPORTING !client TYPE REF TO z2ui5_if_client.
-
-    METHODS on_event
-      IMPORTING !client TYPE REF TO z2ui5_if_client.
+    METHODS view_display
+      IMPORTING client TYPE REF TO z2ui5_if_client.
 
   PRIVATE SECTION.
-
 ENDCLASS.
 
 
 CLASS z2ui5_cl_demo_app_316 IMPLEMENTATION.
-  METHOD display_view.
+  METHOD view_display.
+
     url = VALUE #( url        = `http://www.sap.com`
                    new_window = `true` ).
     email = VALUE #( email      = `email@email.com`
@@ -49,7 +42,7 @@ CLASS z2ui5_cl_demo_app_316 IMPLEMENTATION.
     DATA(page) = z2ui5_cl_xml_view=>factory(
         )->_z2ui5( )->title( `URL Helper Sample`
         )->shell(
-            )->page( title          = 'abap2UI5 - Sample: URL Helper'
+            )->page( title          = `abap2UI5 - Sample: URL Helper`
                      navbuttonpress = client->_event_nav_app_leave( )
                      shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -89,8 +82,8 @@ CLASS z2ui5_cl_demo_app_316 IMPLEMENTATION.
          )->text_area( valueliveupdate = abap_true
                        value           = client->_bind_edit( email-body )
                        growing         = abap_true
-                       growingmaxlines = '7'
-                       width           = '100%' ).
+                       growingmaxlines = `7`
+                       width           = `100%` ).
 
     email_form->button( text  = `Trigger Email`
                         press = client->_event_client( val   = client->cs_event-urlhelper
@@ -140,16 +133,16 @@ CLASS z2ui5_cl_demo_app_316 IMPLEMENTATION.
                                                                       ( |${ client->_bind_edit( url ) }| ) ) ) ).
 
     client->view_display( page->stringify( ) ).
+
   ENDMETHOD.
 
-  METHOD on_event.
-  ENDMETHOD.
 
   METHOD z2ui5_if_app~main.
+
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
     ENDIF.
 
-    on_event( client ).
   ENDMETHOD.
+
 ENDCLASS.

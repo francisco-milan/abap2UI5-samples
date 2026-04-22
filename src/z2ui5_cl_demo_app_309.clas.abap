@@ -1,31 +1,25 @@
-CLASS z2ui5_cl_demo_app_309 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_309 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
+    INTERFACES z2ui5_if_app.
 
-
-    INTERFACES z2ui5_if_app .
     DATA mv_url TYPE string.
 
     METHODS on_event.
     METHODS view_display.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_309 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_309 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'CUSTOM_JS_FROM_EB' ).
+    IF client->check_on_event( `CUSTOM_JS_FROM_EB` ).
 *        client->follow_up_action( val = `sap.z2ui5.afterBE()` ).
       client->follow_up_action( `alert("afterBE triggered !!");` ).
     ENDIF.
@@ -47,7 +41,7 @@ CLASS Z2UI5_CL_DEMO_APP_309 IMPLEMENTATION.
     page = page->vbox( ).
     page->get_parent( )->hbox( class = `sapUiSmallMargin` ).
     page->button( text  = `call custom JS from EB`
-                  press = client->_event( 'CUSTOM_JS_FROM_EB' ) ).
+                  press = client->_event( `CUSTOM_JS_FROM_EB` ) ).
 
     client->view_display( view->stringify( ) ).
 
@@ -59,7 +53,6 @@ CLASS Z2UI5_CL_DEMO_APP_309 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-
       view_display( ).
 
     ENDIF.
@@ -67,4 +60,5 @@ CLASS Z2UI5_CL_DEMO_APP_309 IMPLEMENTATION.
     on_event( ).
 
   ENDMETHOD.
+
 ENDCLASS.

@@ -1,6 +1,4 @@
-CLASS z2ui5_cl_demo_app_323 DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_323 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
@@ -9,7 +7,6 @@ CLASS z2ui5_cl_demo_app_323 DEFINITION
 
   PROTECTED SECTION.
   PRIVATE SECTION.
-
 ENDCLASS.
 
 
@@ -21,17 +18,17 @@ CLASS z2ui5_cl_demo_app_323 IMPLEMENTATION.
       DATA(view) = z2ui5_cl_xml_view=>factory( ).
       client->view_display( view->shell(
              )->page(
-                     title          = 'abap2UI5 - Navigation with app state'
-                     navbuttonpress = client->_event( 'BACK' )
+                     title          = `abap2UI5 - Navigation with app state`
+                     navbuttonpress = client->_event( `BACK` )
                      shownavbutton  = client->check_app_prev_stack( )
-          )->simple_form( title = 'Form Title' editable = abap_true
-                     )->content( 'form'
-                         )->title( 'Input'
-                         )->label( 'quantity'
+          )->simple_form( title = `Form Title` editable = abap_true
+                     )->content( `form`
+                         )->title( `Input`
+                         )->label( `quantity`
                          )->input( client->_bind_edit( mv_quantity )
                          )->button(
-                             text  = 'share'
-                             press = client->_event( 'BUTTON_POST' )
+                             text  = `share`
+                             press = client->_event( `BUTTON_POST` )
               )->stringify( ) ).
     ENDIF.
 
@@ -44,8 +41,7 @@ CLASS z2ui5_cl_demo_app_323 IMPLEMENTATION.
       WHEN `BACK`.
         client->nav_app_leave( ).
     ENDCASE.
+
   ENDMETHOD.
-
-
 
 ENDCLASS.

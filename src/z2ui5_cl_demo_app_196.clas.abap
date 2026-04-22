@@ -1,33 +1,25 @@
-CLASS z2ui5_cl_demo_app_196 DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_196 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES z2ui5_if_app .
-    DATA mv_slider_value TYPE i .
+    INTERFACES z2ui5_if_app.
 
     TYPES: BEGIN OF ty_shape,
        id TYPE string,
       END OF ty_shape.
 
+    DATA mv_slider_value TYPE i.
+
     DATA mt_shapes TYPE TABLE OF ty_shape.
-
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
+    METHODS initialize.
+    METHODS view_display.
   PRIVATE SECTION.
-
-    DATA client TYPE REF TO z2ui5_if_client .
-
-    METHODS initialize .
-    METHODS on_event .
-    METHODS render_screen .
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_196 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_196 IMPLEMENTATION.
 
   METHOD initialize.
 
@@ -104,14 +96,9 @@ CLASS Z2UI5_CL_DEMO_APP_196 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD on_event.
-  ENDMETHOD.
-
-
-  METHOD render_screen.
+  METHOD view_display.
 
     DATA lv_script TYPE string.
-
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     view->_generic( ns   = `html`
@@ -127,7 +114,7 @@ CLASS Z2UI5_CL_DEMO_APP_196 IMPLEMENTATION.
     DATA(page) = view->shell(
          )->page(
             showheader     = xsdbool( abap_false = client->get( )-check_launchpad_active )
-            title          = 'abap2UI5 - Status Indicators Library'
+            title          = `abap2UI5 - Status Indicators Library`
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -160,7 +147,6 @@ CLASS Z2UI5_CL_DEMO_APP_196 IMPLEMENTATION.
              )->shape_group(
               )->library_shape( shapeid = `{ID}` ).
 
-
     client->view_display( view->stringify( ) ).
 
   ENDMETHOD.
@@ -173,11 +159,10 @@ CLASS Z2UI5_CL_DEMO_APP_196 IMPLEMENTATION.
     IF client->check_on_init( ).
 
       initialize( ).
-      render_screen( ).
+      view_display( ).
 
     ENDIF.
 
-    on_event( ).
-
   ENDMETHOD.
+
 ENDCLASS.

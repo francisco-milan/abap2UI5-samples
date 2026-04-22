@@ -1,50 +1,40 @@
-CLASS z2ui5_cl_demo_app_110 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_110 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
+    INTERFACES z2ui5_if_app.
 
+    DATA product TYPE string.
+    DATA quantity TYPE string.
 
-    INTERFACES z2ui5_if_app .
-
-    DATA product TYPE string .
-    DATA quantity TYPE string .
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-
-    METHODS z2ui5_on_init.
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_display_view.
-
+    METHODS view_display.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
+CLASS z2ui5_cl_demo_app_110 IMPLEMENTATION.
 
-CLASS Z2UI5_CL_DEMO_APP_110 IMPLEMENTATION.
-
-
-  METHOD z2ui5_display_view.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     view->shell(
       )->page(
-              title          = 'abap2UI5 - Sample: MaskInput'
+              title          = `abap2UI5 - Sample: MaskInput`
               navbuttonpress = client->_event_nav_app_leave( )
               shownavbutton  = client->check_app_prev_stack( )
-          )->simple_form( title    = 'Generic Mask Input'
-                          layout   = 'ColumnLayout'
+          )->simple_form( title    = `Generic Mask Input`
+                          layout   = `ColumnLayout`
                           editable = abap_true
 *              )->content( 'form'
-                  )->label( 'Unique ID'
+                  )->label( `Unique ID`
                   )->mask_input( mask              = `~~~~~~~~~~`
                                  placeholdersymbol = `_`
-                                 placeholder       = 'All characters allowed' )->get(
+                                 placeholder       = `All characters allowed` )->get(
                     )->rules(
-                      )->mask_input_rule( maskformatsymbol = '~'
+                      )->mask_input_rule( maskformatsymbol = `~`
                                           regex            = `[^_]`
                     )->get_parent( )->get_parent( )->get_parent(
                  )->label( `Promo code`
@@ -62,8 +52,8 @@ CLASS Z2UI5_CL_DEMO_APP_110 IMPLEMENTATION.
                   )->rules(
                     )->mask_input_rule(
                   )->get_parent( )->get_parent( )->get_parent( )->get_parent(
-      )->simple_form( title    = 'Possible usages (may require additional coding)'
-                      layout   = 'ColumnLayout'
+      )->simple_form( title    = `Possible usages (may require additional coding)`
+                      layout   = `ColumnLayout`
                       editable = abap_true
                 )->label( `Serial number`
                  )->mask_input( mask              = `CCCC-CCCC-CCCC-CCCC-CCCC`
@@ -103,22 +93,10 @@ CLASS Z2UI5_CL_DEMO_APP_110 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      z2ui5_on_init( ).
-      z2ui5_display_view( ).
+      view_display( ).
       RETURN.
     ENDIF.
 
-    z2ui5_on_event( ).
-
   ENDMETHOD.
 
-
-  METHOD z2ui5_on_event.
-  ENDMETHOD.
-
-
-  METHOD z2ui5_on_init.
-
-
-  ENDMETHOD.
 ENDCLASS.

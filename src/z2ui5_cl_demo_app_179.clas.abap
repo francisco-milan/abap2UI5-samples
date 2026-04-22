@@ -1,14 +1,9 @@
-CLASS z2ui5_cl_demo_app_179 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_179 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
 *https://github.com/abap2UI5/abap2UI5/issues/988#issuecomment-1978738754
 
     INTERFACES z2ui5_if_app.
-
-    DATA zoomlevel TYPE i.
 
     TYPES:
       BEGIN OF ty_s_data,
@@ -23,25 +18,22 @@ CLASS z2ui5_cl_demo_app_179 DEFINITION
         starttime      TYPE string,
         endtime        TYPE string,
       END OF ty_s_data.
+
+    DATA zoomlevel TYPE i.
+
     DATA mt_data TYPE STANDARD TABLE OF ty_s_data WITH EMPTY KEY.
-
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
 
-    DATA client TYPE REF TO z2ui5_if_client .
-    METHODS set_view .
-    METHODS z2ui5_on_event .
-    METHODS set_mock_data .
-
+    METHODS set_view.
+    METHODS set_mock_data.
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_179 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_179 IMPLEMENTATION.
 
   METHOD set_mock_data.
-
 
     DATA(lv_mock) = `[` && |\n| &&
                     `   {` && |\n| &&
@@ -146,16 +138,15 @@ CLASS Z2UI5_CL_DEMO_APP_179 IMPLEMENTATION.
 
   METHOD set_view.
 
-
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     view->_generic_property( VALUE #( n = `core:require` v = `{Helper:'z2ui5/Util'}` ) ).
 
     DATA(page) = view->page( id = `page_main`
-            title               = 'abap2UI5 - Gantt'
+            title               = `abap2UI5 - Gantt`
             navbuttonpress      = client->_event_nav_app_leave( )
             shownavbutton       = client->check_app_prev_stack( )
-            class               = 'sapUiContentPadding' ).
+            class               = `sapUiContentPadding` ).
 
     DATA(cont) = page->scroll_container(
 *               height     =
@@ -173,14 +164,13 @@ CLASS Z2UI5_CL_DEMO_APP_179 IMPLEMENTATION.
         showlegendbutton      = abap_true
         showsettingbutton     = abap_true
         showtimezoomcontrol   = abap_true
-*        findbuttonpress           = client->_event( 'FIRE' )
+*        findbuttonpress           = client->_event( `FIRE` )
 *    stepcountofslider         =
 *    zoomcontroltype           =
 *        zoomlevel                 = client->_bind_edit( zoomlevel )
 *  RECEIVING
 *    result                    =
       ).
-
 
     DATA(gantt_container) = cont->gantt_chart_container( ).
 
@@ -207,8 +197,6 @@ CLASS Z2UI5_CL_DEMO_APP_179 IMPLEMENTATION.
          `     }` && |\r\n| &&
          `}` ).
 
-
-
     DATA(row_settings) = table->row_settings_template( )->gantt_row_settings( rowid = `{OBJECTID}`
 *                                  shapes1 = `{path: 'TASK', templateShareable:false}`
 *                                  shapes2 = `{path: 'SUBTASK', templateShareable:false}`
@@ -231,18 +219,17 @@ CLASS Z2UI5_CL_DEMO_APP_179 IMPLEMENTATION.
         successor   = `{SUCCTASKID}`
         predecessor = `{PREDECTASKID}` ).
 
-
     DATA(columns) = table->ui_columns( ).
     DATA(column) = columns->ui_column(
-         id = 'OBJECTNAME' ).
+         id = `OBJECTNAME` ).
 
     column->ui_custom_data( )->core_custom_data(
-       key    = 'exportTableColumnConfig'
-        value = '{"columnKey": "OBJECTNAME",' && |\r\n| &&
-                 '    "leadingProperty":"OBJECTNAME",' && |\r\n| &&
-                 '    "dataType": "string",' && |\r\n| &&
-                 '    "hierarchyNodeLevel": "HierarchyNodeLevel",' && |\r\n| &&
-                 '    "wrap": true}'
+       key    = `exportTableColumnConfig`
+        value = `{"columnKey": "OBJECTNAME",` && |\r\n| &&
+                 `    "leadingProperty":"OBJECTNAME",` && |\r\n| &&
+                 `    "dataType": "string",` && |\r\n| &&
+                 `    "hierarchyNodeLevel": "HierarchyNodeLevel",` && |\r\n| &&
+                 `    "wrap": true}`
       ).
 
     column->text( `Object Name` ).
@@ -272,11 +259,6 @@ CLASS Z2UI5_CL_DEMO_APP_179 IMPLEMENTATION.
       RETURN.
     ENDIF.
 
-    z2ui5_on_event( ).
-
   ENDMETHOD.
 
-
-  METHOD z2ui5_on_event.
-  ENDMETHOD.
 ENDCLASS.
