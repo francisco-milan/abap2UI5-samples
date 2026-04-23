@@ -29,11 +29,12 @@ CLASS z2ui5_cl_demo_app_071 IMPLEMENTATION.
                                     val   = `SET_SIZE_LIMIT`
                                     t_arg = VALUE #( ( CONV #( mv_set_size_limit ) ) ( client->cs_view-main ) )
                         ) ).
-        client->view_model_update( ).
         client->message_toast_display( `SizeLimitUpdated` ).
+        RETURN.
 
     ENDCASE.
 
+    mv_combo_number = 105.
     DO mv_combo_number TIMES.
       INSERT VALUE #( key = sy-index text = sy-index ) INTO TABLE lt_combo.
     ENDDO.
@@ -50,15 +51,16 @@ CLASS z2ui5_cl_demo_app_071 IMPLEMENTATION.
                      )->label( `Link`
                      )->label( `setSizeLimit`
                      )->input( value = client->_bind_edit( mv_set_size_limit )
+                     )->button(
+                         text  = `update size limit`
+                         press = client->_event( val = `UPDATE` )
                      )->label( `Number of Entries`
-                     )->input( value = client->_bind_edit( mv_combo_number )
+                     )->input( value = client->_bind_edit( mv_combo_number ) enabled = abap_false
                      )->label( `demo`
                      )->combobox( items = client->_bind( lt_combo )
                         )->item( key = `{KEY}` text = `{TEXT}`
                         )->get_parent( )->get_parent(
-                     )->button(
-                         text  = `Press 2x update`
-                         press = client->_event( val = `UPDATE` )
+
         )->stringify( ) ).
 
   ENDMETHOD.
