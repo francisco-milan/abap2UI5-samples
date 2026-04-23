@@ -32,6 +32,15 @@ CLASS z2ui5_cl_demo_app_071 IMPLEMENTATION.
         client->message_toast_display( `SizeLimitUpdated` ).
         RETURN.
 
+      WHEN `UPDATE_MODEL`.
+        CLEAR lt_combo.
+        DO mv_combo_number TIMES.
+          INSERT VALUE #( key = sy-index text = sy-index ) INTO TABLE lt_combo.
+        ENDDO.
+        client->message_toast_display( `update number of entries` ).
+        client->view_model_update( ).
+        RETURN.
+
     ENDCASE.
 
     mv_combo_number = 105.
@@ -55,7 +64,10 @@ CLASS z2ui5_cl_demo_app_071 IMPLEMENTATION.
                          text  = `update size limit`
                          press = client->_event( val = `UPDATE` )
                      )->label( `Number of Entries`
-                     )->input( value = client->_bind_edit( mv_combo_number ) enabled = abap_false
+                     )->input( value = client->_bind_edit( mv_combo_number )
+                     )->button(
+                         text  = `update number entries`
+                         press = client->_event( val = `UPDATE_MODEL` )
                      )->label( `demo`
                      )->combobox( items = client->_bind( lt_combo )
                         )->item( key = `{KEY}` text = `{TEXT}`
