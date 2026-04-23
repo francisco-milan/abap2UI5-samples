@@ -1,10 +1,13 @@
-CLASS z2ui5_cl_demo_app_342 DEFINITION PUBLIC.
+CLASS z2ui5_cl_demo_app_342 DEFINITION
+  PUBLIC
+  CREATE PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
     DATA mv_view_display TYPE abap_bool.
     DATA mo_parent_view  TYPE REF TO z2ui5_cl_xml_view.
+    DATA mv_init         TYPE abap_bool.
     DATA mv_table        TYPE string.
 
     DATA mt_data_tmp    TYPE REF TO data.
@@ -14,19 +17,19 @@ CLASS z2ui5_cl_demo_app_342 DEFINITION PUBLIC.
 
     METHODS set_app_data
       IMPORTING
-        table TYPE string.
+        !table TYPE string.
 
   PROTECTED SECTION.
-    METHODS on_event    IMPORTING client TYPE REF TO z2ui5_if_client.
+    METHODS on_init.
+    METHODS on_event    IMPORTING !client TYPE REF TO z2ui5_if_client.
 
-    METHODS view_display IMPORTING client TYPE REF TO z2ui5_if_client.
+    METHODS render_main IMPORTING !client TYPE REF TO z2ui5_if_client.
     METHODS get_data.
 
+  PRIVATE SECTION.
     METHODS get_comp
       RETURNING
         VALUE(result) TYPE abap_component_tab.
-
-  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -37,7 +40,7 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
     DATA selkz TYPE abap_bool.
 
     IF mv_table IS INITIAL.
-      mv_table = `Z2UI5_T_01`.
+      mv_table = 'Z2UI5_T_01'.
     ENDIF.
 
     TRY.
@@ -55,18 +58,19 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
             LOOP AT comp INTO DATA(com).
 
               IF com-as_include = abap_false.
+
                 APPEND com TO result.
 
               ENDIF.
 
             ENDLOOP.
 
-          CATCH cx_root.
+          CATCH cx_root INTO DATA(root). " TODO: variable is assigned but never used (ABAP cleaner)
 
         ENDTRY.
 
         DATA(component) = VALUE cl_abap_structdescr=>component_table(
-                                    ( name = `SELKZ`
+                                    ( name = 'SELKZ'
                                       type = CAST #( cl_abap_datadescr=>describe_by_data( selkz ) ) ) ).
 
         APPEND LINES OF component TO result.
@@ -76,32 +80,34 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD on_event.
-
     CASE client->get( )-event.
 
-      WHEN `SELECTION_CHANGE`.
+      WHEN 'SELECTION_CHANGE'.
 
         client->nav_app_call( z2ui5_cl_demo_app_340=>factory(
                                 io_table  = mt_data
                                 io_layout = mo_lay  ) ).
 
-      WHEN `BACK`.
+      WHEN 'BACK'.
 
         client->nav_app_leave( ).
 
     ENDCASE.
+  ENDMETHOD.
+
+  METHOD on_init.
 
   ENDMETHOD.
 
-
-  METHOD view_display.
+  METHOD render_main.
 
     IF mo_parent_view IS INITIAL.
+
       DATA(page) = z2ui5_cl_xml_view=>factory( ).
 
     ELSE.
+
       page = mo_parent_view->get( `Page` ).
 
     ENDIF.
@@ -111,9 +117,9 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
 
     ASSIGN mt_data->* TO FIELD-SYMBOL(<table>).
 
-    DATA(table) = page->table( width = `auto`
-                               mode  = `SingleSelectLeft`
-                               selectionchange  = client->_event( `SELECTION_CHANGE` )
+    DATA(table) = page->table( width = 'auto'
+                               mode  = 'SingleSelectLeft'
+                               selectionchange  = client->_event( 'SELECTION_CHANGE' )
                                items = client->_bind_edit( val = <table> ) ).
 
     DATA(columns) = table->columns( ).
@@ -129,7 +135,7 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
     ENDLOOP.
 
     DATA(column_list_item) = columns->get_parent( )->items(
-                                       )->column_list_item( valign   = `Middle`
+                                       )->column_list_item( valign   = 'Middle'
                                                             type     = `Inactive`
                                                             selected = `{SELKZ}` ).
 
@@ -144,15 +150,15 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
     ENDLOOP.
 
     IF mo_parent_view IS INITIAL.
-      client->view_display( page->stringify( ) ).
+
+      client->view_display( page->get_root( )->xml_get( ) ).
 
     ELSE.
+
       mv_view_display = abap_true.
 
     ENDIF.
-
   ENDMETHOD.
-
 
   METHOD set_app_data.
 
@@ -160,13 +166,14 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
 
   ENDMETHOD.
 
-
   METHOD z2ui5_if_app~main.
 
-    IF client->check_on_init( ).
+    IF mv_init IS INITIAL.
+      mv_init = abap_true.
 
       get_data( ).
-      view_display( client ).
+
+      render_main( client ).
 
     ENDIF.
 
@@ -174,13 +181,12 @@ CLASS z2ui5_cl_demo_app_342 IMPLEMENTATION.
     ASSIGN mt_data->* TO FIELD-SYMBOL(<table>).
 
     IF <data> <> <table>.
-      client->message_toast_display( `ERROR - mo_layout->mr_data->* ne mt_table->*`  ).
+      client->message_toast_display( 'ERROR - mo_layout->mr_data->* ne mt_table->*'  ).
     ENDIF.
 
     on_event( client ).
 
   ENDMETHOD.
-
 
   METHOD get_data.
 
