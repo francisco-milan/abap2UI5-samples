@@ -27,17 +27,10 @@ CLASS z2ui5_cl_demo_app_361 IMPLEMENTATION.
                              ( n = `showNavButton`  v = client->check_app_prev_stack( ) )
                              ( n = `title`          v = `abap2UI5 - System Logout` ) ) ).
 
-      page->__( `headerContent`
-         )->_( n = `Button`
-               p = VALUE #( ( n = `icon`    v = `sap-icon://log` )
-                            ( n = `text`    v = `Logout` )
-                            ( n = `tooltip` v = `Sign out of the current session` )
-                            ( n = `press`   v = client->_event_client( client->cs_event-system_logout ) ) ) ).
-
-      page->__( n = `MessageStrip`
+      page->__( n = `Text`
              p = VALUE #( ( n = `class`    v = `sapUiMediumMargin` )
                           ( n = `showIcon` v = abap_true )
-                          ( n = `text`     v = `This demo shows the new system logout event. Pressing the button below triggers SYSTEM_LOGOUT on the client. Inside a Fiori Launchpad the shell container handles the sign-out; otherwise the app navigates to the ICF logoff endpoint.` )
+                          ( n = `text`     v = `Trigger SYSTEM_LOGOUT on the client. Inside a Fiori Launchpad the shell container handles the sign-out; otherwise the app navigates to the ICF logoff endpoint.` )
                           ( n = `type`     v = `Information` ) )
          )->_( n = `Button`
                p = VALUE #( ( n = `class` v = `sapUiSmallMargin` )
