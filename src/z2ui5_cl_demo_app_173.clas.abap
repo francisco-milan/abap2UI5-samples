@@ -1,9 +1,6 @@
-CLASS z2ui5_cl_demo_app_173 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_173 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     TYPES:
@@ -29,23 +26,21 @@ CLASS z2ui5_cl_demo_app_173 DEFINITION
     METHODS view_display.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_173 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_173 IMPLEMENTATION.
 
   METHOD view_display.
+
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     view = view->shell( )->page( id    = `page_main`
                                  class = `sapUiContentPadding`
-             title                     = 'abap2UI5 - Sample Templating I'
+             title                     = `abap2UI5 - Sample Templating I`
              navbuttonpress            = client->_event_nav_app_leave( )
              shownavbutton             = client->check_app_prev_stack( ) ).
 
@@ -63,7 +58,6 @@ CLASS Z2UI5_CL_DEMO_APP_173 IMPLEMENTATION.
                                   var  = `L1`
                 )->object_identifier( text = `{= '{' + ${L1>FNAME} + '}' }` ).
 
-
     view->label( `IF Template (with re-rendering)` ).
     view->switch( state  = client->_bind_edit( mv_flag )
                   change = client->_event( `CHANGE_FLAG` ) ).
@@ -77,8 +71,8 @@ CLASS Z2UI5_CL_DEMO_APP_173 IMPLEMENTATION.
         )->icon( src   = `sap-icon://decline`
                  color = `red` ).
 
-
     client->view_display( view->stringify( ) ).
+
   ENDMETHOD.
 
 
@@ -90,24 +84,23 @@ CLASS Z2UI5_CL_DEMO_APP_173 IMPLEMENTATION.
 
       client->_bind( mt_layout ).
 
-      mt_data = VALUE #( ( name = 'Theo' date = '01.01.2000' age = '5' )
-                         ( name = 'Lore' date = '01.01.2000' age = '1' ) ).
+      mt_data = VALUE #( ( name = `Theo` date = `01.01.2000` age = `5` )
+                         ( name = `Lore` date = `01.01.2000` age = `1` ) ).
 
-      mt_layout = VALUE #( ( fname = 'NAME' merge = 'false' visible = 'true' )
-                           ( fname = 'DATE' merge = 'false' visible = 'true' )
-                           ( fname = 'AGE'  merge = 'false' visible = 'false' ) ).
-
+      mt_layout = VALUE #( ( fname = `NAME` merge = `false` visible = `true` )
+                           ( fname = `DATE` merge = `false` visible = `true` )
+                           ( fname = `AGE`  merge = `false` visible = `false` ) ).
 
       view_display( ).
 
     ENDIF.
 
     CASE client->get( )-event.
-      WHEN 'CHANGE_FLAG'.
+      WHEN `CHANGE_FLAG`.
 
         view_display( ).
     ENDCASE.
 
-
   ENDMETHOD.
+
 ENDCLASS.

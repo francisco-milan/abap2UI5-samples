@@ -1,6 +1,4 @@
-CLASS z2ui5_cl_demo_app_338 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_338 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
@@ -26,13 +24,13 @@ CLASS z2ui5_cl_demo_app_338 DEFINITION
 
     METHODS on_init.
     METHODS on_event.
-    METHODS render_main.
+    METHODS view_display.
 
     METHODS render_sub_app.
 
   PRIVATE SECTION.
-
 ENDCLASS.
+
 
 CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
 
@@ -40,7 +38,7 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
 
     CASE client->get( )-event.
 
-      WHEN 'ONSELECTICONTABBAR'.
+      WHEN `ONSELECTICONTABBAR`.
 
         CASE mv_selectedkey.
 
@@ -53,28 +51,30 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD on_init.
 
-    mt_t002 = VALUE #( ( id = '1' class = 'Z2UI5_CL_DEMO_APP_339' table = 'Z2UI5_T_01' )
-                       ( id = '2' class = 'Z2UI5_CL_DEMO_APP_342' table = 'Z2UI5_T_01' )
-                       ( id = '3' class = 'Z2UI5_CL_DEMO_APP_339' table = 'Z2UI5_T_01' ) ).
+    mt_t002 = VALUE #( ( id = `1` class = `Z2UI5_CL_DEMO_APP_339` table = `Z2UI5_T_01` )
+                       ( id = `2` class = `Z2UI5_CL_DEMO_APP_342` table = `Z2UI5_T_01` )
+                       ( id = `3` class = `Z2UI5_CL_DEMO_APP_339` table = `Z2UI5_T_01` ) ).
 
-    mv_selectedkey = '1'.
+    mv_selectedkey = `1`.
 
   ENDMETHOD.
 
-  METHOD render_main.
+
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( )->shell( ).
     DATA(page) = view->page( id             = `page_main`
-                             title          = 'Main App calling Subapps'
+                             title          = `Main App calling Subapps`
                              navbuttonpress = client->_event_nav_app_leave( )
                              shownavbutton  = client->check_app_prev_stack( )
-                             class          = 'sapUiContentPadding' ).
+                             class          = `sapUiContentPadding` ).
 
-    DATA(lo_items) = page->icon_tab_bar( class       = 'sapUiResponsiveContentPadding'
+    DATA(lo_items) = page->icon_tab_bar( class       = `sapUiResponsiveContentPadding`
                                          selectedkey = client->_bind_edit( mv_selectedkey )
-                                         select      = client->_event( 'ONSELECTICONTABBAR' )
+                                         select      = client->_event( `ONSELECTICONTABBAR` )
                                                        )->items( ).
 
     LOOP AT mt_t002 REFERENCE INTO DATA(line).
@@ -88,6 +88,7 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD z2ui5_if_app~main.
 
     me->client = client.
@@ -95,7 +96,7 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
     IF client->check_on_init( ).
 
       on_init( ).
-      render_main( ).
+      view_display( ).
     ENDIF.
 
     on_event( ).
@@ -103,9 +104,10 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD render_sub_app.
-    FIELD-SYMBOLS <view_display> TYPE any.
 
+  METHOD render_sub_app.
+
+    FIELD-SYMBOLS <view_display> TYPE any.
 
     READ TABLE mt_t002 REFERENCE INTO DATA(t002)
          WITH KEY id = mv_selectedkey.
@@ -123,18 +125,19 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
         ENDIF.
         TRY.
 
-            CALL METHOD mo_app->('SET_APP_DATA')
+            CALL METHOD mo_app->(`SET_APP_DATA`)
               EXPORTING
                 table = t002->table.
 
-            render_main( ).
+            view_display( ).
 
-            ASSIGN mo_app->('MO_PARENT_VIEW') TO FIELD-SYMBOL(<view>).
+            ASSIGN mo_app->(`MO_PARENT_VIEW`) TO FIELD-SYMBOL(<view>).
+
             IF <view> IS ASSIGNED.
               <view> = mo_main_page.
             ENDIF.
 
-            CALL METHOD mo_app->('Z2UI5_IF_APP~MAIN')
+            CALL METHOD mo_app->(`Z2UI5_IF_APP~MAIN`)
               EXPORTING
                 client = client.
 
@@ -146,8 +149,7 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
 
     client->view_model_update( ).
 
-
-    ASSIGN mo_app->('MV_VIEW_DISPLAY') TO <view_display>.
+    ASSIGN mo_app->(`MV_VIEW_DISPLAY`) TO <view_display>.
 
     IF <view_display> = abap_true.
       <view_display> = abap_false.

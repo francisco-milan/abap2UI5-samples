@@ -1,14 +1,12 @@
-CLASS z2ui5_cl_demo_app_321 DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_321 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
+
     DATA mv_quantity TYPE string.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
-
 ENDCLASS.
 
 
@@ -20,17 +18,17 @@ CLASS z2ui5_cl_demo_app_321 IMPLEMENTATION.
       DATA(view) = z2ui5_cl_xml_view=>factory( ).
       client->view_display( view->shell(
              )->page(
-                     title          = 'abap2UI5 - Navigation with app state'
-                     navbuttonpress = client->_event( 'BACK' )
+                     title          = `abap2UI5 - Navigation with app state`
+                     navbuttonpress = client->_event( `BACK` )
                      shownavbutton  = client->check_app_prev_stack( )
-          )->simple_form( title = 'Form Title' editable = abap_true
-                     )->content( 'form'
-                         )->title( 'Input'
-                         )->label( 'quantity'
+          )->simple_form( title = `Form Title` editable = abap_true
+                     )->content( `form`
+                         )->title( `Input`
+                         )->label( `quantity`
                          )->input( client->_bind_edit( mv_quantity )
                          )->button(
-                             text  = 'post with state'
-                             press = client->_event( 'BUTTON_POST' )
+                             text  = `post with state`
+                             press = client->_event( `BUTTON_POST` )
               )->stringify( ) ).
     ENDIF.
 

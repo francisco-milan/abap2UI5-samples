@@ -1,11 +1,7 @@
-CLASS z2ui5_cl_demo_app_291 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_291 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
-
 
     DATA lv_default TYPE string.
     DATA lv_error   TYPE string.
@@ -13,16 +9,15 @@ CLASS z2ui5_cl_demo_app_291 DEFINITION
     DATA lv_success TYPE string.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS display_view
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
     METHODS on_event
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_display_popover
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
@@ -30,15 +25,13 @@ CLASS z2ui5_cl_demo_app_291 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_291 IMPLEMENTATION.
 
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
-            title          = 'abap2UI5 - Sample: Message Strip with enableFormattedText'
+            title          = `abap2UI5 - Sample: Message Strip with enableFormattedText`
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -46,13 +39,13 @@ CLASS z2ui5_cl_demo_app_291 IMPLEMENTATION.
        )->button( id = `button_hint_id`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = client->_event( 'CLICK_HINT_ICON' ) ).
+           press     = client->_event( `CLICK_HINT_ICON` ) ).
 
     page->header_content(
        )->link(
-           text   = 'UI5 Demo Kit'
-           target = '_blank'
-           href   = 'https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.MessageStrip/sample/sap.m.sample.MessageStripWithEnableFormattedText' ).
+           text   = `UI5 Demo Kit`
+           target = `_blank`
+           href   = `https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.MessageStrip/sample/sap.m.sample.MessageStripWithEnableFormattedText` ).
 
     page->vertical_layout(
            class = `sapUiContentPadding`
@@ -93,14 +86,14 @@ CLASS z2ui5_cl_demo_app_291 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'CLICK_HINT_ICON' ).
-      z2ui5_display_popover( `button_hint_id` ).
+    IF client->check_on_event( `CLICK_HINT_ICON` ).
+      popover_display( `button_hint_id` ).
     ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
@@ -121,7 +114,7 @@ CLASS z2ui5_cl_demo_app_291 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
 
       lv_default = `Default <em>(Information)</em> with default icon and <strong>close button</strong>:`.
       lv_error   = `<strong>Error</strong> with link to ` && `<a target="_blank" href="http://www.sap.com">SAP Homepage</a> <em>(For more info)</em>`.
@@ -133,4 +126,5 @@ CLASS z2ui5_cl_demo_app_291 IMPLEMENTATION.
     on_event( client ).
 
   ENDMETHOD.
+
 ENDCLASS.

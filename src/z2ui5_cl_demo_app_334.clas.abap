@@ -9,12 +9,11 @@ CLASS z2ui5_cl_demo_app_334 DEFINITION PUBLIC.
 
     METHODS get_data.
 
-    METHODS ui5_view_display
+    METHODS view_display
       IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+        client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
-
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -32,38 +31,40 @@ CLASS z2ui5_cl_demo_app_334 IMPLEMENTATION.
       mo_layout_obj_2 = z2ui5_cl_demo_app_333=>factory( i_data   = REF #( ms_struc )
                                                         vis_cols = 5 ).
 
-      ui5_view_display( client ).
+      view_display( client ).
 
     ENDIF.
+
     IF ms_struc IS INITIAL.
-      client->message_toast_display( 'ERROR - MS_STRUC is initial!' ).
+      client->message_toast_display( `ERROR - MS_STRUC is initial!` ).
     ENDIF.
 
     IF mo_layout_obj->mr_data  IS NOT BOUND.
-      client->message_toast_display( 'ERROR - mo_layout_obj->mr_data is not bound!' ).
+      client->message_toast_display( `ERROR - mo_layout_obj->mr_data is not bound!` ).
     ENDIF.
 
     IF mo_layout_obj_2->mr_data IS NOT BOUND.
-      client->message_toast_display( 'ERROR - mo_layout_obj_2->mr_data  is not bound!' ).
+      client->message_toast_display( `ERROR - mo_layout_obj_2->mr_data  is not bound!` ).
     ENDIF.
 
-    IF mo_layout_obj_2->ms_data-guid EQ mo_layout_obj->ms_data-guid.
-      client->message_toast_display( 'ERROR - GUIDS!' ).
+    IF mo_layout_obj_2->ms_data-guid = mo_layout_obj->ms_data-guid.
+      client->message_toast_display( `ERROR - GUIDS!` ).
     ENDIF.
 
     client->view_model_update( ).
 
   ENDMETHOD.
 
-  METHOD ui5_view_display.
 
-    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = 'RTTI IV'
+  METHOD view_display.
+
+    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = `RTTI IV`
                                                                 navbuttonpress = client->_event_nav_app_leave( )
                                                                 shownavbutton  = client->check_app_prev_stack( ) ).
 
-    page->button( text  = 'GO'
-                  press = client->_event( 'GO' )
-                  type  = 'Success' ).
+    page->button( text  = `GO`
+                  press = client->_event( `GO` )
+                  type  = `Success` ).
 
     DATA(form) = page->simple_form( editable        = abap_true
                                     layout          = `ResponsiveGridLayout`
@@ -80,6 +81,7 @@ CLASS z2ui5_cl_demo_app_334 IMPLEMENTATION.
 
       ASSIGN COMPONENT layout->name OF STRUCTURE <val> TO FIELD-SYMBOL(<value>).
       " assign component layout->name of structure ms_struc to field-symbol(<value>).
+
       IF <value> IS NOT ASSIGNED.
         RETURN.
       ENDIF.
@@ -97,6 +99,7 @@ CLASS z2ui5_cl_demo_app_334 IMPLEMENTATION.
     client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
+
 
   METHOD get_data.
 

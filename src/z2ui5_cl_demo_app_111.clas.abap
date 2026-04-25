@@ -1,11 +1,7 @@
-CLASS z2ui5_cl_demo_app_111 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_111 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_s_tab,
@@ -15,27 +11,26 @@ CLASS z2ui5_cl_demo_app_111 DEFINITION
         create_by        TYPE string,
         storage_location TYPE string,
         quantity         TYPE i,
-      END OF ty_s_tab .
+      END OF ty_s_tab.
     TYPES
-      ty_t_table TYPE STANDARD TABLE OF ty_s_tab WITH EMPTY KEY .
+      ty_t_table TYPE STANDARD TABLE OF ty_s_tab WITH EMPTY KEY.
 
-    DATA mv_search_value TYPE string .
-    DATA mt_table TYPE ty_t_table .
-    DATA mv_key TYPE string .
-    DATA mv_product TYPE string .
-    DATA mv_create_date TYPE string .
-    DATA mv_create_by TYPE string .
-    DATA mv_storage_location TYPE string .
-    DATA mv_quantity TYPE string .
+    DATA mv_search_value TYPE string.
+    DATA mt_table TYPE ty_t_table.
+    DATA mv_key TYPE string.
+    DATA mv_product TYPE string.
+    DATA mv_create_date TYPE string.
+    DATA mv_create_by TYPE string.
+    DATA mv_storage_location TYPE string.
+    DATA mv_quantity TYPE string.
+
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_set_search.
-    METHODS z2ui5_set_data.
-    METHODS z2ui5_view_display.
+    METHODS on_event.
+    METHODS set_search.
+    METHODS set_data.
+    METHODS view_display.
     METHODS get_custom_js
       RETURNING
         VALUE(result) TYPE string.
@@ -44,55 +39,53 @@ CLASS z2ui5_cl_demo_app_111 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_111 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
     me->client     = client.
 
     IF client->check_on_init( ).
-      z2ui5_set_data( ).
+      set_data( ).
       client->nav_app_call( z2ui5_cl_pop_js_loader=>factory( get_custom_js( ) ) ).
       RETURN.
     ENDIF.
 
     IF client->get( )-check_on_navigated = abap_true.
-      z2ui5_view_display( ).
+      view_display( ).
       RETURN.
     ENDIF.
 
-    z2ui5_on_event( ).
+    on_event( ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
     CASE client->get( )-event.
 
-      WHEN 'BUTTON_SEARCH' OR 'BUTTON_START'.
+      WHEN `BUTTON_SEARCH` OR `BUTTON_START`.
         client->view_model_update( ).
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_set_data.
+  METHOD set_data.
 
     mt_table = VALUE #(
-        ( product = 'table' create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'chair' create_date = `01.01.2022` create_by = `James` storage_location = `AREA_001` quantity = 123 )
-        ( product = 'sofa' create_date = `01.05.2021` create_by = `Simone` storage_location = `AREA_001` quantity = 700 )
-        ( product = 'computer' create_date = `27.01.2023` create_by = `Theo` storage_location = `AREA_001` quantity = 200 )
-        ( product = 'printer' create_date = `01.01.2023` create_by = `Hannah` storage_location = `AREA_001` quantity = 90 )
-        ( product = 'table2' create_date = `01.01.2023` create_by = `Julia` storage_location = `AREA_001` quantity = 110 ) ).
+        ( product = `table` create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `chair` create_date = `01.01.2022` create_by = `James` storage_location = `AREA_001` quantity = 123 )
+        ( product = `sofa` create_date = `01.05.2021` create_by = `Simone` storage_location = `AREA_001` quantity = 700 )
+        ( product = `computer` create_date = `27.01.2023` create_by = `Theo` storage_location = `AREA_001` quantity = 200 )
+        ( product = `printer` create_date = `01.01.2023` create_by = `Hannah` storage_location = `AREA_001` quantity = 90 )
+        ( product = `table2` create_date = `01.01.2023` create_by = `Julia` storage_location = `AREA_001` quantity = 110 ) ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_set_search.
+  METHOD set_search.
 
     IF mv_search_value IS NOT INITIAL.
 
@@ -101,6 +94,7 @@ CLASS z2ui5_cl_demo_app_111 IMPLEMENTATION.
         DATA(lv_index) = 1.
         DO.
           ASSIGN COMPONENT lv_index OF STRUCTURE lr_row->* TO FIELD-SYMBOL(<field>).
+
           IF sy-subrc <> 0.
             EXIT.
           ENDIF.
@@ -117,7 +111,7 @@ CLASS z2ui5_cl_demo_app_111 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_display.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
@@ -127,21 +121,19 @@ CLASS z2ui5_cl_demo_app_111 IMPLEMENTATION.
                    name = `script` )->_cc_plain_xml( `sap.z2ui5.InitSvm();`
       )->stringify( ) ).
 
-
-
     DATA(page1) = view->page( id = `page_main`
-            title                = 'abap2UI5 - List Report Features'
+            title                = `abap2UI5 - List Report Features`
             navbuttonpress       = client->_event_nav_app_leave( )
             shownavbutton        = client->check_app_prev_stack( ) ).
 
     DATA(page) = page1->dynamic_page( headerexpanded = abap_true
                                       headerpinned   = abap_true ).
 
-    DATA(header_title) = page->title( ns = 'f' )->get( )->dynamic_page_title( ).
-    header_title->heading( 'f' )->smart_variant_management( id                     = `svm`
+    DATA(header_title) = page->title( ns = `f` )->get( )->dynamic_page_title( ).
+    header_title->heading( `f` )->smart_variant_management( id                     = `svm`
                                                                  showexecuteonselection = abap_true ).
-    header_title->expanded_content( 'f' ).
-    header_title->snapped_content( 'f' ).
+    header_title->expanded_content( `f` ).
+    header_title->snapped_content( `f` ).
 
     DATA(lo_fb) = page->header( )->dynamic_page_header( abap_true ).
 
@@ -194,7 +186,7 @@ CLASS z2ui5_cl_demo_app_111 IMPLEMENTATION.
               )->get( )->suggestion_items( )->item( text = `{QUANTITY}`
             )->get_parent( )->get_parent( )->get_parent( ).
 
-    DATA(cont) = page->content( 'f' ).
+    DATA(cont) = page->content( `f` ).
 
     DATA(tab) = cont->table( id    = `table1`
                              items = client->_bind_edit( val = mt_table ) ).
@@ -216,6 +208,7 @@ CLASS z2ui5_cl_demo_app_111 IMPLEMENTATION.
     client->view_display( view->stringify( ) ).
 
   ENDMETHOD.
+
 
   METHOD get_custom_js.
 

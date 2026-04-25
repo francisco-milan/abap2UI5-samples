@@ -1,67 +1,61 @@
-CLASS z2ui5_cl_demo_app_279 DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_279 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
+    INTERFACES z2ui5_if_app.
 
-    INTERFACES z2ui5_if_app .
-
-    DATA text_input TYPE string .
+    DATA text_input TYPE string.
     DATA dirty TYPE abap_bool.
 
-  PRIVATE SECTION.
+  PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
-    METHODS display_view.
+
+    METHODS view_display.
     METHODS on_event.
     METHODS security_check_popup.
-    METHODS ui5_callback.
+    METHODS on_navigation.
 
+  PRIVATE SECTION.
 ENDCLASS.
-
 
 
 CLASS z2ui5_cl_demo_app_279 IMPLEMENTATION.
 
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory(
                    )->shell(
                    )->page(
-                      title          = 'abap2UI5 - data loss protection'
-                      navbuttonpress = client->_event( 'BACK' )
+                      title          = `abap2UI5 - data loss protection`
+                      navbuttonpress = client->_event( `BACK` )
                       shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(box) = page->flex_box( direction  = `Row`
                                 alignitems = `Start`
-                                class      = 'sapUiTinyMargin' ).
+                                class      = `sapUiTinyMargin` ).
 
     box->input(
       id          = `input`
       value       = client->_bind_edit( text_input )
-      submit      = client->_event( 'submit' )
+      submit      = client->_event( `submit` )
       width       = `40rem`
       placeholder = `Enter data, submit and navigate back to trigger data loss protection` ).
 
     box->info_label(
-      text        = 'dirty'
-      colorscheme = '8'
-      icon        = 'sap-icon://message-success'
+      text        = `dirty`
+      colorscheme = `8`
+      icon        = `sap-icon://message-success`
       class       = `sapUiSmallMarginBegin sapUiTinyMarginTop`
       visible     = client->_bind( dirty ) ).
 
     box->button(
-      text    = 'Reset'
-      press   = client->_event( 'reset' )
+      text    = `Reset`
+      press   = client->_event( `reset` )
       class   = `sapUiSmallMarginBegin`
       visible = client->_bind( dirty ) ).
 
     page->_z2ui5( )->focus( `input` ).
 
-
     page->_z2ui5( )->dirty( client->_bind( dirty ) ).
-
 
     client->view_display( page->stringify( ) ).
 
@@ -71,15 +65,16 @@ CLASS z2ui5_cl_demo_app_279 IMPLEMENTATION.
   METHOD on_event.
 
     CASE client->get( )-event.
-      WHEN 'BACK'.
+      WHEN `BACK`.
         IF dirty = abap_true.
           security_check_popup( ).
+
         ELSE.
           client->nav_app_leave( ).
         ENDIF.
-      WHEN 'submit'.
+      WHEN `submit`.
         dirty = xsdbool( text_input IS NOT INITIAL ).
-      WHEN 'reset'.
+      WHEN `reset`.
         CLEAR:
           dirty,
           text_input.
@@ -105,13 +100,14 @@ CLASS z2ui5_cl_demo_app_279 IMPLEMENTATION.
     me->client = client.
 
     IF client->get( )-check_on_navigated = abap_true.
-      ui5_callback( ).
+      on_navigation( ).
     ENDIF.
 
     on_event( ).
 
     IF client->check_on_init( ).
-      display_view( ).
+      view_display( ).
+
     ELSE.
       client->view_model_update( ).
     ENDIF.
@@ -119,7 +115,7 @@ CLASS z2ui5_cl_demo_app_279 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD ui5_callback.
+  METHOD on_navigation.
 
     TRY.
         DATA(prev) = client->get_app( client->get( )-s_draft-id_prev_app ).
@@ -129,7 +125,7 @@ CLASS z2ui5_cl_demo_app_279 IMPLEMENTATION.
     ENDTRY.
 
     IF confirm_leave = abap_true.
-      CLEAR dirty.
+      dirty = VALUE #( ).
       client->nav_app_leave( ).
     ENDIF.
 

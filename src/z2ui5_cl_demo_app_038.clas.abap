@@ -1,7 +1,6 @@
 CLASS z2ui5_cl_demo_app_038 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     TYPES:
@@ -12,29 +11,24 @@ CLASS z2ui5_cl_demo_app_038 DEFINITION PUBLIC.
         description TYPE string,
         group       TYPE string,
       END OF ty_msg.
-
     DATA t_msg TYPE STANDARD TABLE OF ty_msg WITH EMPTY KEY.
 
-
-    METHODS z2ui5_display_view.
-    METHODS z2ui5_display_popup.
-    METHODS z2ui5_display_popover
+    METHODS view_display.
+    METHODS popup_display.
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
+CLASS z2ui5_cl_demo_app_038 IMPLEMENTATION.
 
-CLASS Z2UI5_CL_DEMO_APP_038 IMPLEMENTATION.
-
-
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(popup) = z2ui5_cl_xml_view=>factory_popup( ).
 
@@ -43,7 +37,7 @@ CLASS Z2UI5_CL_DEMO_APP_038 IMPLEMENTATION.
             groupitems        = abap_true
             placement         = `Top`
             initiallyexpanded = abap_true
-            beforeclose       = client->_event( 'POPOVER_CLOSE' )
+            beforeclose       = client->_event( `POPOVER_CLOSE` )
         )->message_item(
             type        = `{TYPE}`
             title       = `{TITLE}`
@@ -57,14 +51,14 @@ CLASS Z2UI5_CL_DEMO_APP_038 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popup.
+  METHOD popup_display.
 
     DATA(popup) = z2ui5_cl_xml_view=>factory_popup( ).
 
     popup = popup->dialog(
           title         = `Messages`
-          contentheight = '50%'
-          contentwidth  = '50%' ).
+          contentheight = `50%`
+          contentwidth  = `50%` ).
 
     popup->message_view(
             items      = client->_bind( t_msg
@@ -81,10 +75,10 @@ CLASS Z2UI5_CL_DEMO_APP_038 IMPLEMENTATION.
       )->toolbar_spacer(
       )->button(
           id    = `test2`
-          text  = 'test'
+          text  = `test`
           press = client->_event( `TEST` )
       )->button(
-          text  = 'close'
+          text  = `close`
           press = client->_event_client( client->cs_event-popup_close ) ).
 
     client->popup_display( popup->stringify( ) ).
@@ -92,16 +86,16 @@ CLASS Z2UI5_CL_DEMO_APP_038 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_view.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = view->shell(
         )->page(
-            title           = 'abap2UI5 - List'
+            title           = `abap2UI5 - List`
             navbuttonpress  = client->_event_nav_app_leave( )
               shownavbutton = abap_true ).
-    page->button( text  = 'Messages in Popup'
-                  press = client->_event( 'POPUP' ) ).
+    page->button( text  = `Messages in Popup`
+                  press = client->_event( `POPUP` ) ).
     page->message_view(
         items      = client->_bind( t_msg )
         groupitems = abap_true
@@ -114,15 +108,15 @@ CLASS Z2UI5_CL_DEMO_APP_038 IMPLEMENTATION.
 
     page->footer( )->overflow_toolbar(
          )->button(
-             id    = 'test'
-             text  = 'Messages (6)'
-             press = client->_event( 'POPOVER' )
-             type  = 'Emphasized'
+             id    = `test`
+             text  = `Messages (6)`
+             press = client->_event( `POPOVER` )
+             type  = `Emphasized`
          )->toolbar_spacer(
          )->button(
-             text  = 'Send to Server'
-             press = client->_event( 'BUTTON_SEND' )
-             type  = 'Success' ).
+             text  = `Send to Server`
+             press = client->_event( `BUTTON_SEND` )
+             type  = `Success` ).
 
     client->view_display( view->stringify( ) ).
 
@@ -136,25 +130,26 @@ CLASS Z2UI5_CL_DEMO_APP_038 IMPLEMENTATION.
     IF client->check_on_init( ).
 
       t_msg = VALUE #(
-          ( description = 'descr' subtitle = 'subtitle' title = 'title' type = 'Error'     group = 'group 01' )
-          ( description = 'descr' subtitle = 'subtitle' title = 'title' type = 'Information' group = 'group 01' )
-          ( description = 'descr' subtitle = 'subtitle' title = 'title' type = 'Information' group = 'group 02' )
-          ( description = 'descr' subtitle = 'subtitle' title = 'title' type = 'Success' group = 'group 03' ) ).
+          ( description = `descr` subtitle = `subtitle` title = `title` type = `Error`     group = `group 01` )
+          ( description = `descr` subtitle = `subtitle` title = `title` type = `Information` group = `group 01` )
+          ( description = `descr` subtitle = `subtitle` title = `title` type = `Information` group = `group 02` )
+          ( description = `descr` subtitle = `subtitle` title = `title` type = `Success` group = `group 03` ) ).
 
-      z2ui5_display_view( ).
+      view_display( ).
 
     ENDIF.
 
     CASE client->get( )-event.
-      WHEN 'POPOVER_CLOSE'.
+      WHEN `POPOVER_CLOSE`.
         client->popover_destroy( ).
-      WHEN 'POPUP'.
-        z2ui5_display_popup( ).
-      WHEN 'TEST'.
-        z2ui5_display_popover( `test2` ).
-      WHEN 'POPOVER'.
-        z2ui5_display_popover( `test` ).
+      WHEN `POPUP`.
+        popup_display( ).
+      WHEN `TEST`.
+        popover_display( `test2` ).
+      WHEN `POPOVER`.
+        popover_display( `test` ).
     ENDCASE.
 
   ENDMETHOD.
+
 ENDCLASS.

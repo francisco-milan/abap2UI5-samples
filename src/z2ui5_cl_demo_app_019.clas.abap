@@ -98,6 +98,7 @@ CLASS z2ui5_cl_demo_app_019 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
+
     IF client->check_on_init( ).
 
       sel_mode = `None`.
@@ -110,6 +111,7 @@ CLASS z2ui5_cl_demo_app_019 IMPLEMENTATION.
 
     ELSEIF client->check_on_event( `BUTTON_SEGMENT_CHANGE` ).
       client->message_toast_display( `Selection Mode changed` ).
+
     ELSEIF client->check_on_event( `BUTTON_READ_SEL` ).
       t_tab_sel = t_tab.
       DELETE t_tab_sel WHERE selkz <> abap_true.

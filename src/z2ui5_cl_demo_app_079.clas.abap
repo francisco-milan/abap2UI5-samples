@@ -1,13 +1,9 @@
-CLASS z2ui5_cl_demo_app_079 DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_079 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
     DATA mv_value          TYPE string.
-
 
     METHODS get_example_pdf
       RETURNING
@@ -18,9 +14,7 @@ CLASS z2ui5_cl_demo_app_079 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_079 IMPLEMENTATION.
-
 
   METHOD get_example_pdf.
 
@@ -67,7 +61,7 @@ CLASS z2ui5_cl_demo_app_079 IMPLEMENTATION.
 
     IF client->check_on_init( ).
 
-      DATA(view) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = 'PDF Output'
+      DATA(view) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = `PDF Output`
                                                                   navbuttonpress = client->_event_nav_app_leave( )
                                                                   shownavbutton  = client->check_app_prev_stack( )
                       )->_generic(
@@ -82,5 +76,7 @@ CLASS z2ui5_cl_demo_app_079 IMPLEMENTATION.
       client->view_display( view->stringify( ) ).
 
     ENDIF.
+
   ENDMETHOD.
+
 ENDCLASS.

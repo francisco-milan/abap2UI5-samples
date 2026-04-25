@@ -1,11 +1,7 @@
-CLASS z2ui5_cl_demo_app_107 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_107 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_items,
@@ -13,33 +9,28 @@ CLASS z2ui5_cl_demo_app_107 DEFINITION
         mediatype   TYPE string,
         uploadstate TYPE string,
         url         TYPE string,
-      END OF ty_items .
+      END OF ty_items.
 
     DATA
-      mt_items TYPE TABLE OF ty_items WITH DEFAULT KEY .
-    DATA mv_file_raw TYPE string .
-  PROTECTED SECTION.
+      mt_items TYPE TABLE OF ty_items WITH DEFAULT KEY.
 
+    DATA mv_file_raw TYPE string.
+  PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
     DATA check_load_cc TYPE abap_bool.
 
-    METHODS z2ui5_view_display.
-    METHODS z2ui5_on_event.
+    DATA mv_page TYPE string.
+
+    METHODS view_display.
     METHODS get_custom_js
       RETURNING
         VALUE(result) TYPE string.
-
-
   PRIVATE SECTION.
-    DATA mv_page TYPE string.
-
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_107 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_107 IMPLEMENTATION.
 
   METHOD get_custom_js.
 
@@ -76,30 +67,24 @@ CLASS Z2UI5_CL_DEMO_APP_107 IMPLEMENTATION.
       RETURN.
 
     ELSEIF client->check_on_init( ).
-      z2ui5_view_display( ).
+      view_display( ).
       RETURN.
     ENDIF.
 
-    z2ui5_on_event( ).
-
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
-  ENDMETHOD.
-
-
-  METHOD z2ui5_view_display.
+  METHOD view_display.
 
     client->_bind_edit( mv_file_raw ).
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     DATA(page) = view->shell( )->page(
-        title          = 'abap2UI5 - UploadSet Dialog'
+        title          = `abap2UI5 - UploadSet Dialog`
         navbuttonpress = client->_event_nav_app_leave( )
         shownavbutton  = client->check_app_prev_stack( )
-        class          = 'sapUiContentPadding' ).
+        class          = `sapUiContentPadding` ).
 
     page = page->upload_set( instantupload      = abap_true
                              showicons          = abap_true
@@ -129,4 +114,5 @@ CLASS Z2UI5_CL_DEMO_APP_107 IMPLEMENTATION.
     client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

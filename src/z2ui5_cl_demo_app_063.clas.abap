@@ -1,18 +1,10 @@
 CLASS z2ui5_cl_demo_app_063 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
-
-
   PROTECTED SECTION.
-
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
-
-    METHODS on_event
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
 
@@ -20,29 +12,27 @@ CLASS z2ui5_cl_demo_app_063 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_063 IMPLEMENTATION.
 
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
-            title          = 'abap2UI5 - Badge Example'
+            title          = `abap2UI5 - Badge Example`
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(layout) = page->vertical_layout( class = `sapUiContentPadding`
                                           width = `100%` ).
     layout->button(
-                text  = 'Emphasized Button with Badge'
-                type  = 'Emphasized'
-                class = 'sapUiTinyMarginBeginEnd'
-                icon  = 'sap-icon://cart' )->get(
+                text  = `Emphasized Button with Badge`
+                type  = `Emphasized`
+                class = `sapUiTinyMarginBeginEnd`
+                icon  = `sap-icon://cart` )->get(
                 )->custom_data(
                     )->badge_custom_data(
-                        key     = 'badge'
-                        value   = '23'
+                        key     = `badge`
+                        value   = `23`
                         visible = abap_true ).
 
     client->view_display( page->stringify( ) ).
@@ -50,17 +40,12 @@ CLASS z2ui5_cl_demo_app_063 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD on_event.
-  ENDMETHOD.
-
-
   METHOD z2ui5_if_app~main.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
     ENDIF.
 
-    on_event( client ).
-
   ENDMETHOD.
+
 ENDCLASS.

@@ -6,63 +6,66 @@ CLASS z2ui5_cl_demo_app_096 DEFINITION PUBLIC.
     DATA client TYPE REF TO z2ui5_if_client.
     DATA mo_view_parent TYPE REF TO z2ui5_cl_xml_view.
     DATA mv_descr       TYPE string.
-    METHODS on_init.
-    METHODS on_event.
 
     DATA mr_data TYPE REF TO data.
 
-    METHODS display_view
-      CHANGING xml TYPE REF TO z2ui5_cl_xml_view OPTIONAL.
+    METHODS on_init.
+    METHODS on_event.
 
+    METHODS view_display
+      CHANGING xml TYPE REF TO z2ui5_cl_xml_view OPTIONAL.
   PROTECTED SECTION.
   PRIVATE SECTION.
-
 ENDCLASS.
 
 
-CLASS Z2UI5_CL_DEMO_APP_096 IMPLEMENTATION.
+CLASS z2ui5_cl_demo_app_096 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
+
     me->client = client.
 
     IF client->check_on_init( ).
       on_init( ).
-      RETURN.
+
+    ELSE.
+      on_event( ).
     ENDIF.
 
-    on_event( ).
-
   ENDMETHOD.
+
 
   METHOD on_init.
 
     mv_descr = `data sub app`.
-    display_view( ).
+    view_display( ).
 
   ENDMETHOD.
 
+
   METHOD on_event.
 
-    IF client->check_on_event( 'MESSAGE_SUB' ).
+    IF client->check_on_event( `MESSAGE_SUB` ).
       client->message_box_display( `event sub app` ).
     ENDIF.
 
   ENDMETHOD.
 
-  METHOD display_view.
+
+  METHOD view_display.
 
     IF mo_view_parent IS NOT BOUND.
 
       DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
-         )->page( 'Main View' ).
+         )->page( `Main View` ).
 
-      mo_view_parent = page->grid( 'L6 M12 S12'
-          )->content( 'layout' ).
+      mo_view_parent = page->grid( `L6 M12 S12`
+          )->content( `layout` ).
 
       page->footer( )->overflow_toolbar(
                  )->toolbar_spacer(
                  )->button( text  = `event sub app`
-                            press = client->_event( 'BUTTON_SAVE' )
-                            type  = 'Success' ).
+                            press = client->_event( `BUTTON_SAVE` )
+                            type  = `Success` ).
 
     ENDIF.
 
@@ -71,4 +74,5 @@ CLASS Z2UI5_CL_DEMO_APP_096 IMPLEMENTATION.
                             press = client->_event( `MESSAGE_SUB` ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

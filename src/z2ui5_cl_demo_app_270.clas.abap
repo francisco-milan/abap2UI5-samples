@@ -1,22 +1,17 @@
-CLASS z2ui5_cl_demo_app_270 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_270 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
+
     DATA name TYPE string.
     DATA color TYPE string.
-
 
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_270 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
@@ -25,7 +20,7 @@ CLASS z2ui5_cl_demo_app_270 IMPLEMENTATION.
       client->view_display( z2ui5_cl_xml_view=>factory(
         )->shell(
         )->page(
-            title          = 'abap2UI5 - Hello World App'
+            title          = `abap2UI5 - Hello World App`
             shownavbutton  = client->check_app_prev_stack( )
             navbuttonpress = client->_event_nav_app_leave( )
         )->simple_form( editable = abap_true
@@ -39,6 +34,7 @@ CLASS z2ui5_cl_demo_app_270 IMPLEMENTATION.
         )->stringify( ) ).
 
     ENDIF.
+
   ENDMETHOD.
 
 ENDCLASS.

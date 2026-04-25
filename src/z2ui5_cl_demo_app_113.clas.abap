@@ -1,10 +1,7 @@
-CLASS z2ui5_cl_demo_app_113 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_113 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_feed,
@@ -16,46 +13,35 @@ CLASS z2ui5_cl_demo_app_113 DEFINITION
         datetime  TYPE string,
         text      TYPE string,
       END OF ty_feed.
-
     DATA mt_feed TYPE TABLE OF ty_feed.
     DATA ms_feed TYPE ty_feed.
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
-
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_set_data.
-    METHODS z2ui5_view_display.
+    METHODS set_data.
+    METHODS view_display.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_113 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
     me->client = client.
 
     IF client->check_on_init( ).
-      z2ui5_set_data( ).
-      z2ui5_view_display( ).
+      set_data( ).
+      view_display( ).
       RETURN.
     ENDIF.
 
-    z2ui5_on_event( ).
-
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
-  ENDMETHOD.
-
-
-  METHOD z2ui5_set_data.
+  METHOD set_data.
 
     mt_feed = VALUE #(
               ( author = `Developer9` authorpic = `sap-icon://employee` type = `Reply`  datetime = `01.11.2023` text = `newest entry` )
@@ -81,11 +67,11 @@ CLASS z2ui5_cl_demo_app_113 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_display.
+  METHOD view_display.
 
     DATA(lo_view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = lo_view->shell( )->page(
-             title          = 'Timeline'
+             title          = `Timeline`
              navbuttonpress = client->_event_nav_app_leave( )
              shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -102,4 +88,5 @@ CLASS z2ui5_cl_demo_app_113 IMPLEMENTATION.
     client->view_display( lo_view->stringify( ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

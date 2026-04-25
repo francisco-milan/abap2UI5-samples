@@ -1,33 +1,28 @@
 CLASS z2ui5_cl_demo_app_036 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     DATA mv_value TYPE string.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
     DATA:
       BEGIN OF app,
-        check_initialized TYPE abap_bool,
         view_main         TYPE string,
         view_popup        TYPE string,
         get               TYPE z2ui5_if_types=>ty_s_get,
       END OF app.
 
-    METHODS z2ui5_on_init.
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_on_render.
+    METHODS on_init.
+    METHODS on_event.
+    METHODS view_display.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_036 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_036 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
@@ -35,45 +30,44 @@ CLASS Z2UI5_CL_DEMO_APP_036 IMPLEMENTATION.
     app-get      = client->get( ).
     app-view_popup = ``.
 
-    IF app-check_initialized = abap_false.
-      app-check_initialized = abap_true.
-      z2ui5_on_init( ).
+    IF client->check_on_init( ).
+      on_init( ).
     ENDIF.
 
     IF app-get-event IS NOT INITIAL.
-      z2ui5_on_event( ).
+      on_event( ).
     ENDIF.
 
-    z2ui5_on_render( ).
+    view_display( ).
 
-    CLEAR app-get.
+    app-get = VALUE #( ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
     CASE app-get-event.
 
-      WHEN 'POST'.
+      WHEN `POST`.
         client->message_toast_display( app-get-t_event_arg[ 1 ] ).
 
-      WHEN 'MYCC'.
-        client->message_toast_display( 'MYCC event ' && mv_value ).
+      WHEN `MYCC`.
+        client->message_toast_display( `MYCC event ` && mv_value ).
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_init.
+  METHOD on_init.
 
-    app-view_main = 'VIEW_MAIN'.
-    mv_value = 'test'.
+    app-view_main = `VIEW_MAIN`.
+    mv_value = `test`.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_render.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(lv_xml) = `<mvc:View` && |\n| &&
@@ -122,9 +116,9 @@ CLASS Z2UI5_CL_DEMO_APP_036 IMPLEMENTATION.
                           `    context.fillRect (420, 25, 10, 10);` && |\n| &&
                           `    context.clearRect (385, 60, 50, 10); }  ` && |\n| &&
                           ` function myFunction( ) { alert( 'button pressed' ) }` && |\n| &&
-                          ` function myFunction2( ) { sap.z2ui5.oView.getController().onEvent({ 'EVENT' : 'POST', 'METHOD' : 'UPDATE' }, ` && ' document.getElementById(sap.z2ui5.oView.createId( "input" )).value ' && ` ) }` && |\n| &&
+                          ` function myFunction2( ) { sap.z2ui5.oView.getController().onEvent({ 'EVENT' : 'POST', 'METHOD' : 'UPDATE' }, ` && ` document.getElementById(sap.z2ui5.oView.createId( "input" )).value ` && ` ) }` && |\n| &&
                                                                     `</script> <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/barcodes/JsBarcode.code128.min.js"> </script>` &&
-*                                                    ` <z2ui5:MyCC change=" ` && client->_event( 'MYCC' ) && `"  value="` && client->_bind( mv_value ) && `"/>` && |\n|  &&
+*                                                    ` <z2ui5:MyCC change=" ` && client->_event( `MYCC` ) && `"  value="` && client->_bind( mv_value ) && `"/>` && |\n|  &&
       `</body>` && |\n| &&
                           `</html> ` && |\n| &&
                             `</mvc:View>`.
@@ -132,4 +126,5 @@ CLASS Z2UI5_CL_DEMO_APP_036 IMPLEMENTATION.
     client->view_display( lv_xml ).
 
   ENDMETHOD.
+
 ENDCLASS.

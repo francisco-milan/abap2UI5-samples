@@ -1,9 +1,8 @@
-CLASS z2ui5_cl_demo_app_340 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_340 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
+
     DATA mt_data_tmp TYPE REF TO data.
     DATA mt_data     TYPE REF TO data.
     DATA ms_data_row TYPE REF TO data.
@@ -18,55 +17,51 @@ CLASS z2ui5_cl_demo_app_340 DEFINITION
         VALUE(result) TYPE REF TO z2ui5_cl_demo_app_340.
 
   PROTECTED SECTION.
-    METHODS on_init.
-    METHODS on_event    IMPORTING !client TYPE REF TO z2ui5_if_client.
-    METHODS render_main IMPORTING !client TYPE REF TO z2ui5_if_client.
+    METHODS on_event    IMPORTING client TYPE REF TO z2ui5_if_client.
+    METHODS view_display IMPORTING client TYPE REF TO z2ui5_if_client.
 
   PRIVATE SECTION.
-
 ENDCLASS.
 
 
 CLASS z2ui5_cl_demo_app_340 IMPLEMENTATION.
 
   METHOD on_event.
-    IF client->check_on_event( 'POPUP_CLOSE' ).
+
+    IF client->check_on_event( `POPUP_CLOSE` ).
       client->popup_destroy( ).
       client->nav_app_leave( client->get_app( client->get( )-s_draft-id_prev_app_stack ) ).
     ENDIF.
-  ENDMETHOD.
-
-  METHOD on_init.
 
   ENDMETHOD.
 
-  METHOD render_main.
+
+  METHOD view_display.
 
     DATA(popup) = z2ui5_cl_xml_view=>factory_popup( ).
 
-    " TODO: variable is assigned but never used (ABAP cleaner)
-    DATA(simple_form) = popup->dialog( title        = 'Test'
-                                       contentwidth = '60%'
-                                       afterclose   = client->_event( 'POPUP_CLOSE' )
-          )->simple_form( title    = ''
-                          layout   = 'ResponsiveGridLayout'
+    DATA(simple_form) = popup->dialog( title        = `Test`
+                                       contentwidth = `60%`
+                                       afterclose   = client->_event( `POPUP_CLOSE` )
+          )->simple_form( title    = ``
+                          layout   = `ResponsiveGridLayout`
                           editable = abap_true
-          )->content( 'form' )->label( 'Test' )->input( 'TEST' ).
+          )->content( `form` )->label( `Test` )->input( `TEST` ).
 
     client->popup_display( popup->stringify( ) ).
 
   ENDMETHOD.
 
+
   METHOD z2ui5_if_app~main.
 
     IF client->check_on_init( ).
-
-      render_main( client ).
+      view_display( client ).
 
     ENDIF.
 
     IF mo_layout->mr_data IS INITIAL.
-      client->message_toast_display( 'ERROR - mo_layout_obj->mr_data is initial' ).
+      client->message_toast_display( `ERROR - mo_layout_obj->mr_data is initial` ).
       RETURN.
     ENDIF.
 
@@ -74,11 +69,12 @@ CLASS z2ui5_cl_demo_app_340 IMPLEMENTATION.
     ASSIGN mt_data->* TO FIELD-SYMBOL(<table>).
 
     IF <data> <> <table>.
-      client->message_toast_display( 'ERROR - mo_layout_obj->mr_data->* ne mt_table->*' ).
+      client->message_toast_display( `ERROR - mo_layout_obj->mr_data->* ne mt_table->*` ).
     ENDIF.
     on_event( client ).
 
   ENDMETHOD.
+
 
   METHOD factory.
 

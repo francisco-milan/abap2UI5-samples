@@ -1,7 +1,6 @@
 CLASS z2ui5_cl_demo_app_lp_04 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     DATA product  TYPE string.
@@ -15,9 +14,7 @@ CLASS z2ui5_cl_demo_app_lp_04 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_lp_04 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
@@ -32,35 +29,36 @@ CLASS z2ui5_cl_demo_app_lp_04 IMPLEMENTATION.
         product = lt_params[ n = `PRODUCT` ]-v.
       CATCH cx_root.
     ENDTRY.
+
     IF client->check_on_init( ).
 
-      quantity = '500'.
+      quantity = `500`.
 
       client->view_display( view->shell(
             )->page(
                     showheader     = xsdbool( abap_false = client->get( )-check_launchpad_active )
-                    title          = 'abap2UI5 -  Cross App Navigation App 128'
+                    title          = `abap2UI5 -  Cross App Navigation App 128`
                     navbuttonpress = client->_event_nav_app_leave( )
                     shownavbutton  = client->check_app_prev_stack( )
                 )->header_content(
                     )->link(
-                        text   = 'Source_Code'
+                        text   = `Source_Code`
 
-                        target = '_blank'
+                        target = `_blank`
                 )->get_parent(
-                )->simple_form( title    = 'App 128'
+                )->simple_form( title    = `App 128`
                                 editable = abap_true
-                    )->content( 'form'
-                        )->title( 'Input'
-                        )->label( 'product nav param'
+                    )->content( `form`
+                        )->title( `Input`
+                        )->label( `product nav param`
                         )->input( client->_bind_edit( product )
                         )->label( `CHECK_LAUNCHPAD_ACTIVE`
                         )->input( check_launchpad_active
                         )->button( press = client->_event( )
-                        )->button( text  = 'BACK'
+                        )->button( text  = `BACK`
                                    press = client->_event_client( client->cs_event-cross_app_nav_to_prev_app )
                         )->button(
-                            text  = 'go to app 127'
+                            text  = `go to app 127`
                             press = client->_event_client(
             val   = client->cs_event-cross_app_nav_to_ext
             t_arg = VALUE #( ( `{ semanticObject: "Z2UI5_CL_LP_SAMPLE_03",  action: "display" }` ) ( `{ ProductID : "123234" }`) )
@@ -73,10 +71,11 @@ CLASS z2ui5_cl_demo_app_lp_04 IMPLEMENTATION.
 
     CASE client->get( )-event.
 
-      WHEN 'BUTTON_POST'.
+      WHEN `BUTTON_POST`.
 
 *        client->message_toast_display( |{ product } { quantity } - send to the server| ).
     ENDCASE.
 
   ENDMETHOD.
+
 ENDCLASS.

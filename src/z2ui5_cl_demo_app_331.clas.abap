@@ -8,12 +8,11 @@ CLASS z2ui5_cl_demo_app_331 DEFINITION PUBLIC.
 
     METHODS get_data.
 
-    METHODS ui5_view_display
+    METHODS view_display
       IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+        client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
-
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -25,25 +24,27 @@ CLASS z2ui5_cl_demo_app_331 IMPLEMENTATION.
     IF client->check_on_init( ).
       get_data( ).
       mo_table_obj = z2ui5_cl_demo_app_329=>factory( REF #( ms_struc ) ).
-      ui5_view_display( client ).
+      view_display( client ).
     ENDIF.
+
     IF ms_struc IS INITIAL.
-      client->message_toast_display( 'ERROR - MS_STRUC is initial!' ).
+      client->message_toast_display( `ERROR - MS_STRUC is initial!` ).
     ENDIF.
 
     client->view_model_update( ).
 
   ENDMETHOD.
 
-  METHOD ui5_view_display.
 
-    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = 'RTTI IV'
+  METHOD view_display.
+
+    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = `RTTI IV`
                                                                 navbuttonpress = client->_event_nav_app_leave( )
                                                                 shownavbutton  = client->check_app_prev_stack( ) ).
 
-    page->button( text  = 'GO'
-                  press = client->_event( 'GO' )
-                  type  = 'Success' ).
+    page->button( text  = `GO`
+                  press = client->_event( `GO` )
+                  type  = `Success` ).
 
     DATA(form) = page->simple_form( editable        = abap_true
                                     layout          = `ResponsiveGridLayout`
@@ -51,13 +52,14 @@ CLASS z2ui5_cl_demo_app_331 IMPLEMENTATION.
                               )->content( `form` ).
 
     ASSIGN mo_table_obj->mr_data->* TO FIELD-SYMBOL(<val>).
-    ASSIGN COMPONENT 'ID' OF STRUCTURE <val> TO FIELD-SYMBOL(<value>).
+    ASSIGN COMPONENT `ID` OF STRUCTURE <val> TO FIELD-SYMBOL(<value>).
+
     IF <value> IS NOT ASSIGNED.
       RETURN.
     ENDIF.
 
     DATA(line) = form->label( wrapping = abap_false
-                              text     = 'ID' ).
+                              text     = `ID` ).
 
     line->input( client->_bind( <value> ) ).
 
@@ -65,30 +67,11 @@ CLASS z2ui5_cl_demo_app_331 IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD get_data.
 
-*    DATA selkz TYPE abap_bool.
-*
-*    DATA(t_comp) = z2ui5_cl_util=>rtti_get_t_attri_by_table_name( 'Z2UI5_T_01' ).
-*
-*    APPEND LINES OF VALUE cl_abap_structdescr=>component_table(
-*                              ( name = 'SELKZ'
-*                                type = CAST #( cl_abap_datadescr=>describe_by_data( selkz ) ) ) ) TO t_comp.
-*
-*    TRY.
-*
-*        DATA(new_struct_desc) = cl_abap_structdescr=>create( t_comp ).
-*
-*        CREATE DATA ms_struc TYPE HANDLE new_struct_desc.
-*
-*        ASSIGN ms_struc->* TO FIELD-SYMBOL(<struc>).
+  METHOD get_data.
 
     SELECT SINGLE * FROM z2ui5_t_01
       INTO CORRESPONDING FIELDS OF @ms_struc.
-
-*      CATCH cx_root.
-
-*    ENDTRY.
 
   ENDMETHOD.
 

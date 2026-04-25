@@ -5,18 +5,15 @@ CLASS z2ui5_cl_demo_app_lp_02 DEFINITION PUBLIC.
 
     DATA mv_title          TYPE string VALUE `my title`.
 
-
   PROTECTED SECTION.
-
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_LP_02 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_lp_02 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
+
     IF client->check_on_init( ).
 
       IF client->get( )-check_launchpad_active = abap_false.
@@ -24,27 +21,29 @@ CLASS Z2UI5_CL_DEMO_APP_LP_02 IMPLEMENTATION.
       ENDIF.
 
       DATA(shell) = z2ui5_cl_xml_view=>factory( )->shell( ).
+
       IF client->get( )-check_launchpad_active = abap_true.
         DATA(page) = shell->page( showheader = abap_false ).
         page->_z2ui5( )->lp_title( client->_bind_edit( mv_title ) ).
+
       ELSE.
         page = shell->page( client->_bind_edit( mv_title ) ).
       ENDIF.
 
-      client->view_display( page->simple_form( title    = 'Set Launchpad Title Dynamically'
+      client->view_display( page->simple_form( title    = `Set Launchpad Title Dynamically`
                                                editable = abap_true
-                     )->content( 'form'
+                     )->content( `form`
                          )->label( ``
                          )->input( client->_bind_edit( mv_title )
                          )->label( ``
-                         )->button( text  = 'Go Back'
+                         )->button( text  = `Go Back`
                                     press = client->_event_nav_app_leave( ) )->stringify( ) ).
 
     ENDIF.
 
     CASE client->get( )-event.
 
-      WHEN 'READ_PARAMS'.
+      WHEN `READ_PARAMS`.
         DATA(lv_text) = `Start Parameter: `.
         DATA(lt_params) = client->get( )-t_comp_params.
         LOOP AT lt_params INTO DATA(ls_param).
@@ -54,4 +53,5 @@ CLASS Z2UI5_CL_DEMO_APP_LP_02 IMPLEMENTATION.
     ENDCASE.
 
   ENDMETHOD.
+
 ENDCLASS.

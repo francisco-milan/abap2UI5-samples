@@ -1,7 +1,6 @@
 CLASS z2ui5_cl_demo_app_162 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     TYPES:
@@ -20,6 +19,7 @@ CLASS z2ui5_cl_demo_app_162 DEFINITION PUBLIC.
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS on_event.
     METHODS view_display.
     METHODS set_data.
@@ -29,7 +29,6 @@ ENDCLASS.
 
 
 CLASS z2ui5_cl_demo_app_162 IMPLEMENTATION.
-
 
   METHOD on_event.
 
@@ -49,12 +48,12 @@ CLASS z2ui5_cl_demo_app_162 IMPLEMENTATION.
   METHOD set_data.
 
     mt_table = VALUE #(
-        ( product = 'table'    create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'chair'    create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'sofa'     create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'computer' create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'oven'     create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'table2'   create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 ) ).
+        ( product = `table`    create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `chair`    create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `sofa`     create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `computer` create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `oven`     create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `table2`   create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 ) ).
 
     z2ui5_cl_util=>filter_itab(
       EXPORTING
@@ -70,7 +69,7 @@ CLASS z2ui5_cl_demo_app_162 IMPLEMENTATION.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     view = view->shell( )->page( id = `page_main`
-             title                  = 'abap2UI5 - Select-Options'
+             title                  = `abap2UI5 - Select-Options`
              navbuttonpress         = client->_event_nav_app_leave( )
              shownavbutton          = client->check_app_prev_stack( ) ).
 
@@ -122,6 +121,7 @@ CLASS z2ui5_cl_demo_app_162 IMPLEMENTATION.
     IF client->get( )-check_on_navigated = abap_true.
       TRY.
           DATA(lo_value_help) = CAST z2ui5_cl_pop_get_range_m( client->get_app( client->get( )-s_draft-id_prev_app ) ).
+
           IF lo_value_help->result( )-check_confirmed = abap_true.
             mt_filter = lo_value_help->result( )-t_filter.
             set_data( ).
@@ -137,4 +137,5 @@ CLASS z2ui5_cl_demo_app_162 IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
+
 ENDCLASS.

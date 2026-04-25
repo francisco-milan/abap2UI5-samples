@@ -1,24 +1,18 @@
-CLASS z2ui5_cl_demo_app_277 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_277 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
-
-
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS display_view
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
     METHODS on_event
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_display_popover
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
@@ -26,13 +20,12 @@ CLASS z2ui5_cl_demo_app_277 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_277 IMPLEMENTATION.
 
+  METHOD view_display.
 
-  METHOD display_view.
     " Define the base URL for the server
-    DATA base_url TYPE string VALUE 'https://sapui5.hana.ondemand.com/'.
+    DATA base_url TYPE string VALUE `https://sapui5.hana.ondemand.com/`.
 
     DATA(css) = `.tileLayout {` &&
                 ` float: left;` &&
@@ -52,13 +45,13 @@ CLASS z2ui5_cl_demo_app_277 IMPLEMENTATION.
        )->button( id = `button_hint_id`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = client->_event( 'CLICK_HINT_ICON' ) ).
+           press     = client->_event( `CLICK_HINT_ICON` ) ).
 
     page->header_content(
        )->link(
-           text   = 'UI5 Demo Kit'
-           target = '_blank'
-           href   = base_url && 'sdk/#/entity/sap.m.GenericTile/sample/sap.m.sample.GenericTileAsKPITile' ).
+           text   = `UI5 Demo Kit`
+           target = `_blank`
+           href   = base_url && `sdk/#/entity/sap.m.GenericTile/sample/sap.m.sample.GenericTileAsKPITile` ).
 
     page->generic_tile( class     = `sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout`
                         header    = `Country-Specific Profit Margin`
@@ -239,16 +232,16 @@ CLASS z2ui5_cl_demo_app_277 IMPLEMENTATION.
   METHOD on_event.
 
     CASE client->get( )-event.
-      WHEN 'CLICK_HINT_ICON'.
-        z2ui5_display_popover( `button_hint_id` ).
-      WHEN 'onPress'.
+      WHEN `CLICK_HINT_ICON`.
+        popover_display( `button_hint_id` ).
+      WHEN `onPress`.
         client->message_toast_display( `The tile is pressed.` ).
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
@@ -269,10 +262,11 @@ CLASS z2ui5_cl_demo_app_277 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
     ENDIF.
 
     on_event( client ).
 
   ENDMETHOD.
+
 ENDCLASS.

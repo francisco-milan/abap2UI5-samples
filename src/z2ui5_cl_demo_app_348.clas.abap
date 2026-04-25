@@ -9,19 +9,18 @@ CLASS z2ui5_cl_demo_app_348 DEFINITION PUBLIC.
     METHODS get_data.
     METHODS get_data2.
 
-    METHODS ui5_view_display
+    METHODS view_display
       IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+        client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
-
-  PRIVATE SECTION.
     METHODS xml_form
       IMPORTING
         i_data   TYPE REF TO data
         i_page   TYPE REF TO z2ui5_cl_xml_view
         i_client TYPE REF TO z2ui5_if_client.
 
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -38,15 +37,15 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
       mo_layout_obj = z2ui5_cl_demo_app_333=>factory( i_data   = REF #( ms_struc )
                                                       vis_cols = 5 ).
 
-      ui5_view_display( client ).
+      view_display( client ).
     ENDIF.
 
     CASE client->get( )-event.
-      WHEN 'GO'.
+      WHEN `GO`.
         DATA(app) = z2ui5_cl_demo_app_336=>factory( ).
         client->nav_app_call( app ).
 
-      WHEN 'GET_DATA'.
+      WHEN `GET_DATA`.
 
         get_data2( ).
 
@@ -54,40 +53,41 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
 
     IF     client->get( )-check_on_navigated = abap_true
        AND client->check_on_init( )          = abap_false.
-      ui5_view_display( client ).
+      view_display( client ).
     ENDIF.
 
     IF mo_layout_obj->mr_data IS NOT BOUND.
-      client->message_toast_display( 'ERROR - mo_layout_obj->mr_data is not bound!' ).
+      client->message_toast_display( `ERROR - mo_layout_obj->mr_data is not bound!` ).
     ENDIF.
 
     IF ms_struc IS INITIAL.
-      " TODO: check spelling: inital (typo) -> initial (ABAP cleaner)
-      client->message_toast_display( 'ERROR - ms_struc is inital!' ).
+      client->message_toast_display( `ERROR - ms_struc is initial!` ).
     ENDIF.
 
     ASSIGN mo_layout_obj->mr_data->* TO <row>.
+
     IF <row> <> ms_struc.
-      client->message_toast_display( 'ERROR - mo_layout_obj->mr_data->*  <> ms_struc!' ).
+      client->message_toast_display( `ERROR - mo_layout_obj->mr_data->*  <> ms_struc!` ).
     ENDIF.
 
     client->view_model_update( ).
 
   ENDMETHOD.
 
-  METHOD ui5_view_display.
 
-    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = 'RTTI IV'
+  METHOD view_display.
+
+    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = `RTTI IV`
                                                                 navbuttonpress = client->_event_nav_app_leave( )
                                                                 shownavbutton  = client->check_app_prev_stack( ) ).
 
-    page->button( text  = 'CALL Next App'
-                  press = client->_event( 'GO' )
-                  type  = 'Success' ).
+    page->button( text  = `CALL Next App`
+                  press = client->_event( `GO` )
+                  type  = `Success` ).
 
-    page->button( text  = 'Read from DB'
-                  press = client->_event( 'GET_DATA' )
-                  type  = 'Success' ).
+    page->button( text  = `Read from DB`
+                  press = client->_event( `GET_DATA` )
+                  type  = `Success` ).
 
     xml_form( i_data   = REF #( ms_struc )
               i_page   = page
@@ -101,6 +101,7 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD get_data.
 
     SELECT SINGLE id,
@@ -112,6 +113,7 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
       INTO CORRESPONDING FIELDS OF @ms_struc.
 
   ENDMETHOD.
+
 
   METHOD get_data2.
 
@@ -125,6 +127,7 @@ CLASS z2ui5_cl_demo_app_348 IMPLEMENTATION.
       INTO CORRESPONDING FIELDS OF @ms_struc.
 
   ENDMETHOD.
+
 
   METHOD xml_form.
 

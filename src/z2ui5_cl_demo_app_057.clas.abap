@@ -1,11 +1,7 @@
-CLASS z2ui5_cl_demo_app_057 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_057 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES z2ui5_if_app .
-
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_s_tab,
@@ -15,68 +11,62 @@ CLASS z2ui5_cl_demo_app_057 DEFINITION
         create_by        TYPE string,
         storage_location TYPE string,
         quantity         TYPE i,
-      END OF ty_s_tab .
+      END OF ty_s_tab.
     TYPES
-      ty_t_table TYPE STANDARD TABLE OF ty_s_tab WITH EMPTY KEY .
+      ty_t_table TYPE STANDARD TABLE OF ty_s_tab WITH EMPTY KEY.
 
-    DATA mt_table TYPE ty_t_table .
-    DATA mv_check_download TYPE abap_bool .
+    DATA mt_table TYPE ty_t_table.
+    DATA mv_check_download TYPE abap_bool.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
     DATA:
       BEGIN OF app,
-        check_initialized TYPE abap_bool,
         view_main         TYPE string,
         view_popup        TYPE string,
         get               TYPE z2ui5_if_types=>ty_s_get,
       END OF app.
 
-    METHODS z2ui5_on_init.
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_on_render.
-    METHODS z2ui5_on_render_main.
+    METHODS on_init.
+    METHODS on_event.
+    METHODS view_display.
+    METHODS view_display_main.
 
-    METHODS z2ui5_set_data.
+    METHODS set_data.
 
   PRIVATE SECTION.
-
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_057 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
     me->client     = client.
     app-get        = client->get( ).
 
-    IF app-check_initialized = abap_false.
-      app-check_initialized = abap_true.
-      z2ui5_on_init( ).
+    IF client->check_on_init( ).
+      on_init( ).
     ENDIF.
 
     IF app-get-event IS NOT INITIAL.
-      z2ui5_on_event( ).
+      on_event( ).
     ENDIF.
 
-    z2ui5_on_render( ).
+    view_display( ).
 
-    CLEAR app-get.
+    app-get = VALUE #( ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
     CASE app-get-event.
 
-      WHEN 'BUTTON_START'.
-        z2ui5_set_data( ).
+      WHEN `BUTTON_START`.
+        set_data( ).
 
       WHEN `BUTTON_DOWNLOAD`.
         mv_check_download = abap_true.
@@ -85,29 +75,29 @@ CLASS z2ui5_cl_demo_app_057 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_init.
+  METHOD on_init.
 
     app-view_main = `MAIN`.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_render.
+  METHOD view_display.
 
     CASE app-view_main.
-      WHEN 'MAIN'.
-        z2ui5_on_render_main( ).
+      WHEN `MAIN`.
+        view_display_main( ).
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_render_main.
+  METHOD view_display_main.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     view = view->page( id    = `page_main`
-              title          = 'abap2UI5 - List Report Features'
+              title          = `abap2UI5 - List Report Features`
               navbuttonpress = client->_event_nav_app_leave( )
               shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -127,22 +117,21 @@ CLASS z2ui5_cl_demo_app_057 IMPLEMENTATION.
     DATA(page) = view->dynamic_page( headerexpanded = abap_true
                                      headerpinned   = abap_true ).
 
-    DATA(header_title) = page->title( ns = 'f' )->get( )->dynamic_page_title( ).
-    header_title->heading( 'f' )->hbox( )->title( `Download CSV` ).
-    header_title->expanded_content( 'f' ).
-    header_title->snapped_content( 'f' ).
+    DATA(header_title) = page->title( ns = `f` )->get( )->dynamic_page_title( ).
+    header_title->heading( `f` )->hbox( )->title( `Download CSV` ).
+    header_title->expanded_content( `f` ).
+    header_title->snapped_content( `f` ).
 
     DATA(lo_box) = page->header( )->dynamic_page_header( abap_true
          )->flex_box( alignitems     = `Start`
                       justifycontent = `SpaceBetween` )->flex_box( alignitems = `Start` ).
-
 
     lo_box->get_parent( )->hbox( justifycontent = `End` )->button(
         text  = `Go`
         press = client->_event( `BUTTON_START` )
         type  = `Emphasized` ).
 
-    DATA(cont) = page->content( 'f' ).
+    DATA(cont) = page->content( `f` ).
 
     DATA(tab) = cont->table( client->_bind( val = mt_table ) ).
 
@@ -150,8 +139,8 @@ CLASS z2ui5_cl_demo_app_057 IMPLEMENTATION.
             )->toolbar(
                 )->toolbar_spacer(
                 )->button(
-                    icon  = 'sap-icon://download'
-                    press = client->_event( 'BUTTON_DOWNLOAD' ) ).
+                    icon  = `sap-icon://download`
+                    press = client->_event( `BUTTON_DOWNLOAD` ) ).
 
     DATA(lo_columns) = tab->columns( ).
     lo_columns->column( )->text( `Product` ).
@@ -167,20 +156,21 @@ CLASS z2ui5_cl_demo_app_057 IMPLEMENTATION.
     lo_cells->text( `{STORAGE_LOCATION}` ).
     lo_cells->text( `{QUANTITY}` ).
 
-    client->view_display( page->get_root( )->xml_get( ) ).
+    client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_set_data.
+  METHOD set_data.
 
     mt_table = VALUE #(
-        ( product = 'table' create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
-        ( product = 'chair' create_date = `01.01.2022` create_by = `James` storage_location = `AREA_001` quantity = 123 )
-        ( product = 'sofa' create_date = `01.05.2021` create_by = `Simone` storage_location = `AREA_001` quantity = 700 )
-        ( product = 'computer' create_date = `27.01.2023` create_by = `Theo` storage_location = `AREA_001` quantity = 200 )
-        ( product = 'printer' create_date = `01.01.2023` create_by = `Hannah` storage_location = `AREA_001` quantity = 90 )
-        ( product = 'table2' create_date = `01.01.2023` create_by = `Julia` storage_location = `AREA_001` quantity = 110 ) ).
+        ( product = `table` create_date = `01.01.2023` create_by = `Peter` storage_location = `AREA_001` quantity = 400 )
+        ( product = `chair` create_date = `01.01.2022` create_by = `James` storage_location = `AREA_001` quantity = 123 )
+        ( product = `sofa` create_date = `01.05.2021` create_by = `Simone` storage_location = `AREA_001` quantity = 700 )
+        ( product = `computer` create_date = `27.01.2023` create_by = `Theo` storage_location = `AREA_001` quantity = 200 )
+        ( product = `printer` create_date = `01.01.2023` create_by = `Hannah` storage_location = `AREA_001` quantity = 90 )
+        ( product = `table2` create_date = `01.01.2023` create_by = `Julia` storage_location = `AREA_001` quantity = 110 ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

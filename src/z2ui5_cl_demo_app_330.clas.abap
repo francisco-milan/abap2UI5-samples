@@ -1,22 +1,19 @@
-CLASS z2ui5_cl_demo_app_330 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_330 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
+    INTERFACES if_serializable_object.
+    INTERFACES z2ui5_if_app.
 
-    INTERFACES if_serializable_object .
-    INTERFACES z2ui5_if_app .
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS display_view
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
     METHODS on_event
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_display_popover
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
@@ -24,11 +21,9 @@ CLASS z2ui5_cl_demo_app_330 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_330 IMPLEMENTATION.
 
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(object_page_layout) = view->object_page_layout( uppercaseanchorbar = abap_false ).
@@ -54,7 +49,7 @@ CLASS z2ui5_cl_demo_app_330 IMPLEMENTATION.
     header_title->snapped_title_on_mobile(
                   )->title( `Robot Arm Series 9` ).
 
-    header_title->actions( 'uxap'
+    header_title->actions( `uxap`
                   )->button( text = `Edit`
                              type = `Emphasized`
                   )->button( text = `Delete`
@@ -326,14 +321,14 @@ CLASS z2ui5_cl_demo_app_330 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'CLICK_HINT_ICON' ).
-      z2ui5_display_popover( `button_hint_id` ).
+    IF client->check_on_event( `CLICK_HINT_ICON` ).
+      popover_display( `button_hint_id` ).
     ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
@@ -354,11 +349,12 @@ CLASS z2ui5_cl_demo_app_330 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
 
     ENDIF.
 
     on_event( client ).
 
   ENDMETHOD.
+
 ENDCLASS.

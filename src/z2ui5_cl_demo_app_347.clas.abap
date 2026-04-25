@@ -8,20 +8,17 @@ CLASS z2ui5_cl_demo_app_347 DEFINITION PUBLIC.
 
     METHODS get_data.
 
-    METHODS ui5_view_display
+    METHODS view_display
       IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+        client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
-
-  PRIVATE SECTION.
     METHODS xml_table
       IMPORTING
         i_page   TYPE REF TO z2ui5_cl_xml_view
         i_client TYPE REF TO z2ui5_if_client.
 
-
-
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -36,62 +33,60 @@ CLASS z2ui5_cl_demo_app_347 IMPLEMENTATION.
       mo_layout_obj = z2ui5_cl_demo_app_333=>factory( i_data   = REF #( mt_data )
                                                       vis_cols = 5 ).
 
-      ui5_view_display( client ).
+      view_display( client ).
     ENDIF.
 
-
-
     CASE client->get( )-event.
-      WHEN 'GO'.
+      WHEN `GO`.
         DATA(app) = z2ui5_cl_demo_app_336=>factory( ).
         client->nav_app_call( app ).
     ENDCASE.
 
     IF client->get( )-check_on_navigated = abap_true
         AND client->check_on_init( )          = abap_false.
-      ui5_view_display( client ).
+      view_display( client ).
     ENDIF.
 
-
     IF mo_layout_obj->mr_data IS NOT BOUND.
-      client->message_toast_display( 'ERROR - mo_layout_obj->mr_data is not bound!' ).
+      client->message_toast_display( `ERROR - mo_layout_obj->mr_data is not bound!` ).
     ENDIF.
 
     IF mt_data IS INITIAL.
-      client->message_toast_display( 'ERROR - mt_data is inital!' ).
+      client->message_toast_display( `ERROR - mt_data is initial!` ).
     ENDIF.
 
     ASSIGN mo_layout_obj->mr_data->* TO FIELD-SYMBOL(<val>).
+
     IF <val> <> mt_data.
-      client->message_toast_display( 'ERROR - mo_layout_obj_2->mr_data <> mt_data!' ).
+      client->message_toast_display( `ERROR - mo_layout_obj_2->mr_data <> mt_data!` ).
     ENDIF.
 
     client->view_model_update( ).
 
   ENDMETHOD.
 
-  METHOD ui5_view_display.
 
-    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = 'RTTI IV'
+  METHOD view_display.
+
+    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = `RTTI IV`
                                                                 navbuttonpress = client->_event_nav_app_leave( )
                                                                 shownavbutton  = client->check_app_prev_stack( ) ).
 
-    page->button( text  = 'CALL Next App'
-                  press = client->_event( 'GO' )
-                  type  = 'Success' ).
+    page->button( text  = `CALL Next App`
+                  press = client->_event( `GO` )
+                  type  = `Success` ).
 
     xml_table( i_page   = page
                i_client = client ).
-
-
 
     client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
 
+
   METHOD xml_table.
 
-    DATA(table) = i_page->table( width = 'auto'
+    DATA(table) = i_page->table( width = `auto`
                                  items = i_client->_bind_edit( val = mt_data ) ).
 
     DATA(columns) = table->columns( ).
@@ -107,7 +102,7 @@ CLASS z2ui5_cl_demo_app_347 IMPLEMENTATION.
     ENDLOOP.
 
     DATA(column_list_item) = columns->get_parent( )->items(
-                                       )->column_list_item( valign = 'Middle'
+                                       )->column_list_item( valign = `Middle`
                                                             type   = `Inactive` ).
 
     DATA(cells) = column_list_item->cells( ).
@@ -122,6 +117,7 @@ CLASS z2ui5_cl_demo_app_347 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD get_data.
 
     SELECT id,
@@ -133,9 +129,6 @@ CLASS z2ui5_cl_demo_app_347 IMPLEMENTATION.
       INTO CORRESPONDING FIELDS OF TABLE @mt_data
       UP TO 10 ROWS.
 
-
   ENDMETHOD.
-
-
 
 ENDCLASS.

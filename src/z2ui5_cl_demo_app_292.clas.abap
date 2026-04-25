@@ -1,24 +1,18 @@
-CLASS z2ui5_cl_demo_app_292 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_292 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
-
-
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS display_view
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
     METHODS on_event
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_display_popover
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
@@ -26,15 +20,13 @@ CLASS z2ui5_cl_demo_app_292 DEFINITION
 ENDCLASS.
 
 
+CLASS z2ui5_cl_demo_app_292 IMPLEMENTATION.
 
-CLASS Z2UI5_CL_DEMO_APP_292 IMPLEMENTATION.
-
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
-            title          = 'abap2UI5 - Sample: Breadcrumbs sample with current page link'
+            title          = `abap2UI5 - Sample: Breadcrumbs sample with current page link`
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
@@ -42,13 +34,13 @@ CLASS Z2UI5_CL_DEMO_APP_292 IMPLEMENTATION.
        )->button( id = `button_hint_id`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = client->_event( 'CLICK_HINT_ICON' ) ).
+           press     = client->_event( `CLICK_HINT_ICON` ) ).
 
     page->header_content(
        )->link(
-           text   = 'UI5 Demo Kit'
-           target = '_blank'
-           href   = 'https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.Breadcrumbs/sample/sap.m.sample.BreadcrumbsWithCurrentPageLink' ).
+           text   = `UI5 Demo Kit`
+           target = `_blank`
+           href   = `https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.Breadcrumbs/sample/sap.m.sample.BreadcrumbsWithCurrentPageLink` ).
 
     page->vertical_layout(
             class = `sapUiContentPadding`
@@ -81,7 +73,7 @@ CLASS Z2UI5_CL_DEMO_APP_292 IMPLEMENTATION.
           )->select( class         = `sapUiSmallMarginBegin`
                        id          = `idSeparatorSelect`
                        selectedkey = `{/selected}`
-                       change      = 'onChange'
+                       change      = `onChange`
                         )->item( key  = `Slash`
                                  text = `Slash`
                         )->item( key  = `BackSlash`
@@ -103,16 +95,16 @@ CLASS Z2UI5_CL_DEMO_APP_292 IMPLEMENTATION.
   METHOD on_event.
 
     CASE client->get( )-event.
-      WHEN 'CLICK_HINT_ICON'.
-        z2ui5_display_popover( `button_hint_id` ).
-      WHEN 'onPress'.
+      WHEN `CLICK_HINT_ICON`.
+        popover_display( `button_hint_id` ).
+      WHEN `onPress`.
         client->message_toast_display( client->get_event_arg( 1 ) && ` has been clicked` ).
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
@@ -133,11 +125,12 @@ CLASS Z2UI5_CL_DEMO_APP_292 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
 
     ENDIF.
 
     on_event( client ).
 
   ENDMETHOD.
+
 ENDCLASS.

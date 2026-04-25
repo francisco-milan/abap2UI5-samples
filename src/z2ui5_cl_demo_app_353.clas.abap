@@ -1,10 +1,7 @@
-CLASS z2ui5_cl_demo_app_353 DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_353 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-    INTERFACES
-      z2ui5_if_app.
+    INTERFACES z2ui5_if_app.
 
     DATA one               TYPE string.
     DATA focus_field       TYPE string.
@@ -23,12 +20,13 @@ CLASS z2ui5_cl_demo_app_353 DEFINITION
     DATA device_height     TYPE string.
     DATA device_width      TYPE string.
 
-  PRIVATE SECTION.
+  PROTECTED SECTION.
     DATA client      TYPE REF TO z2ui5_if_client.
 
     METHODS render.
     METHODS event.
 
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -37,26 +35,27 @@ CLASS z2ui5_cl_demo_app_353 IMPLEMENTATION.
   METHOD event.
 
     CASE client->get( )-event.
-      WHEN 'TIMER_FINISHED'.
+      WHEN `TIMER_FINISHED`.
 
-        client->message_toast_display( 'Timer finished' ).
-      WHEN 'INFO_FINISHED'.
+        client->message_toast_display( `Timer finished` ).
+      WHEN `INFO_FINISHED`.
 
-        client->message_toast_display( 'Frontend finished' ).
+        client->message_toast_display( `Frontend finished` ).
     ENDCASE.
 
     client->view_model_update( ).
 
   ENDMETHOD.
 
+
   METHOD render.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
-          )->page( title          = 'abap2UI5 - Multiple Timers'
+          )->page( title          = `abap2UI5 - Multiple Timers`
                    navbuttonpress = client->_event_nav_app_leave( )
                    shownavbutton  = client->check_app_prev_stack( ) ).
 
-    page->_z2ui5( )->timer( finished    = client->_event( 'TIMER_FINISHED' )
+    page->_z2ui5( )->timer( finished    = client->_event( `TIMER_FINISHED` )
                             delayms     = `4000`
                             checkactive = client->_bind( mv_check_active ) ).
 
@@ -80,11 +79,11 @@ CLASS z2ui5_cl_demo_app_353 IMPLEMENTATION.
 
                                 )->content( `form` ).
 
-    form->label( 'device_browser'
+    form->label( `device_browser`
                           )->input( client->_bind_edit( device_os )
                           )->label( `device_systemtype`
 
-                         )->label( 'Cursor here -> '
+                         )->label( `Cursor here -> `
                          )->input( id    = `IdOne`
                                    type  = ``
                                    value = client->_bind_edit( one ) ).
@@ -93,12 +92,13 @@ CLASS z2ui5_cl_demo_app_353 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD z2ui5_if_app~main.
 
     me->client = client.
 
     IF client->check_on_init( ).
-      focus_field = 'IdOne'.
+      focus_field = `IdOne`.
       mv_check_active = abap_true.
       render( ).
     ENDIF.

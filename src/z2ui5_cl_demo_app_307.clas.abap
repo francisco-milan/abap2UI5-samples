@@ -1,6 +1,4 @@
-CLASS z2ui5_cl_demo_app_307 DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_307 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
@@ -29,28 +27,34 @@ CLASS z2ui5_cl_demo_app_307 DEFINITION
 
     METHODS initialization.
 
-    METHODS display_view
-      IMPORTING !client TYPE REF TO z2ui5_if_client.
+    METHODS view_display
+      IMPORTING client TYPE REF TO z2ui5_if_client.
 
     METHODS on_event
-      IMPORTING !client TYPE REF TO z2ui5_if_client.
+      IMPORTING client TYPE REF TO z2ui5_if_client.
 
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 CLASS z2ui5_cl_demo_app_307 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
+
     me->client = client.
 
     IF client->check_on_init( ).
       initialization( ).
-      display_view( client ).
+      view_display( client ).
     ENDIF.
 
     on_event( client ).
+
   ENDMETHOD.
 
+
   METHOD initialization.
+
     items = VALUE #(
         ( title     = `Box title 1`
           subtitle  = `Subtitle 1`
@@ -180,9 +184,12 @@ CLASS z2ui5_cl_demo_app_307 IMPLEMENTATION.
           subtitle  = `Subtitle 23`
           highlight = `None`
           type      = `Navigation` ) ).
+
   ENDMETHOD.
 
-  METHOD display_view.
+
+  METHOD view_display.
+
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     view->_z2ui5( )->title( `Grid List with Drag and Drop` ).
@@ -204,35 +211,38 @@ CLASS z2ui5_cl_demo_app_307 IMPLEMENTATION.
                     dropposition      = `Between`
                     droplayout        = `Horizontal`
                     drop              = client->_event(
-                        val   = 'onDrop'
+                        val   = `onDrop`
                         t_arg = VALUE #(
                             ( `${$parameters>/draggedControl/oParent}.indexOfItem(${$parameters>/draggedControl})` )
                             ( `${$parameters>/droppedControl/oParent}.indexOfItem(${$parameters>/droppedControl})` )
                             ( `${$parameters>/dropPosition}` ) ) )
             )->get_parent(
-            )->custom_layout( 'f'
+            )->custom_layout( `f`
                 )->grid_box_layout( boxminwidth = `17rem`
             )->get_parent(
-            )->grid_list_item( counter   = '{COUNTER}'
-                               highlight = '{HIGHLIGHT}'
-                               type      = '{TYPE}'
-                               unread    = '{UNREAD}'
+            )->grid_list_item( counter   = `{COUNTER}`
+                               highlight = `{HIGHLIGHT}`
+                               type      = `{TYPE}`
+                               unread    = `{UNREAD}`
                 )->vbox( height = `100%`
                     )->vbox( `sapUiSmallMargin`
                         )->layout_data(
                             )->flex_item_data( growfactor   = `1`
                                                shrinkfactor = `0`
                         )->get_parent(
-                        )->title( text     = '{TITLE}'
+                        )->title( text     = `{TITLE}`
                                   wrapping = abap_true
-                        )->label( text     = '{SUBTITLE}'
+                        )->label( text     = `{SUBTITLE}`
                                   wrapping = abap_true ).
 
     client->view_display( view->stringify( ) ).
+
   ENDMETHOD.
 
+
   METHOD on_event.
-    IF client->check_on_event( 'onDrop' ).
+
+    IF client->check_on_event( `onDrop` ).
       DATA(ondropparameters) = client->get( )-t_event_arg.
       TRY.
           DATA(drag_position) = CONV i( ondropparameters[ 1 ] ) + 1.
@@ -251,10 +261,13 @@ CLASS z2ui5_cl_demo_app_307 IMPLEMENTATION.
 
       IF insert_position = `Before`.
         INSERT item INTO items INDEX drop_position.
+
       ELSE.
         INSERT item INTO items INDEX drop_position + 1.
       ENDIF.
     ENDIF.
     client->view_model_update( ).
+
   ENDMETHOD.
+
 ENDCLASS.

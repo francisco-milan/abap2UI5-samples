@@ -1,17 +1,13 @@
-CLASS z2ui5_cl_demo_app_288 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_288 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_product_collection,
         product_id TYPE string,
         name       TYPE string,
-      END OF ty_product_collection .
-
+      END OF ty_product_collection.
 
     DATA editable TYPE abap_bool.
     DATA enabled TYPE abap_bool.
@@ -23,16 +19,15 @@ CLASS z2ui5_cl_demo_app_288 DEFINITION
     DATA selected_product3 TYPE string.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS display_view
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
     METHODS on_event
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_display_popover
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
@@ -40,11 +35,9 @@ CLASS z2ui5_cl_demo_app_288 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_288 IMPLEMENTATION.
 
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(page_01) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
@@ -56,13 +49,13 @@ CLASS z2ui5_cl_demo_app_288 IMPLEMENTATION.
        )->button( id = `button_hint_id`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = client->_event( 'CLICK_HINT_ICON' ) ).
+           press     = client->_event( `CLICK_HINT_ICON` ) ).
 
     page_01->header_content(
        )->link(
-           text   = 'UI5 Demo Kit'
-           target = '_blank'
-           href   = 'https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.Select/sample/sap.m.sample.Select' ).
+           text   = `UI5 Demo Kit`
+           target = `_blank`
+           href   = `https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.Select/sample/sap.m.sample.Select` ).
 
     DATA(page_02) = page_01->page(
                               showheader = abap_false
@@ -74,8 +67,8 @@ CLASS z2ui5_cl_demo_app_288 IMPLEMENTATION.
                                          forceselection = abap_false
                                          selectedkey    = client->_bind( selected_product )
                                          items          = client->_bind( lt_product_collection )
-                                         )->item( key  = '{PRODUCT_ID}'
-                                                  text = '{NAME}'
+                                         )->item( key  = `{PRODUCT_ID}`
+                                                  text = `{NAME}`
                                       )->get_parent(
                                   )->get_parent(
                               )->get_parent(
@@ -87,8 +80,8 @@ CLASS z2ui5_cl_demo_app_288 IMPLEMENTATION.
                                             forceselection = abap_false
                                             selectedkey    = client->_bind( selected_product2 )
                                             items          = client->_bind( lt_product_collection2 )
-                                            )->item( key  = '{PRODUCT_ID}'
-                                                     text = '{NAME}'
+                                            )->item( key  = `{PRODUCT_ID}`
+                                                     text = `{NAME}`
                                       )->get_parent(
                                       )->vbox(
                                           )->hbox( alignitems = `Center`
@@ -116,8 +109,8 @@ CLASS z2ui5_cl_demo_app_288 IMPLEMENTATION.
                                               icon            = `sap-icon://filter`
                                               autoadjustwidth = abap_true
                                               items           = client->_bind( lt_product_collection3 )
-                                              )->item( key  = '{PRODUCT_ID}'
-                                                       text = '{NAME}' ).
+                                              )->item( key  = `{PRODUCT_ID}`
+                                                       text = `{NAME}` ).
 
     client->view_display( page_02->stringify( ) ).
 
@@ -126,14 +119,14 @@ CLASS z2ui5_cl_demo_app_288 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'CLICK_HINT_ICON' ).
-      z2ui5_display_popover( `button_hint_id` ).
+    IF client->check_on_event( `CLICK_HINT_ICON` ).
+      popover_display( `button_hint_id` ).
     ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
@@ -154,32 +147,32 @@ CLASS z2ui5_cl_demo_app_288 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
 
       selected_product  = `HT-1001`.
       selected_product2 = `HT-1001`.
       selected_product3 = `HT-1001`.
 
       " Populate the internal tables
-      lt_product_collection = VALUE #( ( product_id = 'HT-1000' name = 'Notebook Basic 15' )
-                                       ( product_id = 'HT-1001' name = 'Notebook Basic 17' )
-                                       ( product_id = 'HT-1002' name = 'Notebook Basic 18' )
-                                       ( product_id = 'HT-1003' name = 'Notebook Basic 19' )
-                                       ( product_id = 'HT-1007' name = 'ITelO Vault' ) ).
+      lt_product_collection = VALUE #( ( product_id = `HT-1000` name = `Notebook Basic 15` )
+                                       ( product_id = `HT-1001` name = `Notebook Basic 17` )
+                                       ( product_id = `HT-1002` name = `Notebook Basic 18` )
+                                       ( product_id = `HT-1003` name = `Notebook Basic 19` )
+                                       ( product_id = `HT-1007` name = `ITelO Vault` ) ).
       SORT lt_product_collection BY name.
 
-      lt_product_collection2 = VALUE #( ( product_id = 'HT-1000' name = 'Notebook Basic 15' )
-                                        ( product_id = 'HT-1001' name = 'Notebook Basic 17' )
-                                        ( product_id = 'HT-1002' name = 'Notebook Basic 18' )
-                                        ( product_id = 'HT-1003' name = 'Notebook Basic 19' )
-                                        ( product_id = 'HT-1007' name = 'ITelO Vault' ) ).
+      lt_product_collection2 = VALUE #( ( product_id = `HT-1000` name = `Notebook Basic 15` )
+                                        ( product_id = `HT-1001` name = `Notebook Basic 17` )
+                                        ( product_id = `HT-1002` name = `Notebook Basic 18` )
+                                        ( product_id = `HT-1003` name = `Notebook Basic 19` )
+                                        ( product_id = `HT-1007` name = `ITelO Vault` ) ).
       SORT lt_product_collection2 BY name.
 
-      lt_product_collection3 = VALUE #( ( product_id = 'HT-1000' name = 'Notebook Basic 15' )
-                                        ( product_id = 'HT-1001' name = 'Notebook Basic 17' )
-                                        ( product_id = 'HT-1002' name = 'Notebook Basic 18' )
-                                        ( product_id = 'HT-1003' name = 'Notebook Basic 19' )
-                                        ( product_id = 'HT-1007' name = 'ITelO Vault' ) ).
+      lt_product_collection3 = VALUE #( ( product_id = `HT-1000` name = `Notebook Basic 15` )
+                                        ( product_id = `HT-1001` name = `Notebook Basic 17` )
+                                        ( product_id = `HT-1002` name = `Notebook Basic 18` )
+                                        ( product_id = `HT-1003` name = `Notebook Basic 19` )
+                                        ( product_id = `HT-1007` name = `ITelO Vault` ) ).
       SORT lt_product_collection3 BY name.
 
       editable = abap_true.
@@ -190,4 +183,5 @@ CLASS z2ui5_cl_demo_app_288 IMPLEMENTATION.
     on_event( client ).
 
   ENDMETHOD.
+
 ENDCLASS.

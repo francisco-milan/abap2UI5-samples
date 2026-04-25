@@ -7,9 +7,9 @@ CLASS z2ui5_cl_demo_app_343 DEFINITION PUBLIC.
 
     METHODS get_data.
 
-    METHODS render_main
+    METHODS view_display
       IMPORTING
-        !client TYPE REF TO z2ui5_if_client.
+        client TYPE REF TO z2ui5_if_client.
 
     METHODS get_comp
       RETURNING
@@ -17,20 +17,17 @@ CLASS z2ui5_cl_demo_app_343 DEFINITION PUBLIC.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
-
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_343 IMPLEMENTATION.
-
 
   METHOD get_comp.
 
     TRY.
         TRY.
 
-            cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = 'Z2UI5_T_01'
+            cl_abap_typedescr=>describe_by_name( EXPORTING  p_name         = `Z2UI5_T_01`
                                                  RECEIVING p_descr_ref     = DATA(typedesc)
                                                  EXCEPTIONS type_not_found = 1
                                                             OTHERS         = 2 ).
@@ -42,7 +39,6 @@ CLASS z2ui5_cl_demo_app_343 IMPLEMENTATION.
             LOOP AT comp INTO DATA(com).
 
               IF com-as_include = abap_false.
-
                 APPEND com TO result.
 
               ENDIF.
@@ -82,22 +78,21 @@ CLASS z2ui5_cl_demo_app_343 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD render_main.
+  METHOD view_display.
 
-    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = 'RTTI IV'
+    DATA(page) = z2ui5_cl_xml_view=>factory( )->shell( )->page( title          = `RTTI IV`
                                                                 navbuttonpress = client->_event_nav_app_leave( )
                                                                 shownavbutton  = client->check_app_prev_stack( ) ).
 
     TRY.
 
-        DATA(table) = page->table( width   = 'auto'
+        DATA(table) = page->table( width   = `auto`
                                      items = client->_bind( mt_data1 ) ).
 
         client->message_box_display( `error - reference processed in binding without error` ).
       CATCH cx_root.
         client->message_box_display( `success - reference not allowed for binding throwed` ).
     ENDTRY.
-
 
     client->view_display( page->stringify( ) ).
 
@@ -108,12 +103,14 @@ CLASS z2ui5_cl_demo_app_343 IMPLEMENTATION.
 
     IF client->check_on_init( ).
       get_data( ).
-      render_main( client ).
+      view_display( client ).
     ENDIF.
+
     IF client->get( )-check_on_navigated = abap_true
         AND client->check_on_init( )          = abap_false.
-      render_main( client ).
+      view_display( client ).
     ENDIF.
 
   ENDMETHOD.
+
 ENDCLASS.

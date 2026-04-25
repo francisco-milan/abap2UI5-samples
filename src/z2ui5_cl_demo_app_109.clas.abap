@@ -1,24 +1,19 @@
-CLASS z2ui5_cl_demo_app_109 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_109 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
+    INTERFACES z2ui5_if_app.
 
-    INTERFACES z2ui5_if_app .
-
-    DATA product TYPE string .
-    DATA quantity TYPE string .
-    DATA mv_placement TYPE string .
+    DATA product TYPE string.
+    DATA quantity TYPE string.
+    DATA mv_placement TYPE string.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-
-    METHODS z2ui5_on_init.
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_display_view.
-    METHODS z2ui5_display_popover
+    METHODS on_init.
+    METHODS on_event.
+    METHODS view_display.
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
@@ -26,11 +21,9 @@ CLASS z2ui5_cl_demo_app_109 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_109 IMPLEMENTATION.
 
-
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = mv_placement
@@ -64,7 +57,6 @@ CLASS z2ui5_cl_demo_app_109 IMPLEMENTATION.
                                                            value = `Here"`
                                                          )->get_parent( ).
 
-
     client->popover_display(
       xml   = view->stringify( )
       by_id = id ).
@@ -72,42 +64,42 @@ CLASS z2ui5_cl_demo_app_109 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_view.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     view->shell(
       )->page(
-              title          = 'abap2UI5 - Popover Quickview Examples'
+              title          = `abap2UI5 - Popover Quickview Examples`
               navbuttonpress = client->_event_nav_app_leave( )
               shownavbutton  = client->check_app_prev_stack( )
-          )->simple_form( 'QuickView Popover'
-              )->content( 'form'
-                  )->title( 'QuickView Popover'
-                  )->label( 'placement'
+          )->simple_form( `QuickView Popover`
+              )->content( `form`
+                  )->title( `QuickView Popover`
+                  )->label( `placement`
                   )->segmented_button( client->_bind_edit( mv_placement )
                         )->items(
                         )->segmented_button_item(
-                                key  = 'Left'
-                                icon = 'sap-icon://add-favorite'
-                                text = 'Left'
+                                key  = `Left`
+                                icon = `sap-icon://add-favorite`
+                                text = `Left`
                         )->segmented_button_item(
-                                key  = 'Top'
-                                icon = 'sap-icon://accept'
-                                text = 'Top'
+                                key  = `Top`
+                                icon = `sap-icon://accept`
+                                text = `Top`
                         )->segmented_button_item(
-                                key  = 'Bottom'
-                                icon = 'sap-icon://accept'
-                                text = 'Bottom'
+                                key  = `Bottom`
+                                icon = `sap-icon://accept`
+                                text = `Bottom`
                         )->segmented_button_item(
-                                key  = 'Right'
-                                icon = 'sap-icon://attachment'
-                                text = 'Right'
+                                key  = `Right`
+                                icon = `sap-icon://attachment`
+                                text = `Right`
                   )->get_parent( )->get_parent(
-                    )->label( 'popover'
+                    )->label( `popover`
                     )->button(
-                        text  = 'show'
-                        press = client->_event( 'POPOVER' )
-                        id    = 'TEST'
+                        text  = `show`
+                        press = client->_event( `POPOVER` )
+                        id    = `TEST`
                         width = `10rem` ).
 
     client->view_display( view->stringify( ) ).
@@ -120,29 +112,29 @@ CLASS z2ui5_cl_demo_app_109 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      z2ui5_on_init( ).
-      z2ui5_display_view( ).
-      RETURN.
-    ENDIF.
+      on_init( ).
+      view_display( ).
 
-    z2ui5_on_event( ).
+    ELSE.
+      on_event( ).
+    ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
     CASE client->get( )-event.
-      WHEN 'CLOSE_POPOVER'.
+      WHEN `CLOSE_POPOVER`.
         client->popover_destroy( ).
-      WHEN 'POPOVER'.
-        z2ui5_display_popover( `TEST` ).
+      WHEN `POPOVER`.
+        popover_display( `TEST` ).
 
-      WHEN 'BUTTON_CONFIRM'.
+      WHEN `BUTTON_CONFIRM`.
         client->message_toast_display( |confirm| ).
         client->popover_destroy( ).
 
-      WHEN 'BUTTON_CANCEL'.
+      WHEN `BUTTON_CANCEL`.
         client->message_toast_display( |cancel| ).
         client->popover_destroy( ).
     ENDCASE.
@@ -150,11 +142,12 @@ CLASS z2ui5_cl_demo_app_109 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_init.
+  METHOD on_init.
 
-    mv_placement = 'Left'.
-    product  = 'tomato'.
-    quantity = '500'.
+    mv_placement = `Left`.
+    product  = `tomato`.
+    quantity = `500`.
 
   ENDMETHOD.
+
 ENDCLASS.

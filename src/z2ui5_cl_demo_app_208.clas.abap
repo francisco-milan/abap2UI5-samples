@@ -1,16 +1,10 @@
-CLASS z2ui5_cl_demo_app_208 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_208 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
+    INTERFACES z2ui5_if_app.
 
-    INTERFACES z2ui5_if_app .
   PROTECTED SECTION.
-
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
-    METHODS on_event
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
 
@@ -18,11 +12,9 @@ CLASS z2ui5_cl_demo_app_208 DEFINITION
 ENDCLASS.
 
 
+CLASS z2ui5_cl_demo_app_208 IMPLEMENTATION.
 
-CLASS Z2UI5_CL_DEMO_APP_208 IMPLEMENTATION.
-
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
@@ -90,17 +82,12 @@ CLASS Z2UI5_CL_DEMO_APP_208 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD on_event.
-  ENDMETHOD.
-
-
   METHOD z2ui5_if_app~main.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
     ENDIF.
 
-    on_event( client ).
-
   ENDMETHOD.
+
 ENDCLASS.

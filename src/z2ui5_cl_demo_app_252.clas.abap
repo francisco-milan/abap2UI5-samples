@@ -1,21 +1,18 @@
-CLASS z2ui5_cl_demo_app_252 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_252 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
+    INTERFACES z2ui5_if_app.
 
-    INTERFACES z2ui5_if_app .
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS display_view
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
     METHODS on_event
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
-    METHODS z2ui5_display_popover
+    METHODS popover_display
       IMPORTING
         id TYPE string.
 
@@ -23,30 +20,27 @@ CLASS z2ui5_cl_demo_app_252 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_252 IMPLEMENTATION.
 
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
-            title          = 'abap2UI5 - Sample: Flex Box - Render Type'
+            title          = `abap2UI5 - Sample: Flex Box - Render Type`
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
-
 
     page->header_content(
        )->button( id = `hint_icon`
            icon      = `sap-icon://hint`
            tooltip   = `Sample information`
-           press     = client->_event( 'POPOVER' ) ).
+           press     = client->_event( `POPOVER` ) ).
 
     page->header_content(
        )->link(
-           text   = 'UI5 Demo Kit'
-           target = '_blank'
-           href   = 'https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.FlexBox/sample/sap.m.sample.FlexBoxRenderType' ).
+           text   = `UI5 Demo Kit`
+           target = `_blank`
+           href   = `https://sapui5.hana.ondemand.com/sdk/#/entity/sap.m.FlexBox/sample/sap.m.sample.FlexBoxRenderType` ).
 
     DATA(layout) = page->vbox(
                           )->panel( headertext = `Render Type - Div`
@@ -82,20 +76,19 @@ CLASS z2ui5_cl_demo_app_252 IMPLEMENTATION.
 
     client->view_display( page->stringify( ) ).
 
-
   ENDMETHOD.
 
 
   METHOD on_event.
 
-    IF client->check_on_event( 'POPOVER' ).
-      z2ui5_display_popover( `hint_icon` ).
+    IF client->check_on_event( `POPOVER` ).
+      popover_display( `hint_icon` ).
     ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_display_popover.
+  METHOD popover_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory_popup( ).
     view->quick_view( placement = `Bottom`
@@ -117,10 +110,11 @@ CLASS z2ui5_cl_demo_app_252 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
     ENDIF.
 
     on_event( client ).
 
   ENDMETHOD.
+
 ENDCLASS.

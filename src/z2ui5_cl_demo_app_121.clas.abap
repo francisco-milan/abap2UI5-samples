@@ -1,10 +1,7 @@
-CLASS z2ui5_cl_demo_app_121 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_121 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     DATA longitude TYPE string.
     DATA latitude TYPE string.
@@ -12,17 +9,15 @@ CLASS z2ui5_cl_demo_app_121 DEFINITION
     DATA speed TYPE string.
     DATA altitudeaccuracy TYPE string.
     DATA accuracy TYPE string.
+
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_121 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_121 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
-
 
     "on init
     IF client->check_on_init( ).
@@ -31,35 +26,33 @@ CLASS Z2UI5_CL_DEMO_APP_121 IMPLEMENTATION.
         )->_z2ui5( )->timer( client->_event( )
         )->stringify( ) ).
 
-
       RETURN.
     ENDIF.
-
 
     "user command
     CASE client->get( )-event.
 
-      WHEN 'TIMER_FINISHED'.
+      WHEN `TIMER_FINISHED`.
         client->message_box_display( `Timer finished!` ).
         RETURN.
     ENDCASE.
-
 
     "render view
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     client->view_display( view->shell(
           )->page(
-                  title          = 'abap2UI5'
+                  title          = `abap2UI5`
                   navbuttonpress = client->_event_nav_app_leave( )
                   shownavbutton  = client->check_app_prev_stack( )
               )->_z2ui5( )->timer(
                                         finished = client->_event( `TIMER_FINISHED` )
                                         delayms  = `2000`
-              )->simple_form( title    = 'Timer Interval 2000 ms'
+              )->simple_form( title    = `Timer Interval 2000 ms`
                               editable = abap_true
-                  )->content( 'form'
+                  )->content( `form`
            )->stringify( ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

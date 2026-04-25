@@ -36,17 +36,15 @@ CLASS z2ui5_cl_demo_app_333 DEFINITION PUBLIC.
     DATA ms_data TYPE ty_s_data.
     DATA mr_data TYPE REF TO data.
 
+    CLASS-DATA cv_value TYPE c LENGTH 10 VALUE `STRUCT`.
+
     CLASS-METHODS factory
       IMPORTING
         i_data        TYPE REF TO data
         vis_cols      TYPE int4
       RETURNING
         VALUE(result) TYPE REF TO z2ui5_cl_demo_app_333.
-
-    CLASS-DATA cv_value TYPE c LENGTH 10 VALUE 'STRUCT'.
-
   PROTECTED SECTION.
-
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -68,6 +66,7 @@ CLASS z2ui5_cl_demo_app_333 IMPLEMENTATION.
       APPEND INITIAL LINE TO result->ms_data-t_layout REFERENCE INTO DATA(layout).
 
       layout->name = comp-name.
+
       IF index <= vis_cols.
         layout->visible = abap_true.
       ENDIF.

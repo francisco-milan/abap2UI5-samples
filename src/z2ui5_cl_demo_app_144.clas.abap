@@ -1,20 +1,17 @@
-CLASS z2ui5_cl_demo_app_144 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_144 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_row,
         title TYPE string,
         value TYPE string,
-      END OF ty_row .
-
-    DATA t_tab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY .
+      END OF ty_row.
+    DATA t_tab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY.
 
     DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS set_view.
 
   PROTECTED SECTION.
@@ -22,19 +19,16 @@ CLASS z2ui5_cl_demo_app_144 DEFINITION
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_144 IMPLEMENTATION.
-
 
   METHOD set_view.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = view->shell(
         )->page(
-                title          = 'abap2UI5 - Binding Cell Level'
+                title          = `abap2UI5 - Binding Cell Level`
                 navbuttonpress = client->_event_nav_app_leave( )
                 shownavbutton  = client->check_app_prev_stack( ) ).
-
 
     LOOP AT t_tab REFERENCE INTO DATA(lr_row).
       DATA(lv_tabix) = sy-tabix.
@@ -44,18 +38,18 @@ CLASS z2ui5_cl_demo_app_144 IMPLEMENTATION.
 
     DATA(tab) = page->table(
             items = client->_bind_edit( t_tab )
-            mode  = 'MultiSelect'
+            mode  = `MultiSelect`
         )->header_toolbar(
             )->overflow_toolbar(
-                )->title( 'title of the table'
+                )->title( `title of the table`
         )->get_parent( )->get_parent(
       )->columns(
-        )->column( )->text( 'Title' )->get_parent(
-        )->column( )->text( 'Value' )->get_parent( )->get_parent(
-      )->items( )->column_list_item( selected = '{SELKZ}'
+        )->column( )->text( `Title` )->get_parent(
+        )->column( )->text( `Value` )->get_parent( )->get_parent(
+      )->items( )->column_list_item( selected = `{SELKZ}`
       )->cells(
-          )->input( '{TITLE}'
-          )->input( '{VALUE}' ).
+          )->input( `{TITLE}`
+          )->input( `{VALUE}` ).
 
     page->input( client->_bind_edit( val = t_tab[ 1 ]-title tab = t_tab tab_index = 1 ) ).
     page->input( client->_bind_edit( val = t_tab[ 1 ]-value tab = t_tab tab_index = 1 ) ).
@@ -75,12 +69,13 @@ CLASS z2ui5_cl_demo_app_144 IMPLEMENTATION.
 
       DO 1 TIMES.
         t_tab = VALUE #( BASE t_tab
-            ( title = 'entry 01'  value = 'red' )
-            ( title = 'entry 02'  value = 'blue' ) ).
+            ( title = `entry 01`  value = `red` )
+            ( title = `entry 02`  value = `blue` ) ).
       ENDDO.
       set_view( ).
     ENDIF.
     client->view_model_update( ).
 
   ENDMETHOD.
+
 ENDCLASS.

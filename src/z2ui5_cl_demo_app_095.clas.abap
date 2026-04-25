@@ -33,19 +33,17 @@ CLASS z2ui5_cl_demo_app_095 DEFINITION PUBLIC.
     METHODS on_event_sub.
 
   PROTECTED SECTION.
-  PRIVATE SECTION.
     DATA page TYPE REF TO z2ui5_cl_xml_view.
 
+  PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_095 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'BUTTON_SAVE' ).
+    IF client->check_on_event( `BUTTON_SAVE` ).
       client->message_box_display( `event main app` ).
     ENDIF.
 
@@ -74,7 +72,7 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
     mo_app_sub->mo_view_parent = mo_grid_sub.
     mo_app_sub->z2ui5_if_app~main( client ).
 
-    client->view_display( page->get_root( )->xml_get( ) ).
+    client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
 
@@ -83,39 +81,39 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
 
     page = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
-            title           = 'abap2UI5 - Main App with Sub App'
+            title           = `abap2UI5 - Main App with Sub App`
             navbuttonpress  = client->_event_nav_app_leave( )
               shownavbutton = abap_true ).
 
-    DATA(o_grid) = page->grid( 'L6 M12 S12'
-        )->content( 'layout' ).
+    DATA(o_grid) = page->grid( `L6 M12 S12`
+        )->content( `layout` ).
 
-    DATA(content) = o_grid->simple_form( 'Input'
-          )->content( 'form' ).
-    content->label( 'main app'
+    DATA(content) = o_grid->simple_form( `Input`
+          )->content( `form` ).
+    content->label( `main app`
       )->input(
           value  = client->_bind_edit( ms_screen-input )
-          submit = client->_event( 'INPUT' ) ).
+          submit = client->_event( `INPUT` ) ).
 
-    mo_grid_sub = page->grid( 'L12 M12 S12'
-        )->content( 'layout' ).
+    mo_grid_sub = page->grid( `L12 M12 S12`
+        )->content( `layout` ).
 
     page->footer( )->overflow_toolbar(
                    )->toolbar_spacer(
                    )->button(
-                       text  = 'Delete'
-                       press = client->_event( 'BUTTON_DELETE' )
-                       type  = 'Reject'
-                       icon  = 'sap-icon://delete'
+                       text  = `Delete`
+                       press = client->_event( `BUTTON_DELETE` )
+                       type  = `Reject`
+                       icon  = `sap-icon://delete`
                    )->button(
-                       text  = 'Add'
-                       press = client->_event( 'BUTTON_ADD' )
-                       type  = 'Default'
-                       icon  = 'sap-icon://add'
+                       text  = `Add`
+                       press = client->_event( `BUTTON_ADD` )
+                       type  = `Default`
+                       icon  = `sap-icon://add`
                    )->button(
-                       text  = 'Save'
-                       press = client->_event( 'BUTTON_SAVE' )
-                       type  = 'Success' ).
+                       text  = `Save`
+                       press = client->_event( `BUTTON_SAVE` )
+                       type  = `Success` ).
 
   ENDMETHOD.
 
@@ -127,7 +125,7 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
     IF client->check_on_init( ).
       on_init( ).
       on_init_sub( ).
-      client->view_display( page->get_root( )->xml_get( ) ).
+      client->view_display( page->stringify( ) ).
       RETURN.
     ENDIF.
 
@@ -135,4 +133,5 @@ CLASS Z2UI5_CL_DEMO_APP_095 IMPLEMENTATION.
     on_event_sub( ).
 
   ENDMETHOD.
+
 ENDCLASS.

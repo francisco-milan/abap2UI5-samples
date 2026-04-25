@@ -1,6 +1,4 @@
-CLASS z2ui5_cl_demo_app_327 DEFINITION
-  PUBLIC FINAL
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_327 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
@@ -26,18 +24,21 @@ CLASS z2ui5_cl_demo_app_327 DEFINITION
     DATA stored_value  TYPE string.
     DATA storage_types TYPE STANDARD TABLE OF ty_storage_type.
 
+  PROTECTED SECTION.
+  PRIVATE SECTION.
 ENDCLASS.
 
 
 CLASS z2ui5_cl_demo_app_327 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
+
     IF client->check_on_init( ).
 
       storage_types = VALUE #( ( type = `local` )
                                ( type = `session` ) ).
       storage = VALUE #( type   = `local`
                          prefix = `prefix1`
-                         key    = 'key1'
+                         key    = `key1`
 *                         value  = VALUE #( field1 = 1
 *                         field2 = 'textfld1' )
                                            ).
@@ -45,32 +46,32 @@ CLASS z2ui5_cl_demo_app_327 IMPLEMENTATION.
       DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
       view->shell(
-        )->page( title          = 'abap2UI5 - Storage'
+        )->page( title          = `abap2UI5 - Storage`
                  navbuttonpress = client->_event_nav_app_leave( )
                  shownavbutton  = client->check_app_prev_stack( )
 
-        )->simple_form( title    = 'Local/Session Storage'
+        )->simple_form( title    = `Local/Session Storage`
                         editable = abap_true
-            )->content( 'form'
-                )->label( 'Type'
+            )->content( `form`
+                )->label( `Type`
                       )->select( forceselection = abap_true
                                  selectedkey    = client->_bind_edit( storage-type )
                                  items          = client->_bind( storage_types )
-                          )->item( key  = '{TYPE}'
-                                   text = '{TYPE}'
+                          )->item( key  = `{TYPE}`
+                                   text = `{TYPE}`
                           )->get_parent(
-                )->label( 'Prefix'
+                )->label( `Prefix`
                 )->input( client->_bind_edit( storage-prefix )
-                )->label( 'Key'
+                )->label( `Key`
                 )->input( client->_bind_edit( storage-key )
-                )->label( 'Value'
+                )->label( `Value`
                 )->input( client->_bind_edit( storage-value )
-                )->button( text  = 'store'
+                )->button( text  = `store`
                            press = client->_event_client( val   = z2ui5_if_client=>cs_event-store_data
                                                           t_arg = VALUE #( ( |${ client->_bind_edit( storage ) }| ) ) )
 
-                )->button( text  = 'get'
-                           press = client->_event( 'GET_STORED_VALUE' )
+                )->button( text  = `get`
+                           press = client->_event( `GET_STORED_VALUE` )
                                        )->get_parent(
                                        )->get_parent(
 
@@ -87,14 +88,16 @@ CLASS z2ui5_cl_demo_app_327 IMPLEMENTATION.
     ENDIF.
 
     CASE client->get( )-event.
-      WHEN 'LOCAL_STORAGE_LOADED'.
+      WHEN `LOCAL_STORAGE_LOADED`.
 *        z2ui5_cl_ajson=>parse( client->get_event_arg( 4 ) )->to_abap( IMPORTING ev_container = storage-value ).
         storage-value = client->get_event_arg( 4 ).
         client->view_model_update( ).
-      WHEN 'GET_STORED_VALUE'.
+      WHEN `GET_STORED_VALUE`.
 *        z2ui5_cl_ajson=>parse( stored_value )->to_abap( IMPORTING ev_container = storage-value ).
         storage-value = stored_value.
         client->view_model_update( ).
     ENDCASE.
+
   ENDMETHOD.
+
 ENDCLASS.

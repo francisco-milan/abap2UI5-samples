@@ -1,35 +1,33 @@
-CLASS z2ui5_cl_demo_app_339 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_339 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
     DATA mv_view_display TYPE abap_bool.
     DATA mo_parent_view  TYPE REF TO z2ui5_cl_xml_view.
-    DATA mv_init         TYPE abap_bool.
     DATA mv_table        TYPE string.
 
     DATA mt_table_tmp    TYPE REF TO data.
     DATA mt_table        TYPE REF TO data.
 
-    DATA mo_layout   TYPE REF TO z2ui5_cl_demo_app_333.
+    DATA mo_layout       TYPE REF TO z2ui5_cl_demo_app_333.
 
     METHODS set_app_data
       IMPORTING
         !table TYPE string.
 
   PROTECTED SECTION.
-    METHODS on_init.
-    METHODS on_event    IMPORTING !client TYPE REF TO z2ui5_if_client.
+    DATA mv_init TYPE abap_bool.
 
-    METHODS render_main IMPORTING !client TYPE REF TO z2ui5_if_client.
+    METHODS on_event     IMPORTING !client TYPE REF TO z2ui5_if_client.
+    METHODS view_display IMPORTING !client TYPE REF TO z2ui5_if_client.
     METHODS get_data.
 
-  PRIVATE SECTION.
     METHODS get_comp
       RETURNING
         VALUE(result) TYPE abap_component_tab.
+
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -40,7 +38,7 @@ CLASS z2ui5_cl_demo_app_339 IMPLEMENTATION.
     DATA selkz TYPE abap_bool.
 
     IF mv_table IS INITIAL.
-      mv_table = 'Z2UI5_T_01'.
+      mv_table = `Z2UI5_T_01`.
     ENDIF.
 
     TRY.
@@ -58,19 +56,18 @@ CLASS z2ui5_cl_demo_app_339 IMPLEMENTATION.
             LOOP AT comp INTO DATA(com).
 
               IF com-as_include = abap_false.
-
                 APPEND com TO result.
 
               ENDIF.
 
             ENDLOOP.
 
-          CATCH cx_root INTO DATA(root). " TODO: variable is assigned but never used (ABAP cleaner)
+          CATCH cx_root.
 
         ENDTRY.
 
         DATA(component) = VALUE cl_abap_structdescr=>component_table(
-                                    ( name = 'SELKZ'
+                                    ( name = `SELKZ`
                                       type = CAST #( cl_abap_datadescr=>describe_by_data( selkz ) ) ) ).
 
         APPEND LINES OF component TO result.
@@ -81,45 +78,40 @@ CLASS z2ui5_cl_demo_app_339 IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD on_event.
+
     CASE client->get( )-event.
 
-      WHEN 'SELECTION_CHANGE'.
+      WHEN `SELECTION_CHANGE`.
 
-        client->nav_app_call( z2ui5_cl_demo_app_340=>factory(
-                                io_table  = mt_table
-                                io_layout = mo_layout  ) ).
+        client->nav_app_call( z2ui5_cl_demo_app_340=>factory( io_table  = mt_table
+                                                              io_layout = mo_layout  ) ).
 
-      WHEN 'BACK'.
+      WHEN `BACK`.
 
         client->nav_app_leave( ).
 
     ENDCASE.
-  ENDMETHOD.
-
-  METHOD on_init.
 
   ENDMETHOD.
 
-  METHOD render_main.
+  METHOD view_display.
 
     IF mo_parent_view IS INITIAL.
-
       DATA(page) = z2ui5_cl_xml_view=>factory( ).
 
     ELSE.
-
       page = mo_parent_view->get( `Page` ).
 
     ENDIF.
 
     mo_layout = z2ui5_cl_demo_app_333=>factory( i_data   = mt_table
-                                                    vis_cols = 5 ).
+                                                vis_cols = 5 ).
     ASSIGN mt_table->* TO FIELD-SYMBOL(<table>).
 
-    DATA(table) = page->table( width = 'auto'
-                               mode  = 'SingleSelectLeft'
-                               selectionchange  = client->_event( 'SELECTION_CHANGE' )
-                               items = client->_bind_edit( val = <table> ) ).
+    DATA(table) = page->table( width           = `auto`
+                               mode            = `SingleSelectLeft`
+                               selectionchange = client->_event( `SELECTION_CHANGE` )
+                               items           = client->_bind_edit( val = <table> ) ).
 
     DATA(columns) = table->columns( ).
 
@@ -134,7 +126,7 @@ CLASS z2ui5_cl_demo_app_339 IMPLEMENTATION.
     ENDLOOP.
 
     DATA(column_list_item) = columns->get_parent( )->items(
-                                       )->column_list_item( valign   = 'Middle'
+                                       )->column_list_item( valign   = `Middle`
                                                             type     = `Inactive`
                                                             selected = `{SELKZ}` ).
 
@@ -149,14 +141,13 @@ CLASS z2ui5_cl_demo_app_339 IMPLEMENTATION.
     ENDLOOP.
 
     IF mo_parent_view IS INITIAL.
-
-      client->view_display( page->get_root( )->xml_get( ) ).
+      client->view_display( page->stringify( ) ).
 
     ELSE.
-
       mv_view_display = abap_true.
 
     ENDIF.
+
   ENDMETHOD.
 
   METHOD set_app_data.
@@ -167,12 +158,11 @@ CLASS z2ui5_cl_demo_app_339 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
-    IF mv_init IS INITIAL.
+    IF mv_init = abap_false.
       mv_init = abap_true.
 
       get_data( ).
-
-      render_main( client ).
+      view_display( client ).
 
     ENDIF.
 
@@ -180,7 +170,7 @@ CLASS z2ui5_cl_demo_app_339 IMPLEMENTATION.
     ASSIGN mt_table->* TO FIELD-SYMBOL(<table>).
 
     IF <data> <> <table>.
-      client->message_toast_display( 'ERROR - mo_layout->mr_data->* ne mt_table->*'  ).
+      client->message_toast_display( `ERROR - mo_layout->mr_data->* ne mt_table->*`  ).
     ENDIF.
 
     on_event( client ).

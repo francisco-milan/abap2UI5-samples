@@ -1,11 +1,7 @@
-CLASS z2ui5_cl_demo_app_069 DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_069 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_t_tree3,
@@ -29,7 +25,6 @@ CLASS z2ui5_cl_demo_app_069 DEFINITION
     DATA mv_check_enabled_02 TYPE abap_bool.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
     METHODS view_display_master.
@@ -37,27 +32,24 @@ CLASS z2ui5_cl_demo_app_069 DEFINITION
     METHODS view_display_app_02.
 
   PRIVATE SECTION.
-
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_069 IMPLEMENTATION.
-
 
   METHOD view_display_app_01.
 
     DATA(lo_view_nested) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = lo_view_nested->page( `APP_01` ).
 
-    page->button( text  = 'Update this view'
-                  press = client->_event( 'UPDATE_DETAIL' ) ).
+    page->button( text  = `Update this view`
+                  press = client->_event( `UPDATE_DETAIL` ) ).
 
     client->nest_view_display(
       val            = lo_view_nested->stringify( )
       id             = `test`
-      method_insert  = 'addMidColumnPage'
-      method_destroy = 'removeAllMidColumnPages' ).
+      method_insert  = `addMidColumnPage`
+      method_destroy = `removeAllMidColumnPages` ).
 
   ENDMETHOD.
 
@@ -67,30 +59,30 @@ CLASS z2ui5_cl_demo_app_069 IMPLEMENTATION.
     DATA(lo_view_nested) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = lo_view_nested->page( `APP_02` ).
 
-    page->button( text  = 'Update this view'
-                  press = client->_event( 'UPDATE_DETAIL' )
+    page->button( text  = `Update this view`
+                  press = client->_event( `UPDATE_DETAIL` )
       )->input( ).
 
     page->button(
-          text    = 'button 01'
+          text    = `button 01`
           press   = client->_event( `NEST_TEST` )
           enabled = client->_bind( mv_check_enabled_01 ) ).
 
     page->button(
-          text    = 'button 01'
+          text    = `button 01`
           press   = client->_event( `NEST_TEST` )
           enabled = client->_bind( mv_check_enabled_01 ) ).
 
     page->button(
-        text    = 'button 02'
+        text    = `button 02`
         press   = client->_event( `NEST_TEST` )
         enabled = client->_bind( mv_check_enabled_02 ) ).
 
     client->nest_view_display(
       val            = lo_view_nested->stringify( )
       id             = `test`
-      method_insert  = 'addMidColumnPage'
-      method_destroy = 'removeAllMidColumnPages' ).
+      method_insert  = `addMidColumnPage`
+      method_destroy = `removeAllMidColumnPages` ).
 
   ENDMETHOD.
 
@@ -100,17 +92,17 @@ CLASS z2ui5_cl_demo_app_069 IMPLEMENTATION.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     DATA(page) = view->shell( )->page(
-          title          = 'abap2UI5 - Master-Detail View with Nested Views'
+          title          = `abap2UI5 - Master-Detail View with Nested Views`
           navbuttonpress = client->_event_nav_app_leave( )
           shownavbutton  = client->check_app_prev_stack( ) ).
 
-    DATA(lr_master) = page->flexible_column_layout( layout = 'TwoColumnsBeginExpanded'
-                                                    id     ='test' )->begin_column_pages( ).
+    DATA(lr_master) = page->flexible_column_layout( layout = `TwoColumnsBeginExpanded`
+                                                    id     =`test` )->begin_column_pages( ).
 
     lr_master->tree( client->_bind( mt_tree ) )->items(
         )->standard_tree_item(
-            type  = 'Active'
-            title = '{TEXT}'
+            type  = `Active`
+            title = `{TEXT}`
             press = client->_event( val = `EVENT_ITEM`
                 t_arg                   = VALUE #( ( `${TEXT}` ) )
                  ) ).
@@ -126,19 +118,19 @@ CLASS z2ui5_cl_demo_app_069 IMPLEMENTATION.
 
     IF client->check_on_init( ).
 
-      mt_tree = VALUE #( ( text = 'Apps'
-                    nodes       = VALUE #( ( text = 'Frontend'
-                                       nodes      = VALUE #( ( text = 'App_001' )
-                                                        ( text = 'App_002' )
+      mt_tree = VALUE #( ( text = `Apps`
+                    nodes       = VALUE #( ( text = `Frontend`
+                                       nodes      = VALUE #( ( text = `App_001` )
+                                                        ( text = `App_002` )
                   ) ) ) )
-                  ( text  = 'Configuration'
-                    nodes = VALUE #( ( text  = 'User Interface'
-                                       nodes = VALUE #( ( text = 'Theme' )
-                                                        ( text = 'Library' )
+                  ( text  = `Configuration`
+                    nodes = VALUE #( ( text  = `User Interface`
+                                       nodes = VALUE #( ( text = `Theme` )
+                                                        ( text = `Library` )
                                      ) )
-                                     ( text  = 'Database'
-                                       nodes = VALUE #( ( text = 'HANA' )
-                                                         ( text = 'ANY DB' )
+                                     ( text  = `Database`
+                                       nodes = VALUE #( ( text = `HANA` )
+                                                         ( text = `ANY DB` )
          ) ) ) ) ).
 
       view_display_master( ).
@@ -152,9 +144,9 @@ CLASS z2ui5_cl_demo_app_069 IMPLEMENTATION.
 
       WHEN `EVENT_ITEM`.
         CASE client->get_event_arg( 1 ).
-          WHEN 'App_001'.
+          WHEN `App_001`.
             view_display_app_01( ).
-          WHEN 'App_002'.
+          WHEN `App_002`.
             view_display_app_02( ).
         ENDCASE.
 
@@ -166,4 +158,5 @@ CLASS z2ui5_cl_demo_app_069 IMPLEMENTATION.
     ENDCASE.
 
   ENDMETHOD.
+
 ENDCLASS.

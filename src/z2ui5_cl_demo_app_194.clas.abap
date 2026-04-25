@@ -1,6 +1,4 @@
-CLASS z2ui5_cl_demo_app_194 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_194 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
@@ -14,9 +12,10 @@ CLASS z2ui5_cl_demo_app_194 DEFINITION
     DATA ms_table_row    TYPE REF TO data.
     DATA mt_comp         TYPE abap_component_tab.
     DATA ms_fixval       TYPE REF TO data.
+
     METHODS set_app_data
       IMPORTING
-        !table TYPE string.
+        table TYPE string.
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
@@ -24,9 +23,8 @@ CLASS z2ui5_cl_demo_app_194 DEFINITION
     METHODS on_init.
     METHODS on_event.
 
-    METHODS render_main.
+    METHODS view_display.
 
-  PRIVATE SECTION.
     METHODS get_data.
 
     METHODS get_comp
@@ -34,6 +32,8 @@ CLASS z2ui5_cl_demo_app_194 DEFINITION
         VALUE(result) TYPE abap_component_tab.
 
     METHODS get_fixval.
+
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -43,16 +43,17 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
 
     FIELD-SYMBOLS <row> TYPE any.
 
-    IF client->check_on_event( 'BUTTON' ).
+    IF client->check_on_event( `BUTTON` ).
 
       LOOP AT mt_comp REFERENCE INTO DATA(comp).
 
         ASSIGN ms_table_row->* TO <row>.
         ASSIGN COMPONENT comp->name OF STRUCTURE <row> TO FIELD-SYMBOL(<val>).
+
         IF <val> IS NOT ASSIGNED.
           CONTINUE.
-        ELSE.
 
+        ELSE.
           client->_bind( <val> ).
 
         ENDIF.
@@ -60,26 +61,33 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
       ENDLOOP.
 
     ENDIF.
+
   ENDMETHOD.
+
 
   METHOD on_init.
+
     get_data( ).
-    render_main( ).
+    view_display( ).
+
   ENDMETHOD.
 
-  METHOD render_main.
+
+  METHOD view_display.
+
     FIELD-SYMBOLS <tab> TYPE data.
 
     IF mo_parent_view IS INITIAL.
       DATA(page) = z2ui5_cl_xml_view=>factory( ).
+
     ELSE.
       page = mo_parent_view->get( `Page` ).
     ENDIF.
 
     ASSIGN mt_table->* TO <tab>.
 
-    DATA(table) = page->table( growing = 'true'
-                               width   = 'auto'
+    DATA(table) = page->table( growing = `true`
+                               width   = `auto`
                                items   = client->_bind( <tab> )
 *                               headertext = mv_table
                                ).
@@ -93,8 +101,8 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
     ENDLOOP.
 
     DATA(cells) = columns->get_parent( )->items(
-                                       )->column_list_item( valign = 'Middle'
-                                                            type   = 'Navigation'
+                                       )->column_list_item( valign = `Middle`
+                                                            type   = `Navigation`
                                        )->cells( ).
 
     LOOP AT mt_comp INTO comp.
@@ -103,38 +111,42 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
 
     page->footer( )->overflow_toolbar(
                          )->toolbar_spacer(
-                         )->button( text  = 'Save'
-                                    press = client->_event( 'BUTTON' )
-                                    type  = 'Success' ).
+                         )->button( text  = `Save`
+                                    press = client->_event( `BUTTON` )
+                                    type  = `Success` ).
 
     IF mo_parent_view IS INITIAL.
-
-      client->view_display( page->get_root( )->xml_get( ) ).
+      client->view_display( page->stringify( ) ).
 
     ELSE.
-
       mv_view_display = abap_true.
 
     ENDIF.
+
   ENDMETHOD.
 
+
   METHOD z2ui5_if_app~main.
+
     me->client = client.
 
     IF client->check_on_init( ).
-
       on_init( ).
 
     ENDIF.
 
     on_event( ).
+
   ENDMETHOD.
+
 
   METHOD set_app_data.
-    " TODO: parameter COUNT is never used (ABAP cleaner)
+
 
     mv_table = table.
+
   ENDMETHOD.
+
 
   METHOD get_data.
 
@@ -173,6 +185,7 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD get_fixval.
 
     TYPES:
@@ -203,7 +216,9 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD get_comp.
+
     DATA index TYPE int4.
 
     TRY.
@@ -229,13 +244,14 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
         ENDTRY.
 
         DATA(component) = VALUE cl_abap_structdescr=>component_table(
-                                    ( name = 'ROW_ID'
+                                    ( name = `ROW_ID`
                                       type = CAST #( cl_abap_datadescr=>describe_by_data( index ) ) ) ).
 
         APPEND LINES OF component TO result.
 
       CATCH cx_root.
     ENDTRY.
+
   ENDMETHOD.
 
 ENDCLASS.

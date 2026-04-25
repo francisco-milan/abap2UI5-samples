@@ -1,33 +1,28 @@
 CLASS z2ui5_cl_demo_app_040 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     DATA mv_barcode TYPE string.
     DATA mv_load_lib TYPE abap_bool.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
     DATA:
       BEGIN OF app,
-        check_initialized TYPE abap_bool,
         view_main         TYPE string,
         view_popup        TYPE string,
         get               TYPE z2ui5_if_types=>ty_s_get,
       END OF app.
 
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_on_render.
+    METHODS on_event.
+    METHODS view_display.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_040 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_040 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
@@ -36,27 +31,27 @@ CLASS Z2UI5_CL_DEMO_APP_040 IMPLEMENTATION.
     app-view_popup = ``.
 
     IF app-get-event IS NOT INITIAL.
-      z2ui5_on_event( ).
+      on_event( ).
     ENDIF.
 
-    z2ui5_on_render( ).
+    view_display( ).
 
-    CLEAR app-get.
+    app-get = VALUE #( ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
-    IF client->check_on_event( 'LOAD_BC' ).
-      client->message_box_display( 'JSBarcode Library loaded' ).
+    IF client->check_on_event( `LOAD_BC` ).
+      client->message_box_display( `JSBarcode Library loaded` ).
       mv_load_lib = abap_true.
     ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_render.
+  METHOD view_display.
 
     DATA(lv_xml) = `<mvc:View ` && |\n| &&
                           `    xmlns:mvc="sap.ui.core.mvc" displayBlock="true"` && |\n| &&
@@ -68,9 +63,9 @@ CLASS Z2UI5_CL_DEMO_APP_040 IMPLEMENTATION.
       `<html><head>` && |\n| &&
                           `</head>` && |\n| &&
                           `<body>` && |\n| &&
-                          `<m:Button text="LoadJSBarcode" press="` && client->_event( 'LOAD_BC' ) && `" />` && |\n| &&
+                          `<m:Button text="LoadJSBarcode" press="` && client->_event( `LOAD_BC` ) && `" />` && |\n| &&
                           `<m:Input value="` && client->_bind_edit( mv_barcode ) && `" />` && |\n| &&
-                         `<m:Button text="Display Barcode" press="` && client->_event( 'DISPLAY_BC' ) && `" />` && |\n| &&
+                         `<m:Button text="Display Barcode" press="` && client->_event( `DISPLAY_BC` ) && `" />` && |\n| &&
                           `<h1>JSBarcode Library</h1>` && |\n| &&
                           `  <svg id="barcode">` && |\n| &&
 *                          `  jsbarcode-format="upc"` && |\n|  &&
@@ -78,6 +73,7 @@ CLASS Z2UI5_CL_DEMO_APP_040 IMPLEMENTATION.
 *                          `  jsbarcode-textmargin="0"` && |\n|  &&
 *                          `  jsbarcode-fontoptions="bold">` && |\n|  &&
                           `</svg>` && |\n|.
+
     IF mv_load_lib = abap_true.
       mv_load_lib = abap_false.
       lv_xml = lv_xml && `<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"> </script>`.
@@ -94,4 +90,5 @@ CLASS Z2UI5_CL_DEMO_APP_040 IMPLEMENTATION.
     client->view_display( lv_xml ).
 
   ENDMETHOD.
+
 ENDCLASS.

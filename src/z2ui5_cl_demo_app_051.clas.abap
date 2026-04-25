@@ -1,7 +1,6 @@
 CLASS z2ui5_cl_demo_app_051 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     DATA:
@@ -11,14 +10,8 @@ CLASS z2ui5_cl_demo_app_051 DEFINITION PUBLIC.
         input3 TYPE string,
       END OF screen.
 
-
-
   PROTECTED SECTION.
-
-    METHODS display_view
-      IMPORTING
-        client TYPE REF TO z2ui5_if_client.
-    METHODS on_event
+    METHODS view_display
       IMPORTING
         client TYPE REF TO z2ui5_if_client.
 
@@ -26,33 +19,30 @@ CLASS z2ui5_cl_demo_app_051 DEFINITION PUBLIC.
 ENDCLASS.
 
 
+CLASS z2ui5_cl_demo_app_051 IMPLEMENTATION.
 
-CLASS Z2UI5_CL_DEMO_APP_051 IMPLEMENTATION.
-
-
-  METHOD display_view.
+  METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( )->shell(
          )->page(
-            title          = 'abap2UI5 - Label Example'
+            title          = `abap2UI5 - Label Example`
             navbuttonpress = client->_event_nav_app_leave( )
             shownavbutton  = client->check_app_prev_stack( ) ).
 
     DATA(layout) = page->vertical_layout( class = `sapUiContentPadding`
                                           width = `100%` ).
-    layout->label( text     = 'Input mandatory'
+    layout->label( text     = `Input mandatory`
                    labelfor = `input1` ).
     layout->input( id       = `input1`
                    required = abap_true ).
 
-
-    layout->label( text     = 'Input bold'
+    layout->label( text     = `Input bold`
                    labelfor = `input2`
                    design   = `Bold` ).
     layout->input( id    = `input2`
                    value = client->_bind_edit( screen-input2 ) ).
 
-    layout->label( text     = 'Input normal'
+    layout->label( text     = `Input normal`
                    labelfor = `input3` ).
     layout->input( id    = `input3`
                    value = client->_bind_edit( screen-input3 ) ).
@@ -62,17 +52,12 @@ CLASS Z2UI5_CL_DEMO_APP_051 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD on_event.
-  ENDMETHOD.
-
-
   METHOD z2ui5_if_app~main.
 
     IF client->check_on_init( ).
-      display_view( client ).
+      view_display( client ).
     ENDIF.
 
-    on_event( client ).
-
   ENDMETHOD.
+
 ENDCLASS.

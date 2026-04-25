@@ -1,12 +1,7 @@
-CLASS z2ui5_cl_demo_app_181 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_181 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-
-    INTERFACES z2ui5_if_app .
-    DATA mv_url TYPE string .
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_cities,
@@ -15,7 +10,6 @@ CLASS z2ui5_cl_demo_app_181 DEFINITION
       END OF ty_cities.
 
     TYPES t_cities TYPE STANDARD TABLE OF ty_cities WITH DEFAULT KEY.
-    DATA mt_cities TYPE t_cities.
 
     TYPES:
       BEGIN OF ty_product_items,
@@ -27,26 +21,27 @@ CLASS z2ui5_cl_demo_app_181 DEFINITION
       END OF ty_product_items.
 
     TYPES t_product_items TYPE STANDARD TABLE OF ty_product_items WITH DEFAULT KEY.
+
+    DATA mv_url TYPE string.
+
+    DATA mt_cities TYPE t_cities.
+
     DATA mt_products TYPE t_product_items.
 
-    METHODS on_event .
-    METHODS view_display .
+    METHODS on_event.
+    METHODS view_display.
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
-
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_181 IMPLEMENTATION.
-
 
   METHOD on_event.
 
-    IF client->check_on_event( 'BOOK' ).
-      client->message_toast_display( 'BOOKED !!! ENJOY' ).
+    IF client->check_on_event( `BOOK` ).
+      client->message_toast_display( `BOOKED !!! ENJOY` ).
     ENDIF.
 
   ENDMETHOD.
@@ -61,7 +56,6 @@ CLASS z2ui5_cl_demo_app_181 IMPLEMENTATION.
         class          = `sapUiContentPadding`
         navbuttonpress = client->_event_nav_app_leave( )
         shownavbutton  = client->check_app_prev_stack( ) ).
-
 
     mt_cities = VALUE #( ( text = `Berlin` key = `BR` )
                                                                                                        ( text = `London` key = `LN` )
@@ -107,7 +101,6 @@ CLASS z2ui5_cl_demo_app_181 IMPLEMENTATION.
                                press = client->_event( `BOOK` )
                                class = `sapUiTinyMarginBegin` ).
 
-
     DATA(card_2) = page->card( width = `300px`
                                class = `sapUiMediumMargin`
                      )->header( `f`
@@ -140,7 +133,6 @@ CLASS z2ui5_cl_demo_app_181 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-
       view_display( ).
 
     ENDIF.
@@ -148,4 +140,5 @@ CLASS z2ui5_cl_demo_app_181 IMPLEMENTATION.
     on_event( ).
 
   ENDMETHOD.
+
 ENDCLASS.

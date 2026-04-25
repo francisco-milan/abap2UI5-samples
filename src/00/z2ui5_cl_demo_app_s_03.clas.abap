@@ -1,23 +1,21 @@
-CLASS z2ui5_cl_demo_app_s_03 DEFINITION
-  PUBLIC
-  FINAL
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_s_03 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
+
     DATA magic_key TYPE string.
     DATA: BEGIN OF message,
             text TYPE string VALUE IS INITIAL,
-            type TYPE string VALUE 'None',
+            type TYPE string VALUE `None`,
           END OF message.
-  PROTECTED SECTION.
-  PRIVATE SECTION.
 
+  PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS view_display.
     METHODS on_event.
 
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -43,7 +41,7 @@ CLASS z2ui5_cl_demo_app_s_03 IMPLEMENTATION.
     SELECT
       SINGLE FROM icfservloc
       FIELDS icfactive
-      WHERE icf_name = 'MIME_DEMO'
+      WHERE icf_name = `MIME_DEMO`
       INTO @DATA(icfactive).
 
     " Note, these are demo sounds and are part of the abap2UI5 sample repo.
@@ -70,29 +68,32 @@ CLASS z2ui5_cl_demo_app_s_03 IMPLEMENTATION.
     vbox->input( id          = `inputApp`
                  value       = client->_bind_edit( magic_key )
                  placeholder = `Enter magic key`
-                 submit      = client->_event( 'enter' ) ).
+                 submit      = client->_event( `enter` ) ).
     vbox->button( text  = `submit`
                   type  = `accept`
-                  press = client->_event( 'enter' ) ).
+                  press = client->_event( `enter` ) ).
 
     view->_z2ui5( )->focus( focusid = `inputApp` ).
     client->view_display( view->stringify( ) ).
+
   ENDMETHOD.
 
 
   METHOD on_event.
 
-    IF client->get( )-event = 'enter'.
+    IF client->get( )-event = `enter`.
+
       IF magic_key = `abap2UI5`.
         client->follow_up_action( val = `playSuccess()` ).
-        message-type = 'Success'.
-        message-text = 'Hooray!'.
+        message-type = `Success`.
+        message-text = `Hooray!`.
+
       ELSE.
         client->follow_up_action( val = `playError()` ).
-        message-type = 'Error'.
+        message-type = `Error`.
         message-text = `That wasn't the magic key`.
       ENDIF.
-      CLEAR magic_key.
+      magic_key = VALUE #( ).
       client->view_model_update( ).
     ENDIF.
 

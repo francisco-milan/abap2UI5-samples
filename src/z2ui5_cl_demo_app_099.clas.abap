@@ -1,11 +1,7 @@
-CLASS z2ui5_cl_demo_app_099 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_099 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     TYPES:
       BEGIN OF ty_row,
@@ -15,48 +11,45 @@ CLASS z2ui5_cl_demo_app_099 DEFINITION
         icon     TYPE string,
         info     TYPE string,
         selected TYPE abap_bool,
-      END OF ty_row .
+      END OF ty_row.
     TYPES:
       BEGIN OF ty_sort,
         text     TYPE string,
         key      TYPE string,
         selected TYPE abap_bool,
-      END OF ty_sort .
+      END OF ty_sort.
 
     DATA
-      t_tab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY .
+      t_tab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY.
     DATA
-      t_tab_sort TYPE STANDARD TABLE OF ty_sort WITH EMPTY KEY .
+      t_tab_sort TYPE STANDARD TABLE OF ty_sort WITH EMPTY KEY.
     DATA
-      t_tab_group TYPE STANDARD TABLE OF ty_sort WITH EMPTY KEY .
+      t_tab_group TYPE STANDARD TABLE OF ty_sort WITH EMPTY KEY.
     DATA
-      t_tab_filter TYPE STANDARD TABLE OF ty_sort WITH EMPTY KEY .
-    DATA mv_sorter_group TYPE string .
-    DATA mv_filter TYPE string .
-    DATA mv_sort_descending TYPE abap_bool .
-    DATA mv_group_descending TYPE abap_bool .
+      t_tab_filter TYPE STANDARD TABLE OF ty_sort WITH EMPTY KEY.
+
+    DATA mv_sorter_group TYPE string.
+    DATA mv_filter TYPE string.
+    DATA mv_sort_descending TYPE abap_bool.
+    DATA mv_group_descending TYPE abap_bool.
     DATA mv_group_desc_str TYPE string VALUE `false` ##NO_TEXT.
-  PROTECTED SECTION.
 
+  PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
-
-    METHODS z2ui5_set_data.
-    METHODS z2ui5_view_display.
-    METHODS z2ui5_view_sort_popup.
-    METHODS z2ui5_view_filter_popup.
-    METHODS z2ui5_view_group_popup.
-    METHODS z2ui5_view_settings_popup.
-    METHODS z2ui5_on_event.
-
+    METHODS set_data.
+    METHODS view_display.
+    METHODS view_display_sort_popup.
+    METHODS view_display_filter_popup.
+    METHODS view_display_group_popup.
+    METHODS view_display_settings_popup.
+    METHODS on_event.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
-CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
-
+CLASS z2ui5_cl_demo_app_099 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
@@ -64,29 +57,29 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
 
     IF client->check_on_init( ).
 
-      z2ui5_set_data( ).
+      set_data( ).
 
-      z2ui5_view_display( ).
-      RETURN.
+      view_display( ).
+
+    ELSE.
+      on_event( ).
     ENDIF.
-
-    z2ui5_on_event( ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
     CASE client->get( )-event.
-      WHEN 'ALL'.
-        z2ui5_view_settings_popup( ).
-      WHEN 'SORT'.
-        z2ui5_view_sort_popup( ).
-      WHEN 'FILTER'.
-        z2ui5_view_filter_popup( ).
-      WHEN 'GROUP'.
-        z2ui5_view_group_popup( ).
-      WHEN 'CONFIRM_SORT'.
+      WHEN `ALL`.
+        view_display_settings_popup( ).
+      WHEN `SORT`.
+        view_display_sort_popup( ).
+      WHEN `FILTER`.
+        view_display_filter_popup( ).
+      WHEN `GROUP`.
+        view_display_group_popup( ).
+      WHEN `CONFIRM_SORT`.
         DATA(lt_arg) = client->get( )-t_event_arg.
 
         IF lt_arg IS NOT INITIAL.
@@ -95,6 +88,7 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
 
           IF mv_sort_descending = abap_true.
             SORT t_tab BY (sort_field) DESCENDING.
+
           ELSE.
             SORT t_tab BY (sort_field) ASCENDING.
 
@@ -104,20 +98,21 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
 
         ENDIF.
 
-      WHEN 'CONFIRM_FILTER'.
-        CLEAR mv_filter.
+      WHEN `CONFIRM_FILTER`.
+        mv_filter = VALUE #( ).
         lt_arg = client->get( )-t_event_arg.
 
         IF lt_arg IS NOT INITIAL.
 
           DATA(filter_string) = lt_arg[ 1 ].
-          SPLIT filter_string AT ':' INTO DATA(lv_dummy) filter_string.
+          SPLIT filter_string AT `:` INTO DATA(lv_dummy) filter_string.
           CONDENSE filter_string NO-GAPS.
           SPLIT filter_string AT `(` INTO DATA(lv_field) DATA(lv_values).
           TRANSLATE lv_field TO UPPER CASE.
           DATA(lv_values_len) = strlen( lv_values ) - 1.
           lv_values = lv_values+0(lv_values_len).
-          SPLIT lv_values AT ',' INTO TABLE DATA(lt_values) IN CHARACTER MODE.
+          SPLIT lv_values AT `,` INTO TABLE DATA(lt_values) IN CHARACTER MODE.
+
           IF sy-subrc = 0.
             LOOP AT lt_values INTO DATA(lv_val).
               mv_filter = mv_filter && `{path:'` && lv_field && `',operator: 'EQ',value1:'` && lv_val && `'},`.
@@ -126,12 +121,11 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
           DATA(mv_filter_len) = strlen( mv_filter ) - 1.
           mv_filter = mv_filter+0(mv_filter_len).
 
-
-          z2ui5_view_display( ).
+          view_display( ).
 
         ENDIF.
 
-      WHEN 'CONFIRM_GROUP'.
+      WHEN `CONFIRM_GROUP`.
         lt_arg = client->get( )-t_event_arg.
 
         IF lt_arg IS NOT INITIAL.
@@ -142,6 +136,7 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
 
             IF mv_group_descending = abap_true.
               SORT t_tab BY (group_field) DESCENDING.
+
             ELSE.
               SORT t_tab BY (group_field) ASCENDING.
             ENDIF.
@@ -153,32 +148,33 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
 
             IF mv_group_descending = abap_true.
               SORT t_tab BY (group_field) DESCENDING.
+
             ELSE.
               SORT t_tab BY (group_field) ASCENDING.
             ENDIF.
 
-            CLEAR mv_sorter_group.
+            mv_sorter_group = VALUE #( ).
           ENDIF.
 
-          z2ui5_view_display( ).
+          view_display( ).
 
         ENDIF.
 
-      WHEN 'RESET_GROUP'.
+      WHEN `RESET_GROUP`.
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_set_data.
+  METHOD set_data.
 
     t_tab = VALUE #(
-      ( title = 'row_01'  info = 'completed'   descr = 'this is a description' icon = 'sap-icon://account' )
-      ( title = 'row_02'  info = 'incompleted' descr = 'this is a description' icon = 'sap-icon://account' )
-      ( title = 'row_03'  info = 'working'     descr = 'this is a description' icon = 'sap-icon://account' )
-      ( title = 'row_04'  info = 'working'     descr = 'this is a description' icon = 'sap-icon://account' )
-      ( title = 'row_05'  info = 'completed'   descr = 'this is a description' icon = 'sap-icon://account' )
-      ( title = 'row_06'  info = 'completed'   descr = 'this is a description' icon = 'sap-icon://account' ) ).
+      ( title = `row_01`  info = `completed`   descr = `this is a description` icon = `sap-icon://account` )
+      ( title = `row_02`  info = `incompleted` descr = `this is a description` icon = `sap-icon://account` )
+      ( title = `row_03`  info = `working`     descr = `this is a description` icon = `sap-icon://account` )
+      ( title = `row_04`  info = `working`     descr = `this is a description` icon = `sap-icon://account` )
+      ( title = `row_05`  info = `completed`   descr = `this is a description` icon = `sap-icon://account` )
+      ( title = `row_06`  info = `completed`   descr = `this is a description` icon = `sap-icon://account` ) ).
 
     t_tab_group = VALUE #(
        ( text = `Title`       key = `title` )
@@ -195,25 +191,23 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
       ( text = `Descr`  key = `Descr` )
       ( text = `Info`   key = `Info` ) ).
 
-
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_display.
+  METHOD view_display.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = view->shell(
         )->page(
-            title           = 'abap2UI5 - List'
+            title           = `abap2UI5 - List`
             navbuttonpress  = client->_event_nav_app_leave( )
               shownavbutton = abap_true
             )->header_content(
                 )->link(
       )->get_parent( ).
 
-
     page->table(
-        headertext = 'Table Output'
+        headertext = `Table Output`
         items      = `{path:'` && client->_bind_edit( val = t_tab path = abap_true )
                             && `',sorter:{path:'` && mv_sorter_group
                             && `',group:` && `true` && `}`
@@ -255,7 +249,7 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_filter_popup.
+  METHOD view_display_filter_popup.
 
     DATA(popup_filter) = z2ui5_cl_xml_view=>factory_popup( ).
 
@@ -278,7 +272,7 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_group_popup.
+  METHOD view_display_group_popup.
 
     DATA(popup_group) = z2ui5_cl_xml_view=>factory_popup( ).
 
@@ -296,11 +290,12 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_settings_popup.
+  METHOD view_display_settings_popup.
+
     DATA(popup_settings) = z2ui5_cl_xml_view=>factory_popup( ).
 
     popup_settings = popup_settings->view_settings_dialog(
-                                    confirm     = client->_event( 'ALL_EVENT' )
+                                    confirm     = client->_event( `ALL_EVENT` )
                                     sortitems   = client->_bind_edit( t_tab_sort )
                                     groupitems  = client->_bind_edit( t_tab_group )
                                     filteritems = client->_bind_edit( t_tab_filter )
@@ -325,7 +320,7 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_sort_popup.
+  METHOD view_display_sort_popup.
 
     DATA(popup_sort) = z2ui5_cl_xml_view=>factory_popup( ).
 
@@ -341,4 +336,5 @@ CLASS Z2UI5_CL_DEMO_APP_099 IMPLEMENTATION.
     client->popup_display( sort_view->stringify( ) ).
 
   ENDMETHOD.
+
 ENDCLASS.

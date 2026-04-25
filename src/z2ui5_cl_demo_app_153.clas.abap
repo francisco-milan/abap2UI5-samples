@@ -1,10 +1,8 @@
 CLASS z2ui5_cl_demo_app_153 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
-    DATA client TYPE REF TO z2ui5_if_client.
     TYPES:
       BEGIN OF ty_dataset2,
         label                TYPE string,
@@ -33,29 +31,28 @@ CLASS z2ui5_cl_demo_app_153 DEFINITION PUBLIC.
       BEGIN OF ty_data,
         labels   TYPE string_table,
         datasets TYPE ty_datasets,
-      END OF ty_data .
+      END OF ty_data.
 
     TYPES:
       BEGIN OF ty_chart,
         data TYPE ty_data,
-      END OF ty_chart .
+      END OF ty_chart.
+
+    DATA client TYPE REF TO z2ui5_if_client.
 
     DATA ms_struc TYPE ty_chart.
     DATA ms_struc2 TYPE ty_chart.
 
-    METHODS ui5_display.
-    METHODS ui5_event.
-
+    METHODS view_display.
+    METHODS on_event.
   PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_153 IMPLEMENTATION.
 
-
-  METHOD ui5_display.
+  METHOD view_display.
 
     client->_bind_edit(
         val                = ms_struc
@@ -65,23 +62,23 @@ CLASS z2ui5_cl_demo_app_153 IMPLEMENTATION.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     view->shell(
         )->page(
-                title          = 'abap2UI5 - Binding'
+                title          = `abap2UI5 - Binding`
                 navbuttonpress = client->_event_nav_app_leave( )
                 shownavbutton  = client->check_app_prev_stack( )
            )->button(
-            text  = 'Rountrip...'
-            press = client->_event( 'POPUP' ) ).
+            text  = `Rountrip...`
+            press = client->_event( `POPUP` ) ).
 
     client->view_display( view->stringify( ) ).
 
   ENDMETHOD.
 
 
-  METHOD ui5_event.
+  METHOD on_event.
 
     CASE client->get( )-event.
 
-      WHEN 'POPUP'.
+      WHEN `POPUP`.
 
         IF ms_struc <> ms_struc2.
           client->message_box_display( `structure changed error` ).
@@ -102,8 +99,8 @@ CLASS z2ui5_cl_demo_app_153 IMPLEMENTATION.
       ms_struc-data-labels = VALUE #( ( `Jan` ) ( `Feb` ) ( `Mar` ) ( `Apr` ) ( `May` ) ( `Jun` ) ).
 
       DATA ls_dataset TYPE ty_dataset.
-      CLEAR ls_dataset.
-      ls_dataset-label = 'Fully Rounded'.
+      ls_dataset = VALUE #( ).
+      ls_dataset-label = `Fully Rounded`.
       ls_dataset-border_width = 2.
       ls_dataset-border_radius = 200.
 
@@ -112,11 +109,11 @@ CLASS z2ui5_cl_demo_app_153 IMPLEMENTATION.
       APPEND ls_dataset TO ms_struc-data-datasets.
       ms_struc2 = ms_struc.
 
-      ui5_display( ).
+      view_display( ).
       RETURN.
     ENDIF.
 
-    ui5_event( ).
+    on_event( ).
 
   ENDMETHOD.
 

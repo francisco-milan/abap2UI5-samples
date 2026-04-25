@@ -1,33 +1,27 @@
 CLASS z2ui5_cl_demo_app_031 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
     INTERFACES z2ui5_if_app.
 
     DATA mv_value    TYPE string.
 
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
     DATA:
-      BEGIN OF app,
-        check_initialized TYPE abap_bool,
-        get               TYPE z2ui5_if_types=>ty_s_get,
+      BEGIN OF app,        get               TYPE z2ui5_if_types=>ty_s_get,
         popup             TYPE string,
       END OF app.
 
-    METHODS z2ui5_on_init.
-    METHODS z2ui5_on_event.
-    METHODS z2ui5_on_render_main.
-    METHODS z2ui5_on_render_popup.
+    METHODS on_init.
+    METHODS on_event.
+    METHODS view_display_main.
+    METHODS popup_display_view.
 
   PRIVATE SECTION.
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_031 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
@@ -35,43 +29,42 @@ CLASS z2ui5_cl_demo_app_031 IMPLEMENTATION.
     me->client = client.
     app-popup = ``.
 
-    IF app-check_initialized = abap_false.
-      app-check_initialized = abap_true.
-      z2ui5_on_init( ).
+    IF client->check_on_init( ).
+      on_init( ).
     ENDIF.
 
     IF app-get-event IS NOT INITIAL.
-      z2ui5_on_event( ).
+      on_event( ).
     ENDIF.
 
-    z2ui5_on_render_main( ).
-    z2ui5_on_render_popup( ).
+    view_display_main( ).
+    popup_display_view( ).
 
-    CLEAR app-get.
+    app-get = VALUE #( ).
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
     CASE app-get-event.
-      WHEN 'POPUP'.
-        app-popup = 'TEST'.
-      WHEN 'DATA'.
-        client->message_box_display( 'Event raised value:' && mv_value ).
+      WHEN `POPUP`.
+        app-popup = `TEST`.
+      WHEN `DATA`.
+        client->message_box_display( `Event raised value:` && mv_value ).
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_init.
+  METHOD on_init.
 
-    mv_value  = '200'.
+    mv_value  = `200`.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_render_main.
+  METHOD view_display_main.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
@@ -81,16 +74,16 @@ CLASS z2ui5_cl_demo_app_031 IMPLEMENTATION.
                         `       <form:SimpleForm editable="true" width="40rem">` && |\n| &&
                         `       <Label text="Loading time" />` && |\n| &&
                         `       <Input id="loadingMinSeconds" width="8rem" type="Number" description="seconds" value="` && client->_bind( mv_value ) && `"/>` && |\n| &&
-                        `       <Button text="BACK" type="Emphasized" press="` && client->_event( 'BACK') && `"/>` && |\n| &&
+                        `       <Button text="BACK" type="Emphasized" press="` && client->_event( `BACK`) && `"/>` && |\n| &&
                         `   </form:SimpleForm>  ` && |\n| &&
-                        `   <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Country-Specific Profit Margin"  press="` && client->_event( 'POPUP' ) && `"` && |\n| &&
+                        `   <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Country-Specific Profit Margin"  press="` && client->_event( `POPUP` ) && `"` && |\n| &&
                         `       frameType="OneByHalf" subheader="Subtitle">` && |\n| &&
                         `       <TileContent>` && |\n| &&
                         `           <ImageContent src="test-resources/sap/m/demokit/sample/GenericTileAsLaunchTile/images/SAPLogoLargeTile_28px_height.png" />` && |\n| &&
                         `       </TileContent>` && |\n| &&
                         `   </GenericTile>` && |\n| &&
                         |\n| &&
-                        `   <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Sales Fulfillment Application Title" press="` && client->_event( 'DATA' ) && `"` && |\n| &&
+                        `   <GenericTile class="sapUiTinyMarginBegin sapUiTinyMarginTop tileLayout" header="Sales Fulfillment Application Title" press="` && client->_event( `DATA` ) && `"` && |\n| &&
                         `       subheader="Subtitle" frameType= "TwoByHalf">` && |\n| &&
                         `       <TileContent />` && |\n| &&
                         `   </GenericTile>` && |\n| &&
@@ -160,7 +153,7 @@ CLASS z2ui5_cl_demo_app_031 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_render_popup.
+  METHOD popup_display_view.
 
     IF app-popup = `TEST`.
       DATA(lv_xml) = `<core:FragmentDefinition` && |\n| &&
@@ -207,5 +200,7 @@ CLASS z2ui5_cl_demo_app_031 IMPLEMENTATION.
       client->popup_display( lv_xml ).
 
     ENDIF.
+
   ENDMETHOD.
+
 ENDCLASS.

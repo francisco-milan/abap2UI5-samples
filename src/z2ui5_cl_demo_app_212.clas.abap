@@ -1,6 +1,4 @@
-CLASS z2ui5_cl_demo_app_212 DEFINITION
-  PUBLIC
-  CREATE PUBLIC.
+CLASS z2ui5_cl_demo_app_212 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
@@ -14,7 +12,7 @@ CLASS z2ui5_cl_demo_app_212 DEFINITION
 
     METHODS set_app_data
       IMPORTING
-        !table TYPE string.
+        table TYPE string.
 
   PROTECTED SECTION.
     DATA mv_table             TYPE string.
@@ -22,12 +20,11 @@ CLASS z2ui5_cl_demo_app_212 DEFINITION
     DATA mt_dfies             TYPE z2ui5_cl_util_ext=>ty_t_dfies.
     DATA client            TYPE REF TO z2ui5_if_client.
 
-
     METHODS on_init.
 
     METHODS on_event.
 
-    METHODS render_main.
+    METHODS view_display.
 
     METHODS get_data.
 
@@ -35,21 +32,17 @@ CLASS z2ui5_cl_demo_app_212 DEFINITION
       RETURNING
         VALUE(result) TYPE abap_component_tab.
 
-    METHODS init_layout.
-
-    METHODS on_after_navigation.
-
     METHODS row_select.
 
     METHODS prefill_popup_values
       IMPORTING
-        !index TYPE string.
+        index TYPE string.
 
     METHODS render_popup.
 
-  PRIVATE SECTION.
     METHODS get_dfies.
 
+  PRIVATE SECTION.
 ENDCLASS.
 
 
@@ -57,10 +50,12 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
 
   METHOD on_event.
 
-    IF client->check_on_event( 'ROW_SELECT' ).
+    IF client->check_on_event( `ROW_SELECT` ).
       row_select( ).
     ENDIF.
+
   ENDMETHOD.
+
 
   METHOD row_select.
 
@@ -74,7 +69,9 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
     prefill_popup_values( ls_arg ).
 
     render_popup( ).
+
   ENDMETHOD.
+
 
   METHOD prefill_popup_values.
 
@@ -100,7 +97,9 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
       ENDIF.
 
     ENDLOOP.
+
   ENDMETHOD.
+
 
   METHOD get_dfies.
 
@@ -108,27 +107,27 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD render_popup.
 
     FIELD-SYMBOLS <row> TYPE any.
 
     DATA(popup) = z2ui5_cl_xml_view=>factory_popup( ).
 
-    DATA(content) = popup->dialog( contentwidth = '60%'
-          )->simple_form( layout   = 'ResponsiveGridLayout'
+    DATA(content) = popup->dialog( contentwidth = `60%`
+          )->simple_form( layout   = `ResponsiveGridLayout`
                           editable = abap_true
-          )->content( 'form' ).
+          )->content( `form` ).
 
-    " Gehe über alle Comps wenn wir im Edit sind dann sind keyfelder nicht eingabebereit.
+    " Walk through all comps — in edit mode the key fields are not editable.
     LOOP AT mt_dfies REFERENCE INTO DATA(dfies).
 
       ASSIGN ms_table_row->* TO <row>.
       ASSIGN COMPONENT dfies->fieldname OF STRUCTURE <row> TO FIELD-SYMBOL(<val>).
+
       IF <val> IS NOT ASSIGNED.
         CONTINUE.
       ENDIF.
-
-
 
       content->label( `text` ).
 
@@ -142,77 +141,71 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD on_init.
+
     get_data( ).
 
     get_dfies( ).
 
-    init_layout( ).
 
-    render_main( ).
-  ENDMETHOD.
-
-  METHOD init_layout.
-
-
+    view_display( ).
 
   ENDMETHOD.
 
-  METHOD render_main.
+
+  METHOD view_display.
 
     FIELD-SYMBOLS <tab> TYPE data.
 
     IF mo_parent_view IS INITIAL.
       DATA(page) = z2ui5_cl_xml_view=>factory( ).
+
     ELSE.
       page = mo_parent_view->get( `Page` ).
     ENDIF.
 
     ASSIGN mt_table->* TO <tab>.
 
-    DATA(table) = page->table( growing = 'true'
-                               width   = 'auto'
+    DATA(table) = page->table( growing = `true`
+                               width   = `auto`
                                items   = client->_bind_edit( val = <tab> ) ).
 
-    " TODO: variable is assigned but never used (ABAP cleaner)
     DATA(headder) = table->header_toolbar(
                )->overflow_toolbar(
                  )->toolbar_spacer( ).
 
-
-
     IF mo_parent_view IS INITIAL.
-
-      client->view_display( page->get_root( )->xml_get( ) ).
+      client->view_display( page->stringify( ) ).
 
     ELSE.
-
       mv_view_display = abap_true.
 
     ENDIF.
 
   ENDMETHOD.
 
+
   METHOD z2ui5_if_app~main.
+
     me->client = client.
 
     IF client->check_on_init( ).
-
       on_init( ).
 
     ENDIF.
 
     on_event( ).
 
-    on_after_navigation( ).
-
   ENDMETHOD.
+
 
   METHOD set_app_data.
 
     mv_table = table.
 
   ENDMETHOD.
+
 
   METHOD get_data.
 
@@ -249,6 +242,7 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
 
   ENDMETHOD.
 
+
   METHOD get_comp.
 
     DATA index TYPE int4.
@@ -275,18 +269,13 @@ CLASS z2ui5_cl_demo_app_212 IMPLEMENTATION.
         ENDTRY.
 
         DATA(component) = VALUE cl_abap_structdescr=>component_table(
-                                    ( name = 'ROW_ID'
+                                    ( name = `ROW_ID`
                                       type = CAST #( cl_abap_datadescr=>describe_by_data( index ) ) ) ).
 
         APPEND LINES OF component TO result.
 
       CATCH cx_root.
     ENDTRY.
-  ENDMETHOD.
-
-  METHOD on_after_navigation.
-
-
 
   ENDMETHOD.
 

@@ -1,10 +1,7 @@
-CLASS z2ui5_cl_demo_app_090 DEFINITION
-  PUBLIC
-  CREATE PUBLIC .
+CLASS z2ui5_cl_demo_app_090 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
-
-    INTERFACES z2ui5_if_app .
+    INTERFACES z2ui5_if_app.
 
     TYPES: BEGIN OF t_items2,
              columnkey TYPE string,
@@ -23,11 +20,8 @@ CLASS z2ui5_cl_demo_app_090 DEFINITION
            END OF t_items3.
     TYPES tt_items3 TYPE STANDARD TABLE OF t_items3 WITH DEFAULT KEY.
 
-    DATA mt_columns TYPE tt_items2.
-    DATA mt_columns1 TYPE tt_items2.
-    DATA mt_groups TYPE tt_items3.
-
     "P13N
+
     TYPES: BEGIN OF t_items22,
              visible TYPE abap_bool,
              name    TYPE string,
@@ -50,35 +44,33 @@ CLASS z2ui5_cl_demo_app_090 DEFINITION
            END OF t_items33.
     TYPES tt_items33 TYPE STANDARD TABLE OF t_items33 WITH DEFAULT KEY.
 
+    DATA mt_columns TYPE tt_items2.
+    DATA mt_columns1 TYPE tt_items2.
+    DATA mt_groups TYPE tt_items3.
+
     DATA mt_columns_p13n TYPE tt_items22.
     DATA mt_sort_p13n TYPE tt_items32.
     DATA mt_groups_p13n TYPE tt_items33.
-
   PROTECTED SECTION.
-
     DATA client TYPE REF TO z2ui5_if_client.
 
     DATA check_view_loaded TYPE abap_bool.
 
-    METHODS z2ui5_view_display.
-    METHODS z2ui5_view_p13n.
-    METHODS z2ui5_view_p13n_popup.
-    METHODS z2ui5_on_event.
+    DATA mv_page TYPE string.
+
+    METHODS view_display.
+    METHODS view_display_p13n.
+    METHODS view_display_p13n_popup.
+    METHODS on_event.
     METHODS init_data_set.
     METHODS get_custom_js
       RETURNING
         VALUE(result) TYPE string.
-
-
   PRIVATE SECTION.
-    DATA mv_page TYPE string.
-
 ENDCLASS.
 
 
-
 CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
-
 
   METHOD z2ui5_if_app~main.
 
@@ -87,35 +79,36 @@ CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
     IF client->check_on_init( ).
       init_data_set( ).
       client->nav_app_call( z2ui5_cl_pop_js_loader=>factory( get_custom_js( ) ) ).
+
     ELSEIF check_view_loaded = abap_false.
       check_view_loaded = abap_true.
       init_data_set( ).
-      z2ui5_view_display( ).
+      view_display( ).
+
     ELSE.
-      z2ui5_on_event( ).
+      on_event( ).
     ENDIF.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_on_event.
+  METHOD on_event.
 
     CASE client->get( )-event.
-      WHEN 'P13N_OPEN'.
-        z2ui5_view_p13n( ).
+      WHEN `P13N_OPEN`.
+        view_display_p13n( ).
 
-      WHEN 'P13N_POPUP'.
-        z2ui5_view_p13n_popup( ).
+      WHEN `P13N_POPUP`.
+        view_display_p13n_popup( ).
 
-      WHEN 'OK' OR 'CANCEL'.
+      WHEN `OK` OR `CANCEL`.
         client->popup_destroy( ).
     ENDCASE.
 
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_display.
-
+  METHOD view_display.
 
     client->_bind_edit( val           = mt_columns_p13n
                         custom_mapper = z2ui5_cl_ajson_mapping=>create_lower_case( ) ).
@@ -127,10 +120,10 @@ CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
     DATA(page) = z2ui5_cl_xml_view=>factory( ).
 
     page = page->shell( )->page(
-        title          = 'abap2UI5 - P13N Dialog'
+        title          = `abap2UI5 - P13N Dialog`
         navbuttonpress = client->_event_nav_app_leave( )
         shownavbutton  = client->check_app_prev_stack( )
-        class          = 'sapUiContentPadding' ).
+        class          = `sapUiContentPadding` ).
 
     page = page->vbox( ).
 
@@ -172,7 +165,7 @@ CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
       )->get_parent( )->get_parent( ).
 
     page->button( text  = `Open P13N Dialog`
-                  press = client->_event( 'P13N_OPEN' )
+                  press = client->_event( `P13N_OPEN` )
                   class = `sapUiTinyMarginBeginEnd`
       )->button( text  = `Open P13N.POPUP`
                  press = `z2ui5.setInitialData()` )->get_parent( )->get_parent( ).
@@ -182,7 +175,7 @@ CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_p13n.
+  METHOD view_display_p13n.
 
     DATA(p13n_dialog) = z2ui5_cl_xml_view=>factory_popup( ).
 
@@ -228,14 +221,14 @@ CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
   ENDMETHOD.
 
 
-  METHOD z2ui5_view_p13n_popup.
+  METHOD view_display_p13n_popup.
 
     DATA(p13n_popup) = z2ui5_cl_xml_view=>factory( ).
 
     p13n_popup->_generic( name       = `Popup`
                           ns         = `p13n`
                               t_prop = VALUE #( ( n = `title` v = `My Custom View Settings` )
-*                                                ( n = `close` v = client->_event( 'P13N_CLOSE' ) )
+*                                                ( n = `close` v = client->_event( `P13N_CLOSE` ) )
 *                                                ( n = `warningText`  v = `Are you sure?` )
                                                 ( n = `id`  v = `p13nPopup` )
 *                                                ( n = `reset`  v = client->_event( `P13N_RESET` ) )
@@ -265,6 +258,7 @@ CLASS z2ui5_cl_demo_app_090 IMPLEMENTATION.
     client->view_display( p13n_popup->stringify( ) ).
 
   ENDMETHOD.
+
 
   METHOD init_data_set.
 
