@@ -102,11 +102,12 @@ CLASS z2ui5_cl_demo_app_s_10 IMPLEMENTATION.
 
     ENDIF.
 
-    "son't do that, just for demo
+    "don't do that, just for demo
+    "DATA(now) = z2ui5_cl_util=>time_get_timestampl( ).
     "UPDATE vbak
     "  SET auart = @auart,
     "      aedat = @sy-datum,
-    "      UPD_TMSTMP = @sy-uzeit
+    "      UPD_TMSTMP = @now
     "  WHERE vbeln = @vbeln.
     "COMMIT WORK.
 

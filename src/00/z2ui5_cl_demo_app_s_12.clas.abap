@@ -92,7 +92,7 @@ CLASS z2ui5_cl_demo_app_s_12 IMPLEMENTATION.
     DATA s_new TYPE z2ui5_sample_01.
     s_new-vbeln    = vbeln.
     s_new-username = sy-uname.
-    GET TIME STAMP FIELD s_new-locked_at.
+    s_new-locked_at = z2ui5_cl_util=>time_get_timestampl( ).
 
     MODIFY z2ui5_sample_01 FROM @s_new.
     COMMIT WORK.
@@ -161,13 +161,14 @@ CLASS z2ui5_cl_demo_app_s_12 IMPLEMENTATION.
 
     ENDIF.
 
-   "don't do that, just demo
-   " UPDATE vbak
-   "   SET auart = @auart,
-   "       aedat = @sy-datum,
-   "       UPD_TMSTMP = @sy-uzeit
-   "   WHERE vbeln = @vbeln.
-   " COMMIT WORK.
+    "don't do that, just demo
+    "DATA(now) = z2ui5_cl_util=>time_get_timestampl( ).
+    "UPDATE vbak
+    "  SET auart = @auart,
+    "      aedat = @sy-datum,
+    "      UPD_TMSTMP = @now
+    "  WHERE vbeln = @vbeln.
+    "COMMIT WORK.
 
     CALL FUNCTION 'DEQUEUE_EVVBAK'
       EXPORTING
