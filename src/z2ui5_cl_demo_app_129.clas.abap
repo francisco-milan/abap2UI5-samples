@@ -19,7 +19,6 @@ CLASS z2ui5_cl_demo_app_129 DEFINITION PUBLIC.
     DATA lv_text TYPE string.
     DATA:
       BEGIN OF screen,
-        check_is_active TYPE abap_bool,
         colour          TYPE string,
         combo_key       TYPE string,
         combo_key2      TYPE string,
@@ -76,6 +75,11 @@ CLASS z2ui5_cl_demo_app_129 IMPLEMENTATION.
       WHEN `REFRESH`.
         lv_text = lv_text + 10.
 
+        client->follow_up_action(
+            client->_event_client(
+                val   = z2ui5_if_client=>cs_event-start_timer
+                t_arg = VALUE #( ( client->_event( `REFRESH` ) ) ( `3000` ) ) ) ).
+
         client->view_model_update( ).
 
       WHEN `BUTTON_SEND`.
@@ -92,7 +96,6 @@ CLASS z2ui5_cl_demo_app_129 IMPLEMENTATION.
   METHOD on_init.
 
     screen = VALUE #(
-        check_is_active = abap_true
         colour          = `BLUE`
         combo_key       = `GRAY`
         segment_key     = `GREEN`
@@ -115,10 +118,6 @@ CLASS z2ui5_cl_demo_app_129 IMPLEMENTATION.
   METHOD view_display.
 
     DATA(page) = z2ui5_cl_xml_view=>factory( ).
-
-    page->_z2ui5( )->timer( finished    = client->_event( `REFRESH` )
-                            checkrepeat = abap_true
-                            delayms     = `3000` ).
 
     page = page->shell(
          )->page(
@@ -145,6 +144,11 @@ CLASS z2ui5_cl_demo_app_129 IMPLEMENTATION.
              type  = `Success` ).
 
     client->view_display( page->stringify( ) ).
+
+    client->follow_up_action(
+        client->_event_client(
+            val   = z2ui5_if_client=>cs_event-start_timer
+            t_arg = VALUE #( ( client->_event( `REFRESH` ) ) ( `3000` ) ) ) ).
 
   ENDMETHOD.
 

@@ -3,10 +3,9 @@ CLASS z2ui5_cl_demo_app_189 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-    DATA one         TYPE string.
-    DATA two         TYPE string.
-    DATA three       TYPE string.
-    DATA focus_field TYPE string.
+    DATA one   TYPE string.
+    DATA two   TYPE string.
+    DATA three TYPE string.
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
@@ -24,10 +23,17 @@ CLASS z2ui5_cl_demo_app_189 IMPLEMENTATION.
 
     CASE client->get( )-event.
       WHEN `one_enter`.
-        focus_field = `IdTwo`.
+        client->follow_up_action(
+            client->_event_client(
+                val   = z2ui5_if_client=>cs_event-set_focus
+                t_arg = VALUE #( ( `IdTwo` ) ) ) ).
       WHEN `two_enter`.
-        focus_field = `IdThree`.
+        client->follow_up_action(
+            client->_event_client(
+                val   = z2ui5_if_client=>cs_event-set_focus
+                t_arg = VALUE #( ( `IdThree` ) ) ) ).
     ENDCASE.
+
     client->view_model_update( ).
 
   ENDMETHOD.
@@ -52,8 +58,6 @@ CLASS z2ui5_cl_demo_app_189 IMPLEMENTATION.
        )->label( `Three` )->input( id    = `IdThree`
                                    value = client->_bind_edit( three ) ).
 
-    page->_z2ui5( )->focus( client->_bind( focus_field ) ).
-
     client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
@@ -64,8 +68,11 @@ CLASS z2ui5_cl_demo_app_189 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
-      focus_field = `IdOne`.
       render( ).
+      client->follow_up_action(
+          client->_event_client(
+              val   = z2ui5_if_client=>cs_event-set_focus
+              t_arg = VALUE #( ( `IdOne` ) ) ) ).
     ENDIF.
 
     dispatch( ).

@@ -20,15 +20,6 @@ CLASS z2ui5_cl_demo_app_202 IMPLEMENTATION.
 
     DATA(lr_view) = z2ui5_cl_xml_view=>factory( ).
 
-    lr_view->_generic( name = `script`
-                       ns   = `html` )->_cc_plain_xml( `sap.z2ui5.decideNextStep = (stepId, nextStepId) => {debugger;` && |\n| &&
-                                                                     ` var wiz = sap.z2ui5.oView.byId('wiz');` && |\n| &&
-                                                                     ` wiz.discardProgress(sap.z2ui5.oView.byId(stepId));` && |\n| &&
-                                                                     ` var step = sap.z2ui5.oView.byId(stepId);` && |\n| &&
-                                                                     ` var nextStep = sap.z2ui5.oView.byId(nextStepId);` && |\n| &&
-                                                                     ` step.setNextStep(nextStep);` && |\n| &&
-                                                                     `}` ).
-
     lr_view = lr_view->shell( )->page( id = `page_main`
              title                        = `abap2UI5 - Demo Wizard Control`
              navbuttonpress               = client->_event_nav_app_leave( )
@@ -50,7 +41,7 @@ CLASS z2ui5_cl_demo_app_202 IMPLEMENTATION.
     lr_wiz_step2->button(
 *      EXPORTING
         text  = `Press Step 2.2`
-        press = client->_event(`STEP22` ) ).
+        press = client->_event( `STEP22` ) ).
     lr_wiz_step2->button(
 *      EXPORTING
         text  = `Press Step 2.3`
@@ -88,12 +79,16 @@ CLASS z2ui5_cl_demo_app_202 IMPLEMENTATION.
 
     CASE client->get( )-event.
       WHEN `STEP22`.
-
-        client->follow_up_action( 'sap.z2ui5.decideNextStep(`STEP2`,`STEP22`);' ).
+        client->follow_up_action(
+            client->_event_client(
+                val   = z2ui5_if_client=>cs_event-wizard_set_next_step
+                t_arg = VALUE #( ( `wiz` ) ( `STEP2` ) ( `STEP22` ) ) ) ).
 
       WHEN `STEP23`.
-
-        client->follow_up_action( 'sap.z2ui5.decideNextStep(`STEP2`,`STEP23`);' ).
+        client->follow_up_action(
+            client->_event_client(
+                val   = z2ui5_if_client=>cs_event-wizard_set_next_step
+                t_arg = VALUE #( ( `wiz` ) ( `STEP2` ) ( `STEP23` ) ) ) ).
 
     ENDCASE.
     client->view_model_update( ).
