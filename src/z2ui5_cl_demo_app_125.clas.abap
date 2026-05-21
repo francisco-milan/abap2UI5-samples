@@ -3,7 +3,7 @@ CLASS z2ui5_cl_demo_app_125 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-    DATA title TYPE string.
+    DATA title TYPE string VALUE `my title`.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -15,8 +15,6 @@ CLASS z2ui5_cl_demo_app_125 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     IF client->check_on_init( ).
-
-      title = `my title`.
 
       DATA(view) = z2ui5_cl_xml_view=>factory( ).
       view->shell(
@@ -34,11 +32,6 @@ CLASS z2ui5_cl_demo_app_125 IMPLEMENTATION.
                       text  = `Set Title`
                       press = client->_event( `SET_TITLE` ) ).
       client->view_display( view->stringify( ) ).
-
-      client->follow_up_action(
-          client->_event_client(
-              val   = z2ui5_if_client=>cs_event-set_title
-              t_arg = VALUE #( ( title ) ) ) ).
 
     ELSEIF client->check_on_event( `SET_TITLE` ).
 
