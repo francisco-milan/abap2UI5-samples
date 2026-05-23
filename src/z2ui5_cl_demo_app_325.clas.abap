@@ -18,10 +18,14 @@ CLASS z2ui5_cl_demo_app_325 IMPLEMENTATION.
     IF client->check_on_init( ).
 
       DATA(view) = z2ui5_cl_xml_view=>factory( ).
-      DATA(page) = view->object_page_layout(
-            showtitleinheadercontent = abap_true
-            showeditheaderbutton     = abap_true
-            uppercaseanchorbar       = abap_false ).
+      DATA(page) = view->shell(
+          )->page( title          = `Clipboard`
+                   navbuttonpress = client->_event_nav_app_leave( )
+                   shownavbutton  = client->check_app_prev_stack( )
+              )->object_page_layout(
+                  showtitleinheadercontent = abap_true
+                  showeditheaderbutton     = abap_true
+                  uppercaseanchorbar       = abap_false ).
 
       DATA(header_title) = page->header_title(
          )->object_page_dyn_header_title( ).
@@ -63,21 +67,21 @@ CLASS z2ui5_cl_demo_app_325 IMPLEMENTATION.
                       rows            = `15`
                       id              = `text_id` ).
 
-      client->view_display( page->stringify( ) ).
+      client->view_display( view->stringify( ) ).
 
     ENDIF.
 
     CASE client->get( )-event.
       WHEN `COPY_INPUT`.
-        client->follow_up_action( client->_event_client(
+        client->action(
             val   = z2ui5_if_client=>cs_event-clipboard_copy
-            t_arg = VALUE #( ( input ) ) ) ).
+            t_arg = VALUE #( ( input ) ) ).
         client->message_toast_display( `input field copied` && input ).
 
       WHEN `COPY_TEXT_AREA`.
-        client->follow_up_action( client->_event_client(
-             val   = z2ui5_if_client=>cs_event-clipboard_copy
-             t_arg = VALUE #( ( text ) ) ) ).
+        client->action(
+            val   = z2ui5_if_client=>cs_event-clipboard_copy
+            t_arg = VALUE #( ( text ) ) ).
         client->message_toast_display( `text area copied: ` && text ).
 
     ENDCASE.

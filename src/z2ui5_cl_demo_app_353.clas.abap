@@ -34,18 +34,17 @@ CLASS z2ui5_cl_demo_app_353 IMPLEMENTATION.
     device_systemtype = ls_get-s_device-system.
     device_height     = CONV string( ls_get-s_device-resize-height ).
     device_width      = CONV string( ls_get-s_device-resize-width ).
-    ui5_version       = ls_get-s_ui5_version-version.
-    ui5_theme         = ls_get-s_ui5_version-theme.
+    ui5_version       = ls_get-s_ui5-version.
+    ui5_theme         = ls_get-s_ui5-theme.
 
   ENDMETHOD.
 
 
   METHOD start_timer.
 
-    client->follow_up_action(
-        client->_event_client(
-            val   = z2ui5_if_client=>cs_event-start_timer
-            t_arg = VALUE #( ( client->_event( `TIMER_FINISHED` ) ) ( `4000` ) ) ) ).
+    client->action(
+        val   = z2ui5_if_client=>cs_event-start_timer
+        t_arg = VALUE #( ( client->_event( `TIMER_FINISHED` ) ) ( `4000` ) ) ).
 
   ENDMETHOD.
 
@@ -93,10 +92,9 @@ CLASS z2ui5_cl_demo_app_353 IMPLEMENTATION.
       read_device_info( ).
       render( ).
       start_timer( ).
-      client->follow_up_action(
-          client->_event_client(
-              val   = z2ui5_if_client=>cs_event-set_focus
-              t_arg = VALUE #( ( `IdOne` ) ) ) ).
+      client->action(
+          val   = z2ui5_if_client=>cs_event-set_focus
+          t_arg = VALUE #( ( `IdOne` ) ) ).
     ENDIF.
 
     IF client->check_on_event( `TIMER_FINISHED` ).
