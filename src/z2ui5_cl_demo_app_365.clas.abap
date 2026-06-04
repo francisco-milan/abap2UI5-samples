@@ -48,7 +48,7 @@ CLASS z2ui5_cl_demo_app_365 IMPLEMENTATION.
       DATA output TYPE REF TO object.
       CALL METHOD ('CL_DEMO_OUTPUT')=>('NEW')
         RECEIVING
-          result = output.
+          OUTPUT = output.
       CALL METHOD output->('WRITE_TEXT')
         EXPORTING
           text = `The HTML below is produced by the standard SAP class CL_DEMO_OUTPUT` &&
