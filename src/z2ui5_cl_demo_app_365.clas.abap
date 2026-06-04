@@ -20,7 +20,7 @@ CLASS z2ui5_cl_demo_app_365 IMPLEMENTATION.
 
     me->client = client.
 
-    IF client->check_on_init( ).
+    IF client->check_on_navigated( ).
 
       DATA(view) = z2ui5_cl_xml_view=>factory( ).
       view->shell(
