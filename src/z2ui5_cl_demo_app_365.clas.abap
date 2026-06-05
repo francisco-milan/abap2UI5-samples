@@ -70,7 +70,9 @@ CLASS z2ui5_cl_demo_app_365 IMPLEMENTATION.
     " so it is instantiated dynamically here to keep the sample portable.
     " The popup itself accepts the output generically (TYPE REF TO object).
     DATA output TYPE REF TO object.
-    CALL METHOD ('CL_DEMO_OUTPUT')=>('NEW')
+
+    DATA(lv_classname) = 'CL_DEMO_OUTPUT'.
+    CALL METHOD (lv_classname)=>('NEW')
       RECEIVING
         output = output.
     CALL METHOD output->('WRITE_TEXT')
