@@ -4,23 +4,24 @@ CLASS z2ui5_cl_demo_app_152 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_row,
+      BEGIN OF ty_s_row,
         zzselkz TYPE abap_bool,
         title   TYPE string,
         value   TYPE string,
         descr   TYPE string,
-      END OF ty_row.
+      END OF ty_s_row.
 
-    DATA client TYPE REF TO z2ui5_if_client.
-
-    DATA mt_tab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY.
+    DATA mt_tab TYPE STANDARD TABLE OF ty_s_row WITH EMPTY KEY.
     DATA mv_multiselect TYPE abap_bool.
     DATA mv_preselect TYPE abap_bool.
 
     METHODS view_display.
     METHODS on_event.
     METHODS on_navigation.
+
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -112,13 +113,14 @@ CLASS z2ui5_cl_demo_app_152 IMPLEMENTATION.
 
   METHOD on_navigation.
 
-    FIELD-SYMBOLS <row> TYPE ty_row.
+    FIELD-SYMBOLS <row> TYPE ty_s_row.
 
     TRY.
         DATA(lo_prev) = client->get_app( client->get( )-s_draft-id_prev_app ).
         DATA(ls_result) = CAST z2ui5_cl_pop_to_select( lo_prev )->result( ).
 
         IF ls_result-check_confirmed = abap_false.
+
           client->message_box_display( `Popup was cancelled` ).
           RETURN.
         ENDIF.

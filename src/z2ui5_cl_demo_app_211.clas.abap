@@ -13,11 +13,10 @@ CLASS z2ui5_cl_demo_app_211 DEFINITION PUBLIC.
         descr TYPE string,
         class TYPE string,
       END OF ty_s_t002.
-    TYPES ty_t_t002 TYPE STANDARD TABLE OF ty_s_t002 WITH DEFAULT KEY.
 
     DATA mv_selectedkey     TYPE string.
     DATA mv_selectedkey_tmp TYPE string.
-    DATA mt_t002            TYPE ty_t_t002.
+    DATA mt_t002            TYPE STANDARD TABLE OF ty_s_t002 WITH DEFAULT KEY.
     DATA mo_app             TYPE REF TO object.
 
   PROTECTED SECTION.
@@ -105,7 +104,6 @@ CLASS z2ui5_cl_demo_app_211 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
 
       on_init( ).
@@ -163,6 +161,7 @@ CLASS z2ui5_cl_demo_app_211 IMPLEMENTATION.
     ASSIGN mo_app->(`MV_VIEW_DISPLAY`) TO FIELD-SYMBOL(<view_display>).
 
     IF <view_display> = abap_true.
+
       <view_display> = abap_false.
       client->view_display( mo_main_page->stringify( ) ).
     ENDIF.
@@ -170,6 +169,7 @@ CLASS z2ui5_cl_demo_app_211 IMPLEMENTATION.
     ASSIGN mo_app->(`MV_VIEW_MODEL_UPDATE`) TO FIELD-SYMBOL(<view_update>).
 
     IF <view_update> = abap_true.
+
       <view_update> = abap_false.
       client->view_model_update( ).
     ENDIF.

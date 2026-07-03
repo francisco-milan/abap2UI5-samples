@@ -7,10 +7,11 @@ CLASS z2ui5_cl_demo_app_033 DEFINITION PUBLIC.
 
     DATA mv_html TYPE string.
 
+    METHODS view_display.
+
+  PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
-    METHODS view_display.
-  PROTECTED SECTION.
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -61,6 +62,7 @@ CLASS z2ui5_cl_demo_app_033 IMPLEMENTATION.
       `<dl><dt>definition:</dt><dd>definition list of terms and descriptions</dd>`.
 
     IF client->check_on_init( ).
+
       mv_type = `sapIllus-NoActivities`.
       view_display( ).
       RETURN.

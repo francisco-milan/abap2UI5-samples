@@ -32,6 +32,7 @@ CLASS z2ui5_cl_demo_app_072 DEFINITION PUBLIC.
     DATA lv_cnt_heavy TYPE i.
     DATA lv_cnt_neg TYPE i.
     DATA lv_selectedkey TYPE string.
+
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
@@ -40,6 +41,7 @@ CLASS z2ui5_cl_demo_app_072 DEFINITION PUBLIC.
     METHODS set_data.
 
     METHODS set_filter.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -64,6 +66,7 @@ CLASS z2ui5_cl_demo_app_072 IMPLEMENTATION.
   METHOD on_event.
 
     IF client->check_on_event( `OnSelectIconTabBar` ).
+
       client->message_toast_display( |Event SelectedTabBar Key { lv_selectedkey  } | ).
       set_filter( ).
       client->view_model_update( ).

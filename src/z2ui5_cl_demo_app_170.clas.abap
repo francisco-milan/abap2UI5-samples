@@ -3,7 +3,6 @@ CLASS z2ui5_cl_demo_app_170 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-    DATA client TYPE REF TO z2ui5_if_client.
     DATA mv_selected_key TYPE string.
 
     METHODS view_display.
@@ -12,6 +11,8 @@ CLASS z2ui5_cl_demo_app_170 DEFINITION PUBLIC.
     METHODS simple_popup2.
 
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -140,6 +141,7 @@ CLASS z2ui5_cl_demo_app_170 IMPLEMENTATION.
     me->client = client.
 
     IF client->get( )-check_on_navigated = abap_true.
+
       view_display( ).
       RETURN.
     ENDIF.

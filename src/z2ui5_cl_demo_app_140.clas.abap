@@ -4,14 +4,13 @@ CLASS z2ui5_cl_demo_app_140 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF s_combobox,
+      BEGIN OF ty_s_combobox,
         key  TYPE string,
         text TYPE string,
-      END OF s_combobox.
+      END OF ty_s_combobox.
     TYPES
-      ty_t_combo TYPE STANDARD TABLE OF s_combobox WITH EMPTY KEY.
+      ty_t_combo TYPE STANDARD TABLE OF ty_s_combobox WITH EMPTY KEY.
 
-    DATA client TYPE REF TO z2ui5_if_client.
     DATA gt_multi TYPE ty_t_combo.
     DATA gt_sel_multi TYPE ty_t_combo.
     DATA gt_sel_multi2 TYPE string_table.
@@ -21,6 +20,8 @@ CLASS z2ui5_cl_demo_app_140 DEFINITION PUBLIC.
     METHODS view_display.
 
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -89,7 +90,6 @@ CLASS z2ui5_cl_demo_app_140 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
       on_init( ).
     ENDIF.

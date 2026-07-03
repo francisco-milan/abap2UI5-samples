@@ -66,7 +66,6 @@ CLASS z2ui5_cl_demo_app_064 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
       on_init( ).
 
@@ -89,6 +88,7 @@ CLASS z2ui5_cl_demo_app_064 IMPLEMENTATION.
       mv_check_enabled = abap_false.
 
       IF mv_percent > 100.
+
         mv_percent = 0.
         mv_check_active = abap_false.
         mv_check_enabled = abap_true.

@@ -148,7 +148,7 @@ CLASS z2ui5_cl_demo_app_345 IMPLEMENTATION.
 
       lv_index = sy-tabix.
 
-      cells->object_identifier( text = |\{{ layout->name }\}| ).  "."|\{{ layout->fname }\}| ).
+      cells->object_identifier( text = |\{{ layout->name }\}| ).
 
     ENDLOOP.
 
@@ -158,6 +158,7 @@ CLASS z2ui5_cl_demo_app_345 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     IF client->check_on_init( ).
+
       get_data( ).
       view_display( client ).
     ENDIF.

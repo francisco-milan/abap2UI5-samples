@@ -4,7 +4,7 @@ CLASS z2ui5_cl_demo_app_172 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_output,
+      BEGIN OF ty_s_output,
         index    TYPE i,
         text     TYPE c LENGTH 30,
         link     TYPE c LENGTH 30,
@@ -15,11 +15,12 @@ CLASS z2ui5_cl_demo_app_172 DEFINITION PUBLIC.
         input3   TYPE i,
         bool     TYPE abap_bool,
         waers    TYPE waers,
-      END OF ty_output.
-    DATA output TYPE STANDARD TABLE OF ty_output.
-    DATA client TYPE REF TO z2ui5_if_client.
+      END OF ty_s_output.
+    DATA output TYPE STANDARD TABLE OF ty_s_output.
 
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS load_output_table.
     METHODS on_event.
     METHODS render_main_screen.
@@ -35,7 +36,7 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
 
   METHOD load_output_table.
 
-    DATA ls_output TYPE ty_output.
+    DATA ls_output TYPE ty_s_output.
     output = VALUE #( ).
 
     DO 11 TIMES.
@@ -51,6 +52,7 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
         ls_output-percent1 = `100.00`.
 
       ELSE.
+
         ls_output-bool = abap_true.
         ls_output-percent1 = `10.00`.
       ENDIF.
@@ -192,7 +194,6 @@ CLASS z2ui5_cl_demo_app_172 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
 
       load_output_table( ).

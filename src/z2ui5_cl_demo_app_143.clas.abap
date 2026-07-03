@@ -4,21 +4,22 @@ CLASS z2ui5_cl_demo_app_143 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF t_data,
+      BEGIN OF ty_s_data,
         field1 TYPE string,
         field2 TYPE string,
         field3 TYPE string,
-      END OF t_data.
-    TYPES ty_t_data TYPE STANDARD TABLE OF t_data WITH EMPTY KEY.
+      END OF ty_s_data.
+    TYPES ty_t_data TYPE STANDARD TABLE OF ty_s_data WITH EMPTY KEY.
 
     DATA gt_data TYPE ty_t_data.
-    DATA client TYPE REF TO z2ui5_if_client.
 
     METHODS on_init.
     METHODS on_event.
     METHODS view_display.
 
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -29,6 +30,7 @@ CLASS z2ui5_cl_demo_app_143 IMPLEMENTATION.
 
     TRY.
         IF client->check_on_event( `ROW_ACTION_ITEM_ADD` ).
+
           client->message_toast_display( `Something` ).
           client->view_model_update( ).
         ENDIF.
@@ -116,7 +118,6 @@ CLASS z2ui5_cl_demo_app_143 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
       on_init( ).
     ENDIF.

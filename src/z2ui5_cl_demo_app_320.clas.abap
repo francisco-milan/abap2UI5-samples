@@ -3,7 +3,7 @@ CLASS z2ui5_cl_demo_app_320 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-    TYPES: BEGIN OF ty_item,
+    TYPES: BEGIN OF ty_s_item,
              id           TYPE string,
              initials     TYPE string,
              fallbackicon TYPE string,
@@ -14,16 +14,17 @@ CLASS z2ui5_cl_demo_app_320 DEFINITION PUBLIC.
              mobile       TYPE string,
              phone        TYPE string,
              email        TYPE string,
-           END OF ty_item.
-    TYPES ty_items TYPE STANDARD TABLE OF ty_item WITH DEFAULT KEY.
+           END OF ty_s_item.
+    TYPES ty_items TYPE STANDARD TABLE OF ty_s_item WITH DEFAULT KEY.
 
     DATA viewportpercentwidth TYPE i VALUE 100.
 
-    DATA item           TYPE ty_item.
+    DATA item           TYPE ty_s_item.
     DATA items          TYPE ty_items.
     DATA group_items    TYPE ty_items.
     DATA content_height TYPE string.
     DATA content_width  TYPE string.
+
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
@@ -40,6 +41,7 @@ CLASS z2ui5_cl_demo_app_320 DEFINITION PUBLIC.
     METHODS calculate_content_height
       IMPORTING lines        TYPE i
       RETURNING VALUE(result) TYPE string.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -277,6 +279,7 @@ CLASS z2ui5_cl_demo_app_320 IMPLEMENTATION.
           display_group_popover( item_id ).
 
         ELSE.
+
           item = VALUE #( items[ item_table_index + 1 ] OPTIONAL ).
           display_individual_popover( item_id ).
         ENDIF.

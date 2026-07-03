@@ -4,7 +4,6 @@ CLASS z2ui5_cl_demo_app_361 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
   PROTECTED SECTION.
-
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -60,7 +59,6 @@ CLASS z2ui5_cl_demo_app_361 IMPLEMENTATION.
                                                 val   = client->cs_event-system_logout
                                                 t_arg = value #( ( `/sap/public/bc/icf/logoff?redirecturl=www.google.com` ) )
                                               ) ) ) ).
-
 
       page->_( n = `Text`
                p = VALUE #( ( n = `class`    v = `sapUiMediumMargin` )

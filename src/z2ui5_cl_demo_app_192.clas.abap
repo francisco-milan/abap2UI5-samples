@@ -26,23 +26,24 @@ CLASS z2ui5_cl_demo_app_192 DEFINITION PUBLIC.
       END OF ty_s_out,
       ty_t_out TYPE STANDARD TABLE OF ty_s_out WITH EMPTY KEY.
 
-    DATA client TYPE REF TO z2ui5_if_client.
-
     DATA mt_new_data2 TYPE STANDARD TABLE OF REF TO z2ui5_cl_demo_app_193 WITH EMPTY KEY.
 
     DATA mt_out TYPE ty_t_out.
 
     METHODS view_display.
+
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS get_data.
     METHODS xml_parse.
     METHODS xml_stringify.
+
   PRIVATE SECTION.
 ENDCLASS.
 
 
 CLASS z2ui5_cl_demo_app_192 IMPLEMENTATION.
-
 
   METHOD view_display.
 
