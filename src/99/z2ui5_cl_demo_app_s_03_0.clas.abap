@@ -24,7 +24,6 @@ CLASS z2ui5_cl_demo_app_s_03_0 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
       view_display( ).
     ENDIF.
@@ -76,6 +75,7 @@ CLASS z2ui5_cl_demo_app_s_03_0 IMPLEMENTATION.
         message-text = `Hooray!`.
 
       ELSE.
+
         client->follow_up_action( `playError()` ).
         message-type = `Error`.
         message-text = `That wasn't the magic key`.

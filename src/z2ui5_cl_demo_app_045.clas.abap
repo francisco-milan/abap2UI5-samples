@@ -4,15 +4,15 @@ CLASS z2ui5_cl_demo_app_045 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_row,
+      BEGIN OF ty_s_row,
         count    TYPE i,
         value    TYPE string,
         descr    TYPE string,
         icon     TYPE string,
         info     TYPE string,
         checkbox TYPE abap_bool,
-      END OF ty_row.
-    DATA t_tab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY.
+      END OF ty_s_row.
+    DATA t_tab TYPE STANDARD TABLE OF ty_s_row WITH EMPTY KEY.
 
     DATA mv_info_filter TYPE string.
 
@@ -28,7 +28,7 @@ CLASS z2ui5_cl_demo_app_045 IMPLEMENTATION.
   METHOD refresh_data.
 
     DO 1000 TIMES.
-      DATA(ls_row) = VALUE ty_row( count = sy-index  value = `red`
+      DATA(ls_row) = VALUE ty_s_row( count = sy-index  value = `red`
         info = COND #( WHEN sy-index < 50 THEN `completed` ELSE `uncompleted` )
         descr = `this is a description` checkbox = abap_true ).
       INSERT ls_row INTO TABLE t_tab.
@@ -45,7 +45,7 @@ CLASS z2ui5_cl_demo_app_045 IMPLEMENTATION.
 
     CASE client->get( )-event.
 
-      WHEN `FLTER_INFO`.
+      WHEN `FILTER_INFO`.
         refresh_data( ).
 
         IF mv_info_filter <> ``.
@@ -70,10 +70,10 @@ CLASS z2ui5_cl_demo_app_045 IMPLEMENTATION.
                 )->content( `form`
                     )->title( `Filter`
                     )->label( `info`
-                    )->input( client->_bind( mv_info_filter )
+                    )->input( client->_bind_edit( mv_info_filter )
                     )->button(
                         text  = `filter`
-                        press = client->_event( `FLTER_INFO` ) ).
+                        press = client->_event( `FILTER_INFO` ) ).
 
     DATA(tab) = page->scroll_container( height   = `70%`
                                         vertical = abap_true

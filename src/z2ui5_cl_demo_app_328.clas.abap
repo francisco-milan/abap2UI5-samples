@@ -25,6 +25,7 @@ CLASS z2ui5_cl_demo_app_328 IMPLEMENTATION.
     FIELD-SYMBOLS: <tab> TYPE ANY TABLE.
 
     IF client->check_on_init( ).
+
       get_data( ).
       mo_table_obj = z2ui5_cl_demo_app_329=>factory( mt_table ).
       view_display( client ).
@@ -43,11 +44,12 @@ CLASS z2ui5_cl_demo_app_328 IMPLEMENTATION.
 
           ASSIGN COMPONENT `SELKZ` OF STRUCTURE <line> TO FIELD-SYMBOL(<selkz>).
 
-          IF <selkz> IS NOT ASSIGNED.
+          IF sy-subrc <> 0.
             CONTINUE.
           ENDIF.
 
           IF <selkz> = abap_true.
+
             DATA(okay) = abap_true.
             EXIT.
           ENDIF.

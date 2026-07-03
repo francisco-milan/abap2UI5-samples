@@ -3,13 +3,13 @@ CLASS z2ui5_cl_demo_app_168 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-    DATA client TYPE REF TO z2ui5_if_client.
-
     METHODS view_display.
     METHODS on_event.
     METHODS on_navigation.
 
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS get_file
       RETURNING
         VALUE(result) TYPE string.
@@ -68,6 +68,7 @@ CLASS z2ui5_cl_demo_app_168 IMPLEMENTATION.
     me->client = client.
 
     IF client->get( )-check_on_navigated = abap_true.
+
       view_display( ).
       on_navigation( ).
       RETURN.

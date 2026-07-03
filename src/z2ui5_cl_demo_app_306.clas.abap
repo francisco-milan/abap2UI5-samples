@@ -4,24 +4,24 @@ CLASS z2ui5_cl_demo_app_306 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_picture,
+      BEGIN OF ty_s_picture,
         time      TYPE string,
         id        TYPE string,
         name      TYPE string,
         data      TYPE string,    " full resolution - backend only
         thumbnail TYPE string,    " small preview - used in model
         selected  TYPE abap_bool,
-      END OF ty_picture.
+      END OF ty_s_picture.
 
     TYPES:
-      BEGIN OF t_combo,
+      BEGIN OF ty_s_combo,
         key  TYPE string,
         text TYPE string,
-      END OF t_combo,
-      tt_combo TYPE STANDARD TABLE OF t_combo WITH EMPTY KEY.
+      END OF ty_s_combo,
+      tt_combo TYPE STANDARD TABLE OF ty_s_combo WITH EMPTY KEY.
 
-    DATA mt_picture       TYPE STANDARD TABLE OF ty_picture WITH EMPTY KEY.
-    DATA mt_picture_out   TYPE STANDARD TABLE OF ty_picture WITH EMPTY KEY.
+    DATA mt_picture       TYPE STANDARD TABLE OF ty_s_picture WITH EMPTY KEY.
+    DATA mt_picture_out   TYPE STANDARD TABLE OF ty_s_picture WITH EMPTY KEY.
     DATA mv_pic_display   TYPE string.
     DATA mv_picture_base  TYPE string.
     DATA mv_picture_thumb TYPE string.
@@ -31,7 +31,7 @@ CLASS z2ui5_cl_demo_app_306 DEFINITION PUBLIC.
     DATA devices          TYPE tt_combo.
 
   PROTECTED SECTION.
-    DATA selected_picture TYPE ty_picture.
+    DATA selected_picture TYPE ty_s_picture.
     DATA client           TYPE REF TO z2ui5_if_client.
 
     METHODS view_display.
@@ -120,6 +120,7 @@ CLASS z2ui5_cl_demo_app_306 IMPLEMENTATION.
     ENDIF.
 
     IF client->get( )-check_on_navigated = abap_true.
+
       on_navigation( ).
       rebuild_output( ).
       view_display( ).
@@ -187,6 +188,7 @@ CLASS z2ui5_cl_demo_app_306 IMPLEMENTATION.
           ASSIGN mt_picture[ selected_picture-id ] TO FIELD-SYMBOL(<picture>).
 
           IF sy-subrc = 0.
+
             <picture>-data      = mv_pic_display.
             <picture>-thumbnail = mv_pic_display.
           ENDIF.

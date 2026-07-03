@@ -8,13 +8,15 @@ CLASS z2ui5_cl_demo_app_318 DEFINITION PUBLIC.
     DATA mv_editor         TYPE string.
     DATA mv_check_editable TYPE abap_bool.
 
-    DATA client            TYPE REF TO z2ui5_if_client.
     DATA lt_types TYPE z2ui5_if_types=>ty_t_name_value.
 
     DATA lt_types2 TYPE z2ui5_if_types=>ty_t_name_value.
 
     METHODS view_display.
+
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -25,7 +27,7 @@ CLASS z2ui5_cl_demo_app_318 IMPLEMENTATION.
     mv_editor = `<html> ` && |\n| &&
                 `    <body> ` && |\n| &&
                 `        <h1> Hi there 👋</h1>` && |\n| &&
-                `        <p>This example was rendered by providing HTML code to the API. You can also tell the API to convert from a URL. Just remove the html parameter and add the url paramter.</p>` && |\n| &&
+                `        <p>This example was rendered by providing HTML code to the API. You can also tell the API to convert from a URL. Just remove the html parameter and add the url parameter.</p>` && |\n| &&
                 `    </body> ` && |\n| &&
                 `</html>`.
 
@@ -78,6 +80,7 @@ CLASS z2ui5_cl_demo_app_318 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
+
       mv_path = `../../demo/text`.
       mv_type = `plain_text`.
       view_display( ).

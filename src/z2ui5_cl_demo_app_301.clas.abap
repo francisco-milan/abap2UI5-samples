@@ -4,14 +4,14 @@ CLASS z2ui5_cl_demo_app_301 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_product,
+      BEGIN OF ty_s_product,
         name          TYPE string,
         attribute_1   TYPE string,
         attribute_2   TYPE string,
         status        TYPE string,
         overflow_mode TYPE string,
-      END OF ty_product.
-    DATA lt_o_data TYPE TABLE OF ty_product.
+      END OF ty_s_product.
+    DATA lt_o_data TYPE TABLE OF ty_s_product.
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
@@ -104,7 +104,7 @@ CLASS z2ui5_cl_demo_app_301 IMPLEMENTATION.
                       width     = `auto`
               )->quick_view_page( pageid      = `sampleInformationId`
                                   header      = `Sample information`
-                                  description = `The ExpandableText control can be used to display a larger texts inside a table, list or form.` ).
+                                  description = `The ExpandableText control can be used to display larger texts inside a table, list or form.` ).
 
     client->popover_display(
       xml   = view->stringify( )
@@ -118,6 +118,7 @@ CLASS z2ui5_cl_demo_app_301 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
+
       view_display( client ).
       set_data( ).
     ENDIF.

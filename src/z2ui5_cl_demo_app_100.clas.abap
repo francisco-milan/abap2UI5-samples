@@ -19,9 +19,7 @@ CLASS z2ui5_cl_demo_app_100 DEFINITION PUBLIC.
         process          TYPE string,
         process_state    TYPE string,
       END OF ty_s_tab.
-    TYPES ty_t_table TYPE STANDARD TABLE OF ty_s_tab WITH EMPTY KEY.
-
-    DATA mt_table TYPE ty_t_table.
+    DATA mt_table TYPE STANDARD TABLE OF ty_s_tab WITH EMPTY KEY.
     DATA lv_selkz TYPE abap_bool.
 
   PROTECTED SECTION.
@@ -70,7 +68,7 @@ CLASS z2ui5_cl_demo_app_100 IMPLEMENTATION.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = view->shell(
         )->page(
-            title           = `abap2UI5 - List`
+            title           = `abap2UI5 - Table with Variant Management`
             navbuttonpress  = client->_event_nav_app_leave( )
               shownavbutton = abap_true
             )->header_content(

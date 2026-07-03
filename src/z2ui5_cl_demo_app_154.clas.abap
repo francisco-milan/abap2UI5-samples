@@ -3,12 +3,12 @@ CLASS z2ui5_cl_demo_app_154 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-    DATA client TYPE REF TO z2ui5_if_client.
-
     METHODS view_display.
     METHODS on_event.
 
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -17,7 +17,7 @@ CLASS z2ui5_cl_demo_app_154 IMPLEMENTATION.
 
   METHOD on_event.
 
-    TYPES BEGIN OF ty_log_entry.
+    TYPES BEGIN OF ty_s_log_entry.
     TYPES msgnumber TYPE n LENGTH 6.
     TYPES msgty     TYPE c LENGTH 1.
     TYPES msgid     TYPE c LENGTH 20.
@@ -38,8 +38,8 @@ CLASS z2ui5_cl_demo_app_154 IMPLEMENTATION.
     TYPES context   TYPE c LENGTH 255.
     TYPES params    TYPE c LENGTH 255.
     TYPES msg_txt   TYPE string.
-    TYPES END OF ty_log_entry.
-    DATA lt_bal TYPE STANDARD TABLE OF ty_log_entry WITH EMPTY KEY.
+    TYPES END OF ty_s_log_entry.
+    DATA lt_bal TYPE STANDARD TABLE OF ty_s_log_entry WITH EMPTY KEY.
 
     CASE client->get( )-event.
 
@@ -97,7 +97,6 @@ CLASS z2ui5_cl_demo_app_154 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
       view_display( ).
 

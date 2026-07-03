@@ -3,13 +3,13 @@ CLASS z2ui5_cl_demo_app_118 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-    TYPES: BEGIN OF s_row,
+    TYPES: BEGIN OF ty_s_row,
              id    TYPE i,
              descr TYPE string,
              adate TYPE d,
              atime TYPE t,
-           END OF s_row.
-    TYPES t_rows TYPE STANDARD TABLE OF s_row WITH EMPTY KEY.
+           END OF ty_s_row.
+    TYPES t_rows TYPE STANDARD TABLE OF ty_s_row WITH EMPTY KEY.
 
     DATA problematic_rows TYPE t_rows.
     DATA these_are_fine_rows TYPE t_rows.
@@ -45,8 +45,9 @@ CLASS z2ui5_cl_demo_app_118 IMPLEMENTATION.
 
     DATA(page) = view->shell(
         )->page(
-            title          = `ABAP2UI5 Weird behavior showcase`
-            navbuttonpress = client->_event( `BACK` )
+            title          = `abap2UI5 - Weird Behavior Showcase`
+            navbuttonpress = client->_event_nav_app_leave( )
+            shownavbutton  = client->check_app_prev_stack( )
             showheader     = abap_true ).
 
     DATA(tab_ko) = page->table(
@@ -102,7 +103,7 @@ CLASS z2ui5_cl_demo_app_118 IMPLEMENTATION.
 
     client->action->gen(
         val   = z2ui5_if_client=>cs_event-set_title
-        t_arg = VALUE #( ( `ABAP2UI5 Weird behavior showcase` ) ) ).
+        t_arg = VALUE #( ( `abap2UI5 - Weird Behavior Showcase` ) ) ).
 
   ENDMETHOD.
 

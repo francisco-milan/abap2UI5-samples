@@ -4,18 +4,16 @@ CLASS z2ui5_cl_demo_app_084 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF s_suggestion_items,
+      BEGIN OF ty_s_suggestion_items,
         value TYPE string,
         descr TYPE string,
-      END OF s_suggestion_items.
+      END OF ty_s_suggestion_items.
 
     TYPES:
-      BEGIN OF s_combobox,
+      BEGIN OF ty_s_combobox,
         key  TYPE string,
         text TYPE string,
-      END OF s_combobox.
-
-    TYPES ty_t_combo TYPE STANDARD TABLE OF s_combobox WITH EMPTY KEY.
+      END OF ty_s_combobox.
 
     DATA:
       BEGIN OF screen,
@@ -32,13 +30,15 @@ CLASS z2ui5_cl_demo_app_084 DEFINITION PUBLIC.
         check_switch_02 TYPE abap_bool VALUE abap_false,
       END OF screen.
 
-    DATA mt_suggestion TYPE STANDARD TABLE OF s_suggestion_items WITH EMPTY KEY.
+    DATA mt_suggestion TYPE STANDARD TABLE OF ty_s_suggestion_items WITH EMPTY KEY.
 
-    DATA client TYPE REF TO z2ui5_if_client.
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS view_display.
     METHODS on_event.
     METHODS on_init.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -116,7 +116,7 @@ CLASS z2ui5_cl_demo_app_084 IMPLEMENTATION.
                                      text = `Success MessageBox`
                                      icon = `sap-icon://accept` ).
       WHEN `BUTTON_SEND`.
-        client->message_box_display( `success - values send to the server` ).
+        client->message_box_display( `success - values sent to the server` ).
       WHEN `BUTTON_CLEAR`.
         screen = VALUE #( ).
         client->message_toast_display( `View initialized` ).

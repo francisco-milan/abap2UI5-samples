@@ -63,7 +63,6 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
       on_init( ).
 
@@ -130,7 +129,7 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
 
           s_screen-name     = t_employees_sel[ 1 ]-name.
           s_screen-lastname = t_employees_sel[ 1 ]-lastname.
-          client->message_toast_display( `value value selected` ).
+          client->message_toast_display( `value selected` ).
           client->popup_destroy( ).
 
         ENDIF.
@@ -140,12 +139,12 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
         IF lines( t_suggestion_sel ) = 1.
 
           s_screen-color_02 = t_suggestion_sel[ 1 ]-value.
-          client->message_toast_display( `value value selected` ).
+          client->message_toast_display( `value selected` ).
           client->popup_destroy( ).
 
         ENDIF.
       WHEN `BUTTON_SEND`.
-        client->message_box_display( `success - values send to the server` ).
+        client->message_box_display( `success - values sent to the server` ).
       WHEN `BUTTON_CLEAR`.
         s_screen = VALUE #( ).
         client->message_box_display( `View initialized` ).
@@ -230,7 +229,7 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
   METHOD popup_value_suggestion.
 
     DATA(popup) = z2ui5_cl_xml_view=>factory_popup( ).
-    DATA(dialog) = popup->dialog( `abap2UI5 - value Value Help` ).
+    DATA(dialog) = popup->dialog( `abap2UI5 - Value Help` ).
     DATA(tab) = dialog->table(
         mode  = `SingleSelectLeft`
         items = client->_bind_edit( t_suggestion_sel ) ).
@@ -260,7 +259,7 @@ CLASS z2ui5_cl_demo_app_009 IMPLEMENTATION.
   METHOD popup_value_employee.
 
     DATA(popup) = z2ui5_cl_xml_view=>factory_popup( ).
-    DATA(dialog) = popup->dialog( `abap2UI5 - value Value Help` ).
+    DATA(dialog) = popup->dialog( `abap2UI5 - Value Help` ).
 
     dialog->simple_form(
         )->label( `Location`

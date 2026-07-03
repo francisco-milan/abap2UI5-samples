@@ -42,6 +42,7 @@ CLASS z2ui5_cl_demo_app_085 DEFINITION PUBLIC.
     DATA mt_table_supplier TYPE ty_t_table_supplier.
     DATA mv_search_value TYPE string.
     DATA ls_detail TYPE ty_s_tab.
+
   PROTECTED SECTION.
     CONSTANTS c_pic_url TYPE string VALUE `https://sapui5.hana.ondemand.com/sdk/test-resources/sap/ui/documentation/sdk/images/`.
 
@@ -59,6 +60,7 @@ CLASS z2ui5_cl_demo_app_085 DEFINITION PUBLIC.
     METHODS set_search.
 
     METHODS sort.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -72,6 +74,7 @@ CLASS z2ui5_cl_demo_app_085 IMPLEMENTATION.
       lv_sort_desc = abap_false.
 
     ELSE.
+
       SORT mt_table BY productid DESCENDING.
       lv_sort_desc = abap_true.
     ENDIF.
@@ -388,6 +391,7 @@ CLASS z2ui5_cl_demo_app_085 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
+
       set_data( ).
       sort( ).
       view_display_master( ).
@@ -395,6 +399,7 @@ CLASS z2ui5_cl_demo_app_085 IMPLEMENTATION.
     ENDIF.
 
     IF client->get( )-check_on_navigated = abap_true.
+
       view_display_master( ).
       view_display_detail( ).
       RETURN.

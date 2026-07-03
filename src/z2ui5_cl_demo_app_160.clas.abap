@@ -4,7 +4,7 @@ CLASS z2ui5_cl_demo_app_160 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF s_output,
+      BEGIN OF ty_s_output,
         index          TYPE i,
         set_sk         TYPE c LENGTH 10,
         matnr          TYPE matnr,
@@ -33,11 +33,12 @@ CLASS z2ui5_cl_demo_app_160 DEFINITION PUBLIC.
         is_q04_prev    TYPE i,
         pl_q04         TYPE i,
         per_cent_q04   TYPE p LENGTH 2 DECIMALS 1,
-      END OF s_output.
-    DATA mt_output TYPE STANDARD TABLE OF s_output.
-    DATA client TYPE REF TO z2ui5_if_client.
+      END OF ty_s_output.
+    DATA mt_output TYPE STANDARD TABLE OF ty_s_output.
 
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
     METHODS load_output_table.
     METHODS on_event.
     METHODS render_main_screen.
@@ -50,7 +51,7 @@ CLASS z2ui5_cl_demo_app_160 IMPLEMENTATION.
 
   METHOD load_output_table.
 
-    DATA ls_output TYPE s_output.
+    DATA ls_output TYPE ty_s_output.
     mt_output = VALUE #( ).
 
     DO 10 TIMES.
@@ -182,7 +183,7 @@ CLASS z2ui5_cl_demo_app_160 IMPLEMENTATION.
                         filterproperty = `IS_Q01_PREV` )->text( `Column 16` )->ui_template( )->text( `{IS_Q01_PREV}` ).
     columns->ui_column( width          = `5rem`
                         sortproperty   = `PL_Q01`
-                        filterproperty = `PL_Q01` )->text( `Column 17` )->ui_template( )->text( `{PL_Q01}` ). "Nicht editierbar, da im Detail geplant
+                        filterproperty = `PL_Q01` )->text( `Column 17` )->ui_template( )->text( `{PL_Q01}` ). "Not editable, because it is planned at detail level
     columns->ui_column( width          = `4rem`
                         sortproperty   = `per_cent_q01`
                         filterproperty = `per_cent_q01` )->text( `Column 18` )->ui_template( )->text( `{per_cent_q01} %` ).
@@ -231,7 +232,6 @@ CLASS z2ui5_cl_demo_app_160 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
 
       load_output_table( ).

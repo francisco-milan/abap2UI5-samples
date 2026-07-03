@@ -4,12 +4,12 @@ CLASS z2ui5_cl_demo_app_302 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_product,
+      BEGIN OF ty_s_product,
         product        TYPE string,
         supplier       TYPE string,
         additionalinfo TYPE string,
-      END OF ty_product.
-    DATA lt_a_data TYPE TABLE OF ty_product.
+      END OF ty_s_product.
+    DATA lt_a_data TYPE TABLE OF ty_s_product.
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
@@ -83,7 +83,7 @@ CLASS z2ui5_cl_demo_app_302 IMPLEMENTATION.
       WHEN `CLICK_HINT_ICON`.
         popover_display( `button_hint_id` ).
       WHEN `onPress`.
-        client->message_toast_display( client->get_event_arg( 1 ) && ` marker pressed!` ).
+        client->message_toast_display( |{ client->get_event_arg( 1 ) } marker pressed!| ).
     ENDCASE.
 
   ENDMETHOD.

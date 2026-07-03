@@ -4,12 +4,12 @@ CLASS z2ui5_cl_demo_app_058 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF s_combobox,
+      BEGIN OF ty_s_combobox,
         key  TYPE string,
         text TYPE string,
-      END OF s_combobox.
+      END OF ty_s_combobox.
 
-    TYPES ty_t_combo TYPE STANDARD TABLE OF s_combobox WITH EMPTY KEY.
+    TYPES ty_t_combo TYPE STANDARD TABLE OF ty_s_combobox WITH EMPTY KEY.
 
     TYPES:
       BEGIN OF ty_s_cols,
@@ -60,6 +60,7 @@ CLASS z2ui5_cl_demo_app_058 DEFINITION PUBLIC.
     DATA mv_check_sort TYPE abap_bool.
 
     DATA mt_combo TYPE ty_t_combo.
+
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
     DATA:
@@ -77,6 +78,7 @@ CLASS z2ui5_cl_demo_app_058 DEFINITION PUBLIC.
     METHODS set_data.
     METHODS popup_display_view.
     METHODS popup_display_save.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -237,7 +239,7 @@ CLASS z2ui5_cl_demo_app_058 IMPLEMENTATION.
     ro_popup->custom_header(
           )->bar(
               )->content_right(
-          )->button( text  = `zurücksetzten`
+          )->button( text  = `Reset`
                      press = client->_event( `BUTTON_INIT` ) ).
 
     DATA(lo_tab) = ro_popup->tab_container( ).
@@ -253,11 +255,11 @@ CLASS z2ui5_cl_demo_app_058 IMPLEMENTATION.
        )->simple_form( editable = abap_true
            )->content( `form`
                )->label( `zebra mode`
-               )->checkbox( client->_bind( ms_layout-check_zebra )
+               )->checkbox( client->_bind_edit( ms_layout-check_zebra )
                )->label( `sticky header`
-               )->input( client->_bind( ms_layout-sticky_header )
+               )->input( client->_bind_edit( ms_layout-sticky_header )
                )->label( `Title`
-               )->input( client->_bind( ms_layout-title )
+               )->input( client->_bind_edit( ms_layout-title )
                )->label( `sel mode`
                )->combobox(
                    selectedkey = client->_bind_edit( ms_layout-selmode )

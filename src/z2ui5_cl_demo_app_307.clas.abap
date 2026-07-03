@@ -3,7 +3,7 @@ CLASS z2ui5_cl_demo_app_307 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-    TYPES: BEGIN OF ty_item,
+    TYPES: BEGIN OF ty_s_item,
              busy               TYPE abap_bool,
              busyindicatordelay TYPE i,
              busyindicatorsize  TYPE string,
@@ -18,10 +18,8 @@ CLASS z2ui5_cl_demo_app_307 DEFINITION PUBLIC.
              visiple            TYPE abap_bool,
              title              TYPE string,
              subtitle           TYPE string,
-           END OF ty_item.
-    TYPES ty_items TYPE STANDARD TABLE OF ty_item WITH DEFAULT KEY.
-
-    DATA client            TYPE REF TO z2ui5_if_client.
+           END OF ty_s_item.
+    TYPES ty_items TYPE STANDARD TABLE OF ty_s_item WITH DEFAULT KEY.
 
     DATA items             TYPE ty_items.
 
@@ -34,6 +32,8 @@ CLASS z2ui5_cl_demo_app_307 DEFINITION PUBLIC.
       IMPORTING client TYPE REF TO z2ui5_if_client.
 
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -44,6 +44,7 @@ CLASS z2ui5_cl_demo_app_307 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
+
       initialization( ).
       view_display( client ).
     ENDIF.

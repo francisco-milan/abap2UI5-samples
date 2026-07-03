@@ -50,7 +50,7 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
         ASSIGN ms_table_row->* TO <row>.
         ASSIGN COMPONENT comp->name OF STRUCTURE <row> TO FIELD-SYMBOL(<val>).
 
-        IF <val> IS NOT ASSIGNED.
+        IF sy-subrc <> 0.
           CONTINUE.
 
         ELSE.
@@ -129,7 +129,6 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
       on_init( ).
 
@@ -141,7 +140,6 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
 
 
   METHOD set_app_data.
-
 
     mv_table = table.
 
@@ -189,14 +187,14 @@ CLASS z2ui5_cl_demo_app_194 IMPLEMENTATION.
   METHOD get_fixval.
 
     TYPES:
-      BEGIN OF fixvalue,
+      BEGIN OF ty_s_fixvalue,
         low        TYPE string,
         high       TYPE string,
         option     TYPE string,
         ddlanguage TYPE string,
         ddtext     TYPE string,
-      END OF fixvalue.
-    TYPES fixvalues TYPE STANDARD TABLE OF fixvalue WITH DEFAULT KEY.
+      END OF ty_s_fixvalue.
+    TYPES fixvalues TYPE STANDARD TABLE OF ty_s_fixvalue WITH DEFAULT KEY.
 
     DATA comp        TYPE cl_abap_structdescr=>component_table.
     DATA lt_fixval   TYPE fixvalues.

@@ -84,7 +84,7 @@ CLASS z2ui5_cl_demo_app_074 IMPLEMENTATION.
       ENDLOOP.
       DATA(lo_cells) = tab->items( )->column_list_item( )->cells( ).
       LOOP AT lr_fields REFERENCE INTO lr_col.
-        lo_cells->text( `{` && lr_col->name && `}` ).
+        lo_cells->text( |\{{ lr_col->name }\}| ).
       ENDLOOP.
     ENDIF.
 
@@ -106,6 +106,7 @@ CLASS z2ui5_cl_demo_app_074 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
+
       view_display( ).
       RETURN.
     ENDIF.

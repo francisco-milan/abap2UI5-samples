@@ -4,15 +4,15 @@ CLASS z2ui5_cl_demo_app_082 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_row,
+      BEGIN OF ty_s_row,
         title    TYPE string,
         value    TYPE string,
         descr    TYPE string,
         icon     TYPE string,
         info     TYPE string,
         checkbox TYPE abap_bool,
-      END OF ty_row.
-    DATA t_tab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY.
+      END OF ty_s_row.
+    DATA t_tab TYPE STANDARD TABLE OF ty_s_row WITH EMPTY KEY.
     DATA mv_counter TYPE i.
 
   PROTECTED SECTION.
@@ -33,6 +33,7 @@ CLASS z2ui5_cl_demo_app_082 IMPLEMENTATION.
     me->client     = client.
 
     IF client->check_on_init( ).
+
       on_init( ).
       view_display( ).
     ENDIF.
@@ -48,7 +49,7 @@ CLASS z2ui5_cl_demo_app_082 IMPLEMENTATION.
 
     IF client->check_on_event( `TIMER_FINISHED` ).
       mv_counter = mv_counter + 1.
-      INSERT VALUE #( title = `entry` && mv_counter   info = `completed`   descr = `this is a description` icon = `sap-icon://account` )
+      INSERT VALUE #( title = |entry{ mv_counter }|   info = `completed`   descr = `this is a description` icon = `sap-icon://account` )
           INTO TABLE t_tab.
 
       client->action->gen(
@@ -65,7 +66,7 @@ CLASS z2ui5_cl_demo_app_082 IMPLEMENTATION.
     mv_counter = 1.
 
     t_tab = VALUE #(
-            ( title = `entry` && mv_counter  info = `completed`   descr = `this is a description` icon = `sap-icon://account` ) ).
+            ( title = |entry{ mv_counter }|  info = `completed`   descr = `this is a description` icon = `sap-icon://account` ) ).
 
   ENDMETHOD.
 

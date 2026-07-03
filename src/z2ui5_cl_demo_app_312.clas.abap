@@ -4,33 +4,35 @@ CLASS z2ui5_cl_demo_app_312 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ts_data_chart,
+      BEGIN OF ty_s_data_chart,
         week    TYPE string,
         revenue TYPE string,
         cost    TYPE string,
-      END OF ts_data_chart.
-    TYPES tt_data_chart TYPE STANDARD TABLE OF ts_data_chart WITH DEFAULT KEY.
+      END OF ty_s_data_chart.
+    TYPES tt_data_chart TYPE STANDARD TABLE OF ty_s_data_chart WITH DEFAULT KEY.
 
     TYPES:
-      BEGIN OF ts_screen,
+      BEGIN OF ty_s_screen,
         viztype    TYPE string,
         viztypesel TYPE string,
-      END OF ts_screen.
+      END OF ty_s_screen.
 
     DATA mt_data_chart     TYPE tt_data_chart.
 
-    DATA ms_screen         TYPE ts_screen.
+    DATA ms_screen         TYPE ty_s_screen.
 
     DATA mv_prop           TYPE string.
     DATA mt_feed_values    TYPE TABLE OF string.
 
     DATA mt_viztypes       TYPE z2ui5_if_types=>ty_t_name_value..
+
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
 
     METHODS on_rendering.
     METHODS on_event.
     METHODS on_init.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -218,10 +220,10 @@ CLASS z2ui5_cl_demo_app_312 IMPLEMENTATION.
                                                          )->filter_control( ).
 
     " ---------- Set combo box input field ------------------------------------------------------------
-    lr_filter->combobox( selectedkey   = client->_bind_edit( me->ms_screen-viztypesel )
+    lr_filter->combobox( selectedkey   = client->_bind_edit( ms_screen-viztypesel )
                          change        = client->_event( `EVT_VIZTYPE_CHANGE` )
                          showclearicon = abap_true
-                         items         = client->_bind( me->mt_viztypes )
+                         items         = client->_bind( mt_viztypes )
                               )->item( key  = `{N}`
                                        text = `{V}` ).
 
@@ -235,7 +237,7 @@ CLASS z2ui5_cl_demo_app_312 IMPLEMENTATION.
 *                            vizcustomizations =
                             vizproperties = mv_prop
 *                            vizscales     =
-                            viztype       = client->_bind( me->ms_screen-viztype )
+                            viztype       = client->_bind( ms_screen-viztype )
                             height        = `500px`
                             width         = `100%`
 *                            uiconfig      = `{applicationSet:'fiori'}`
@@ -247,7 +249,7 @@ CLASS z2ui5_cl_demo_app_312 IMPLEMENTATION.
     DATA(lr_dataset) = lr_vizframe->viz_dataset( ).
 
     " ---------- Set vizframe flattened dataset --------------------------------------------------------
-    DATA(lr_flatteneddataset) = lr_dataset->viz_flattened_dataset( client->_bind( me->mt_data_chart ) ).
+    DATA(lr_flatteneddataset) = lr_dataset->viz_flattened_dataset( client->_bind( mt_data_chart ) ).
 
     " ---------- Set vizframe dimensions ---------------------------------------------------------------
     DATA(lr_dimensions) = lr_flatteneddataset->viz_dimensions( ).
@@ -292,7 +294,7 @@ CLASS z2ui5_cl_demo_app_312 IMPLEMENTATION.
     DATA(lr_lr_feed_item1) = lr_feeds->viz_feed_item( id     = `valueAxisFeed`
                                                       uid    = `valueAxis`
                                                       type   = `Measure`
-                                                      values = client->_bind( me->mt_feed_values ) ).
+                                                      values = client->_bind( mt_feed_values ) ).
 
     " ---------- Set vizframe feed for category axis --------------------------------------------------
     DATA(lr_lr_feed_item2) = lr_feeds->viz_feed_item( id     = `categoryAxisFeed`
@@ -308,7 +310,6 @@ CLASS z2ui5_cl_demo_app_312 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
       on_init( ).
       on_rendering( ).

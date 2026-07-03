@@ -4,11 +4,11 @@ CLASS z2ui5_cl_demo_app_298 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_product_collection,
+      BEGIN OF ty_s_product_collection,
         product_id TYPE string,
         name       TYPE string,
-      END OF ty_product_collection.
-    DATA lt_a_products TYPE TABLE OF ty_product_collection.
+      END OF ty_s_product_collection.
+    DATA lt_a_products TYPE TABLE OF ty_s_product_collection.
     DATA selectedproducterrorcollection TYPE string.
     DATA selectedproductwrnngcollection TYPE string.
     DATA selectedproductsccsscollection TYPE string.
@@ -63,7 +63,7 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `errorSelect`
                           forceselection = abap_true
-                          selectedkey    = client->_bind( selectedproducterrorcollection )
+                          selectedkey    = client->_bind_edit( selectedproducterrorcollection )
                           valuestate     = `Error`
                           valuestatetext = `error value state text`
                           items          = client->_bind( lt_a_products )
@@ -78,7 +78,7 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `warningSelect`
                           forceselection = abap_true
-                          selectedkey    = client->_bind( selectedproductwrnngcollection )
+                          selectedkey    = client->_bind_edit( selectedproductwrnngcollection )
                           valuestate     = `Warning`
                           valuestatetext = `This is a Level 1 explanation. The items Lorem and Ipsum are not recommended from the system.`
                           items          = client->_bind( lt_a_products )
@@ -93,7 +93,7 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `successSelect`
                           forceselection = abap_true
-                          selectedkey    = client->_bind( selectedproductsccsscollection )
+                          selectedkey    = client->_bind_edit( selectedproductsccsscollection )
                           valuestate     = `Success`
                           valuestatetext = `success value state text`
                           items          = client->_bind( lt_a_products )
@@ -108,7 +108,7 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
                       )->select(
                           id             = `informationSelect`
                           forceselection = abap_true
-                          selectedkey    = client->_bind( selectedproductinforcollection )
+                          selectedkey    = client->_bind_edit( selectedproductinforcollection )
                           valuestate     = `Information`
                           valuestatetext = `information value state text`
                           items          = client->_bind( lt_a_products )
@@ -153,6 +153,7 @@ CLASS z2ui5_cl_demo_app_298 IMPLEMENTATION.
     me->client = client.
 
     IF client->check_on_init( ).
+
       view_display( client ).
       set_data( ).
     ENDIF.

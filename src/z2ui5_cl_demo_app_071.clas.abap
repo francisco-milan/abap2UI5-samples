@@ -4,15 +4,14 @@ CLASS z2ui5_cl_demo_app_071 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF s_combobox,
+      BEGIN OF ty_s_combobox,
         key  TYPE string,
         text TYPE string,
-      END OF s_combobox.
-    TYPES ty_t_combo TYPE STANDARD TABLE OF s_combobox WITH EMPTY KEY.
+      END OF ty_s_combobox.
 
     DATA mv_set_size_limit TYPE i VALUE 100.
     DATA mv_combo_number TYPE i VALUE 105.
-    DATA lt_combo TYPE ty_t_combo.
+    DATA t_combo TYPE STANDARD TABLE OF ty_s_combobox WITH EMPTY KEY.
 
   PROTECTED SECTION.
   PRIVATE SECTION.
@@ -32,9 +31,9 @@ CLASS z2ui5_cl_demo_app_071 IMPLEMENTATION.
         RETURN.
 
       WHEN `UPDATE_MODEL`.
-        CLEAR lt_combo.
+        t_combo = VALUE #( ).
         DO mv_combo_number TIMES.
-          INSERT VALUE #( key = sy-index text = sy-index ) INTO TABLE lt_combo.
+          INSERT VALUE #( key = sy-index text = sy-index ) INTO TABLE t_combo.
         ENDDO.
         client->message_toast_display( `update number of entries` ).
         client->view_model_update( ).
@@ -44,7 +43,7 @@ CLASS z2ui5_cl_demo_app_071 IMPLEMENTATION.
 
     mv_combo_number = 105.
     DO mv_combo_number TIMES.
-      INSERT VALUE #( key = sy-index text = sy-index ) INTO TABLE lt_combo.
+      INSERT VALUE #( key = sy-index text = sy-index ) INTO TABLE t_combo.
     ENDDO.
 
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
@@ -68,7 +67,7 @@ CLASS z2ui5_cl_demo_app_071 IMPLEMENTATION.
                          text  = `update number entries`
                          press = client->_event( val = `UPDATE_MODEL` )
                      )->label( `demo`
-                     )->combobox( items = client->_bind( lt_combo )
+                     )->combobox( items = client->_bind( t_combo )
                         )->item( key = `{KEY}` text = `{TEXT}`
                         )->get_parent( )->get_parent(
 

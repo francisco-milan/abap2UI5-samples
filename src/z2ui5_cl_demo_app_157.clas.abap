@@ -3,13 +3,13 @@ CLASS z2ui5_cl_demo_app_157 DEFINITION PUBLIC.
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
 
-    DATA client TYPE REF TO z2ui5_if_client.
-
     METHODS view_display.
     METHODS on_event.
     METHODS on_navigation.
 
   PROTECTED SECTION.
+    DATA client TYPE REF TO z2ui5_if_client.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -21,7 +21,7 @@ CLASS z2ui5_cl_demo_app_157 IMPLEMENTATION.
     TRY.
         DATA(lo_prev) = client->get_app( client->get( )-s_draft-id_prev_app ).
         DATA(lv_text) = CAST z2ui5_cl_pop_file_ul( lo_prev )->result( )-value.
-        client->message_box_display( `the input is ` && lv_text ).
+        client->message_box_display( |the input is { lv_text }| ).
       CATCH cx_root.
     ENDTRY.
 
@@ -62,6 +62,7 @@ CLASS z2ui5_cl_demo_app_157 IMPLEMENTATION.
     me->client = client.
 
     IF client->get( )-check_on_navigated = abap_true.
+
       view_display( ).
       on_navigation( ).
       RETURN.

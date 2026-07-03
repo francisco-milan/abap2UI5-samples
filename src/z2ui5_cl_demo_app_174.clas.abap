@@ -4,13 +4,13 @@ CLASS z2ui5_cl_demo_app_174 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_row,
+      BEGIN OF ty_s_row,
         zzselkz TYPE abap_bool,
         title   TYPE string,
         value   TYPE string,
         descr   TYPE string,
-      END OF ty_row.
-    TYPES ty_tab TYPE STANDARD TABLE OF ty_row WITH EMPTY KEY.
+      END OF ty_s_row.
+    TYPES ty_tab TYPE STANDARD TABLE OF ty_s_row WITH EMPTY KEY.
 
     DATA mt_tab TYPE ty_tab.
     DATA mv_multiselect TYPE abap_bool.
@@ -78,7 +78,7 @@ CLASS z2ui5_cl_demo_app_174 IMPLEMENTATION.
         DATA(lt3) = CONV ty_tab( <t> ).
 
         IF mv_multiselect = abap_false.
-          client->message_box_display( `callback after popup to select: ` && lt3[ 1 ]-title ).
+          client->message_box_display( |callback after popup to select: { lt3[ 1 ]-title }| ).
 
         ELSE.
           client->nav_app_call( z2ui5_cl_pop_table=>factory( i_tab   = lt3

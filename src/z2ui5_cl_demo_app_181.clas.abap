@@ -4,23 +4,23 @@ CLASS z2ui5_cl_demo_app_181 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_cities,
+      BEGIN OF ty_s_cities,
         text TYPE string,
         key  TYPE string,
-      END OF ty_cities.
+      END OF ty_s_cities.
 
-    TYPES t_cities TYPE STANDARD TABLE OF ty_cities WITH DEFAULT KEY.
+    TYPES t_cities TYPE STANDARD TABLE OF ty_s_cities WITH DEFAULT KEY.
 
     TYPES:
-      BEGIN OF ty_product_items,
+      BEGIN OF ty_s_product_items,
         title         TYPE string,
         subtitle      TYPE string,
         revenue       TYPE string,
         status        TYPE string,
         status_schema TYPE string,
-      END OF ty_product_items.
+      END OF ty_s_product_items.
 
-    TYPES t_product_items TYPE STANDARD TABLE OF ty_product_items WITH DEFAULT KEY.
+    TYPES t_product_items TYPE STANDARD TABLE OF ty_s_product_items WITH DEFAULT KEY.
 
     DATA mv_url TYPE string.
 
@@ -30,8 +30,10 @@ CLASS z2ui5_cl_demo_app_181 DEFINITION PUBLIC.
 
     METHODS on_event.
     METHODS view_display.
+
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
+
   PRIVATE SECTION.
 ENDCLASS.
 
@@ -131,7 +133,6 @@ CLASS z2ui5_cl_demo_app_181 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
       view_display( ).
 

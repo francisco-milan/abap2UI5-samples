@@ -4,14 +4,14 @@ CLASS z2ui5_cl_demo_app_038 DEFINITION PUBLIC.
     INTERFACES z2ui5_if_app.
 
     TYPES:
-      BEGIN OF ty_msg,
+      BEGIN OF ty_s_msg,
         type        TYPE string,
         title       TYPE string,
         subtitle    TYPE string,
         description TYPE string,
         group       TYPE string,
-      END OF ty_msg.
-    DATA t_msg TYPE STANDARD TABLE OF ty_msg WITH EMPTY KEY.
+      END OF ty_s_msg.
+    DATA t_msg TYPE STANDARD TABLE OF ty_s_msg WITH EMPTY KEY.
 
     METHODS view_display.
     METHODS popup_display.
@@ -82,16 +82,6 @@ CLASS z2ui5_cl_demo_app_038 IMPLEMENTATION.
                                press = client->_event_client( client->cs_event-popup_close )
                                type  = `Emphasized` ).
 
-*    popup->footer( )->overflow_toolbar(
-*      )->toolbar_spacer(
-*      )->button(
-*          id    = `test2`
-*          text  = `test`
-*          press = client->_event( `TEST` )
-*      )->button(
-*          text  = `close`
-*          press = client->_event_client( client->cs_event-popup_close ) ).
-
     client->popup_display( popup->stringify( ) ).
 
   ENDMETHOD.
@@ -102,7 +92,7 @@ CLASS z2ui5_cl_demo_app_038 IMPLEMENTATION.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
     DATA(page) = view->shell(
         )->page(
-            title           = `abap2UI5 - List`
+            title           = `abap2UI5 - Message View`
             navbuttonpress  = client->_event_nav_app_leave( )
               shownavbutton = abap_true ).
     page->button( text  = `Messages in Popup`

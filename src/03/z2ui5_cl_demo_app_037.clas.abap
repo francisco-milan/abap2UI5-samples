@@ -69,7 +69,6 @@ CLASS z2ui5_cl_demo_app_037 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
       view_display( ).
     ENDIF.
@@ -113,7 +112,7 @@ CLASS z2ui5_cl_demo_app_037 IMPLEMENTATION.
         client->message_box_display( `Custom Control displayed ` ).
 
       WHEN `MYCC`.
-        client->message_toast_display( `Custom Control input: ` && mv_value ).
+        client->message_toast_display( |Custom Control input: { mv_value }| ).
     ENDCASE.
 
   ENDMETHOD.

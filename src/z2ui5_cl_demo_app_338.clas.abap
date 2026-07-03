@@ -92,7 +92,6 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
     IF client->check_on_init( ).
 
       on_init( ).
@@ -152,6 +151,7 @@ CLASS z2ui5_cl_demo_app_338 IMPLEMENTATION.
     ASSIGN mo_app->(`MV_VIEW_DISPLAY`) TO <view_display>.
 
     IF <view_display> = abap_true.
+
       <view_display> = abap_false.
       client->view_display( mo_main_page->stringify( ) ).
     ENDIF.
