@@ -14,11 +14,24 @@ CLASS z2ui5_cl_sample_000 DEFINITION PUBLIC.
 
   PROTECTED SECTION.
     DATA client TYPE REF TO z2ui5_if_client.
+    DATA:
+      BEGIN OF s_scroll,
+        id TYPE string,
+        x  TYPE i,
+        y  TYPE i,
+      END OF s_scroll.
 
+    METHODS on_event.
+    METHODS scroll_restore.
     METHODS view_display.
     METHODS get_catalog
       RETURNING
         VALUE(result) TYPE ty_t_tile.
+    METHODS class_exists
+      IMPORTING
+        name          TYPE clike
+      RETURNING
+        VALUE(result) TYPE abap_bool.
 
   PRIVATE SECTION.
 ENDCLASS.
@@ -29,20 +42,46 @@ CLASS z2ui5_cl_sample_000 IMPLEMENTATION.
   METHOD z2ui5_if_app~main.
 
     me->client = client.
-
-    IF client->check_on_event( ).
-
-      TRY.
-          DATA(classname) = to_upper( client->get( )-event ).
-          DATA li_app TYPE REF TO z2ui5_if_app.
-          CREATE OBJECT li_app TYPE (classname).
-          client->nav_app_call( li_app ).
-        CATCH cx_root ##NO_HANDLER.
-      ENDTRY.
-
-    ELSE.
+    IF client->check_on_init( ).
       view_display( ).
+
+    ELSEIF client->check_on_navigated( ).
+
+      scroll_restore( ).
+      view_display( ).
+
+    ELSEIF client->check_on_event( ).
+      on_event( ).
     ENDIF.
+
+  ENDMETHOD.
+
+
+  METHOD on_event.
+
+    TRY.
+        DATA(classname) = to_upper( client->get( )-event ).
+        DATA li_app TYPE REF TO z2ui5_if_app.
+        CREATE OBJECT li_app TYPE (classname).
+        s_scroll = CORRESPONDING #( client->get( )-s_scroll-main ).
+        client->nav_app_call( li_app ).
+      CATCH cx_root ##NO_HANDLER.
+    ENDTRY.
+
+  ENDMETHOD.
+
+
+  METHOD scroll_restore.
+
+    IF s_scroll-id IS INITIAL.
+      RETURN.
+    ENDIF.
+
+    client->action->gen(
+        val   = z2ui5_if_client=>cs_event-scroll_to
+        t_arg = VALUE #( ( s_scroll-id )
+                         ( |{ s_scroll-y }| )
+                         ( |{ s_scroll-x }| ) ) ).
 
   ENDMETHOD.
 
@@ -52,31 +91,103 @@ CLASS z2ui5_cl_sample_000 IMPLEMENTATION.
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     DATA(page) = view->shell( )->page(
+        id             = `page`
         title          = `abap2UI5 - Samples`
         navbuttonpress = client->_event_nav_app_leave( )
         shownavbutton  = client->check_app_prev_stack( ) ).
 
-    page->formatted_text( `<p><strong>Explore and copy code samples!</strong> One line per app, grouped by capability.</p>` ).
+    IF class_exists( `Z2UI5_CL_DEMO_APP_000` ) = abap_true.
+      DATA(url) = |{ client->get( )-s_config-origin }{ client->get( )-s_config-pathname }?app_start=z2ui5_cl_demo_app_000|.
+      page->message_strip(
+          type                = `Warning`
+          showicon            = abap_true
+          enableformattedtext = abap_true
+          class               = `sapUiSmallMarginBottom`
+          text                = |This overview is still under construction. Click <a href="{ url }" target="_blank">here</a> to open the classic launchpad overview.| ).
+    ENDIF.
 
-    DATA(prev_group) = ``.
-    DATA list        TYPE REF TO z2ui5_cl_xml_view.
+    TYPES:
+      BEGIN OF ty_s_ctrl,
+        group   TYPE string,
+        header  TYPE string,
+        t_items TYPE ty_t_tile,
+      END OF ty_s_ctrl.
+    DATA t_ctrl TYPE STANDARD TABLE OF ty_s_ctrl WITH DEFAULT KEY.
 
     LOOP AT get_catalog( ) INTO DATA(tile).
 
-      IF tile-group <> prev_group.
-        list       = page->list( headertext = tile-group ).
-        prev_group = tile-group.
+      ASSIGN t_ctrl[ group  = tile-group
+                     header = tile-header ] TO FIELD-SYMBOL(<ctrl>).
+      IF sy-subrc <> 0.
+        APPEND VALUE #( group  = tile-group
+                        header = tile-header ) TO t_ctrl ASSIGNING <ctrl>.
       ENDIF.
 
-      list->standard_list_item(
-          title       = tile-header
-          description = tile-sub
-          type        = `Navigation`
-          press       = client->_event( tile-app ) ).
+      APPEND tile TO <ctrl>-t_items.
+
+    ENDLOOP.
+
+    DATA(prev_group) = ``.
+
+    LOOP AT t_ctrl INTO DATA(ctrl).
+
+      IF ctrl-group <> prev_group.
+        page->title(
+            text  = ctrl-group
+            level = `H3`
+            class = `sapUiSmallMarginTop sapUiTinyMarginBottom` ).
+        prev_group = ctrl-group.
+      ENDIF.
+
+      DATA(row) = page->hbox(
+          alignitems = `Center`
+          wrap       = `Wrap`
+          class      = `sapUiTinyMarginBegin` ).
+
+      DATA(first) = ctrl-t_items[ 1 ].
+
+      IF lines( ctrl-t_items ) > 1.
+
+        row->text(
+            text  = ctrl-header
+            class = `sapUiTinyMarginEnd` ).
+
+        LOOP AT ctrl-t_items INTO DATA(item).
+          row->link(
+              text  = COND #( WHEN item-sub IS NOT INITIAL THEN item-sub ELSE |Sample { sy-tabix }| )
+              class = `sapUiTinyMarginEnd`
+              press = client->_event( item-app ) ).
+        ENDLOOP.
+
+      ELSEIF first-sub IS INITIAL.
+        row->link(
+            text  = ctrl-header
+            press = client->_event( first-app ) ).
+
+      ELSE.
+        row->link(
+            text  = ctrl-header
+            class = `sapUiTinyMarginEnd`
+            press = client->_event( first-app )
+            )->text( first-sub ).
+      ENDIF.
 
     ENDLOOP.
 
     client->view_display( view->stringify( ) ).
+
+  ENDMETHOD.
+
+
+  METHOD class_exists.
+
+    TRY.
+        DATA li_app TYPE REF TO z2ui5_if_app.
+        CREATE OBJECT li_app TYPE (name).
+        result = xsdbool( li_app IS BOUND ).
+      CATCH cx_root.
+        result = abap_false.
+    ENDTRY.
 
   ENDMETHOD.
 
