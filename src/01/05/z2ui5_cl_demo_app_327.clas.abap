@@ -29,7 +29,10 @@ CLASS z2ui5_cl_demo_app_327 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-CLASS z2ui5_cl_demo_app_327 IMPLEMENTATION.
+
+CLASS Z2UI5_CL_DEMO_APP_327 IMPLEMENTATION.
+
+
   METHOD z2ui5_if_app~main.
 
     IF client->check_on_init( ).
@@ -99,5 +102,4 @@ CLASS z2ui5_cl_demo_app_327 IMPLEMENTATION.
     ENDCASE.
 
   ENDMETHOD.
-
 ENDCLASS.

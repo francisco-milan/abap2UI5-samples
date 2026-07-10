@@ -29,7 +29,10 @@ CLASS z2ui5_cl_demo_app_316 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-CLASS z2ui5_cl_demo_app_316 IMPLEMENTATION.
+
+CLASS Z2UI5_CL_DEMO_APP_316 IMPLEMENTATION.
+
+
   METHOD view_display.
 
     url = VALUE #( url        = `http://www.sap.com`
@@ -147,5 +150,4 @@ CLASS z2ui5_cl_demo_app_316 IMPLEMENTATION.
     ENDIF.
 
   ENDMETHOD.
-
 ENDCLASS.
