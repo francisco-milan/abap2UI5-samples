@@ -5,7 +5,7 @@
    <VSEOCLASS>
     <CLSNAME>Z2UI5_CL_DEMO_APP_327</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>Store data inside localStorage or sessionStorage</DESCRIPT>
+    <DESCRIPT>Storage - Store data inside localStorage or sessionStorage</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
