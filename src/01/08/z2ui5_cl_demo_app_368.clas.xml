@@ -3,9 +3,9 @@
  <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
   <asx:values>
    <VSEOCLASS>
-    <CLSNAME>Z2UI5_CL_DEMO_APP_072</CLSNAME>
+    <CLSNAME>Z2UI5_CL_DEMO_APP_368</CLSNAME>
     <LANGU>E</LANGU>
-    <DESCRIPT>Visualization - Object Number, Object States &amp; Tab Filter</DESCRIPT>
+    <DESCRIPT>Icon Tab Bar - Filter Table with Counts</DESCRIPT>
     <STATE>1</STATE>
     <CLSCCINCL>X</CLSCCINCL>
     <FIXPT>X</FIXPT>
