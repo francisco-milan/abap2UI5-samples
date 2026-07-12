@@ -1,4 +1,4 @@
-CLASS z2ui5_cl_sample_app_001 DEFINITION PUBLIC.
+CLASS z2ui5_cl_sample_app_000 DEFINITION PUBLIC.
 
   PUBLIC SECTION.
     INTERFACES z2ui5_if_app.
@@ -37,7 +37,7 @@ CLASS z2ui5_cl_sample_app_001 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-CLASS z2ui5_cl_sample_app_001 IMPLEMENTATION.
+CLASS z2ui5_cl_sample_app_000 IMPLEMENTATION.
 
   METHOD z2ui5_if_app~main.
 
@@ -96,7 +96,7 @@ CLASS z2ui5_cl_sample_app_001 IMPLEMENTATION.
         navbuttonpress = client->_event_nav_app_leave( )
         shownavbutton  = client->check_app_prev_stack( ) ).
 
-    DATA(url_standard) = |{ client->get( )-s_config-origin }{ client->get( )-s_config-pathname }?app_start=z2ui5_cl_sample_app_000|.
+    DATA(url_standard) = |{ client->get( )-s_config-origin }{ client->get( )-s_config-pathname }?app_start=z2ui5_cl_sample_app_001|.
     page->header_content( )->button(
         text  = `Basic Samples`
         icon  = `sap-icon://action`
@@ -257,13 +257,7 @@ CLASS z2ui5_cl_sample_app_001 IMPLEMENTATION.
       ( group = `experimental` header = `UploadSet` sub = `` app = `z2ui5_cl_demo_app_354` )
       ( group = `demos` header = `Sample App` sub = `` app = `z2ui5_cl_demo_app_085` )
       ( group = `demos` header = `Selection Screen` sub = `Explore Input Controls` app = `z2ui5_cl_demo_app_002` )
-      ( group = `generic xml view` header = `more` sub = `Controls Overview` app = `z2ui5_cl_demo_app_357` )
-      ( group = `generic xml view` header = `more` sub = `Expression Binding` app = `z2ui5_cl_demo_app_359` )
-      ( group = `generic xml view` header = `more` sub = `Formatter` app = `z2ui5_cl_demo_app_360` )
       ( group = `generic xml view` header = `more` sub = `InputListItem Sample` app = `z2ui5_cl_demo_app_355` )
-      ( group = `generic xml view` header = `more` sub = `Label Sample` app = `z2ui5_cl_demo_app_356` )
-      ( group = `generic xml view` header = `more` sub = `System Logout` app = `z2ui5_cl_demo_app_361` )
-      ( group = `generic xml view` header = `more` sub = `Table` app = `z2ui5_cl_demo_app_358` )
       ( group = `only non-openui5-with-cc` header = `cc` sub = `geoloaction` app = `z2ui5_cl_demo_app_120` )
       ( group = `uncategorized` header = `App Calling App with REF` sub = `` app = `z2ui5_cl_demo_app_192` )
       ( group = `uncategorized` header = `App in App` sub = `Popup` app = `z2ui5_cl_demo_app_340` )
@@ -288,6 +282,7 @@ CLASS z2ui5_cl_sample_app_001 IMPLEMENTATION.
       ( group = `uncategorized` header = `demo 02` sub = `` app = `z2ui5_cl_demo_app_105` )
       ( group = `uncategorized` header = `demo 03` sub = `` app = `z2ui5_cl_demo_app_112` )
       ( group = `uncategorized` header = `extension` sub = `import xml view 2` app = `z2ui5_cl_demo_app_039` )
+      ( group = `uncategorized` header = `Import View` sub = `Copy & paste views of the UI5 Documentation` app = `z2ui5_cl_demo_app_031` )
       ( group = `uncategorized` header = `list report` sub = `filter` app = `z2ui5_cl_demo_app_083` )
       ( group = `uncategorized` header = `list report` sub = `layout` app = `z2ui5_cl_demo_app_058` )
       ( group = `uncategorized` header = `list report` sub = `navigation` app = `z2ui5_cl_demo_app_054` )
@@ -300,6 +295,7 @@ CLASS z2ui5_cl_sample_app_001 IMPLEMENTATION.
       ( group = `uncategorized` header = `RTTI` sub = `With Data Ref´s` app = `z2ui5_cl_demo_app_336` )
       ( group = `uncategorized` header = `Selectoptions` sub = `` app = `z2ui5_cl_demo_app_130` )
       ( group = `uncategorized` header = `Side Navigation Demo` sub = `` app = `z2ui5_cl_demo_app_258` )
+      ( group = `uncategorized` header = `Standard Margins` sub = `Negative Margins` app = `z2ui5_cl_demo_app_243` )
       ( group = `uncategorized` header = `tab` sub = `cell copy` app = `z2ui5_cl_demo_app_087` )
       ( group = `uncategorized` header = `tab` sub = `filter columns` app = `z2ui5_cl_demo_app_045` )
       ( group = `uncategorized` header = `tab` sub = `layout` app = `z2ui5_cl_demo_app_055` )
@@ -309,6 +305,21 @@ CLASS z2ui5_cl_sample_app_001 IMPLEMENTATION.
       ( group = `uncategorized` header = `ui` sub = `model update` app = `z2ui5_cl_demo_app_049` )
       ( group = `uncategorized` header = `ui table with filter` sub = `` app = `z2ui5_cl_demo_app_143` )
       ( group = `uncategorized` header = `view setting dialog` sub = `` app = `z2ui5_cl_demo_app_099` )
+      ( group = `framework popups` header = `popup` sub = `cl_demo_output html` app = `z2ui5_cl_demo_app_365` )
+      ( group = `framework popups` header = `popup` sub = `popop_get_range_multi` app = `z2ui5_cl_demo_app_162` )
+      ( group = `framework popups` header = `popup` sub = `popup table` app = `z2ui5_cl_demo_app_164` )
+      ( group = `framework popups` header = `popup` sub = `popup_file_download` app = `z2ui5_cl_demo_app_168` )
+      ( group = `framework popups` header = `popup` sub = `popup_file_upload` app = `z2ui5_cl_demo_app_157` )
+      ( group = `framework popups` header = `popup` sub = `popup_html` app = `z2ui5_cl_demo_app_149` )
+      ( group = `framework popups` header = `popup` sub = `popup_input_value` app = `z2ui5_cl_demo_app_156` )
+      ( group = `framework popups` header = `popup` sub = `popup_messages` app = `z2ui5_cl_demo_app_154` )
+      ( group = `framework popups` header = `popup` sub = `popup_pdf` app = `z2ui5_cl_demo_app_158` )
+      ( group = `framework popups` header = `popup` sub = `popup_pdf` app = `z2ui5_cl_demo_app_159` )
+      ( group = `framework popups` header = `popup` sub = `popup_textedit` app = `z2ui5_cl_demo_app_155` )
+      ( group = `framework popups` header = `popup` sub = `popup_to_confirm` app = `z2ui5_cl_demo_app_150` )
+      ( group = `framework popups` header = `popup` sub = `popup_to_inform` app = `z2ui5_cl_demo_app_151` )
+      ( group = `framework popups` header = `popup` sub = `popup_to_select` app = `z2ui5_cl_demo_app_152` )
+      ( group = `framework popups` header = `popup` sub = `popup_to_select2` app = `z2ui5_cl_demo_app_174` )
       ( group = `obsolete` header = `landing page` sub = `` app = `z2ui5_cl_demo_app_000` )
       ( group = `obsolete` header = `obsolete` sub = `old focus demo, use Focus custom control` app = `z2ui5_cl_demo_app_133_0` )
       ( group = `obsolete` header = `obsolete` sub = `old focus demo, use Focus custom control` app = `z2ui5_cl_demo_app_189_0` )

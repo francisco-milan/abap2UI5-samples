@@ -8,7 +8,9 @@ CLASS z2ui5_cl_demo_app_187 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-CLASS z2ui5_cl_demo_app_187 IMPLEMENTATION.
+
+CLASS Z2UI5_CL_DEMO_APP_187 IMPLEMENTATION.
+
 
   METHOD z2ui5_if_app~main.
 
@@ -38,7 +40,7 @@ CLASS z2ui5_cl_demo_app_187 IMPLEMENTATION.
     CASE client->get( )-event.
 
       WHEN `SY`.
-        DATA(ls_msg2) = z2ui5_cl_util=>msg_get_by_msg(
+        DATA(ls_msg2) = z2ui5_cl_sample_context=>msg_get_by_msg(
                   id = `NET`
                   no = `001` ).
         client->message_box_display( ls_msg2 ).
@@ -57,5 +59,4 @@ CLASS z2ui5_cl_demo_app_187 IMPLEMENTATION.
     ENDCASE.
 
   ENDMETHOD.
-
 ENDCLASS.
