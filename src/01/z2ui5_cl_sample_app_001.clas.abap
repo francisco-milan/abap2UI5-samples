@@ -117,7 +117,7 @@ CLASS z2ui5_cl_sample_app_001 IMPLEMENTATION.
           showicon            = abap_true
           enableformattedtext = abap_true
           class               = `sapUiSmallMarginBottom`
-          text                = |This overview is still under construction. Click <a href="{ url }" target="_blank">here</a> to open the classic launchpad overview.| ).
+          text                = |This overview is still under construction. Click <a href="{ url }" target="_blank">here</a> to open the classic overview.| ).
     ENDIF.
 
     DATA(prev_group) = ``.
@@ -243,8 +243,8 @@ CLASS z2ui5_cl_sample_app_001 IMPLEMENTATION.
       ( group = `controls` header = `Card` sub = `with Header & Content` app = `z2ui5_cl_demo_app_181` )
       ( group = `controls` header = `Carousel` sub = `Browse through Pages` app = `z2ui5_cl_demo_app_371` )
       ( group = `controls` header = `Checkbox` sub = `` app = `z2ui5_cl_demo_app_239` )
-      ( group = `controls` header = `Code Editor` sub = `` app = `z2ui5_cl_demo_app_035` )
-      ( group = `controls` header = `Code Editor` sub = `` app = `z2ui5_cl_demo_app_265` )
+      ( group = `controls` header = `Code Editor` sub = `editable with type switch` app = `z2ui5_cl_demo_app_035` )
+      ( group = `controls` header = `Code Editor` sub = `with hint popover` app = `z2ui5_cl_demo_app_265` )
       ( group = `controls` header = `Color Picker` sub = `` app = `z2ui5_cl_demo_app_270` )
       ( group = `controls` header = `ComboBox` sub = `Suggestions wrapping` app = `z2ui5_cl_demo_app_229` )
       ( group = `controls` header = `Date Picker` sub = `Value States` app = `z2ui5_cl_demo_app_294` )
