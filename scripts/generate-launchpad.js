@@ -81,15 +81,30 @@ for (const abap of walk(SRC)) {
   const cls = path.basename(abap, '.clas.abap');
   if (!cls.startsWith('z2ui5_cl_demo_app')) continue;
 
-  const rel = path.relative(SRC, abap).split(path.sep); // [ area, subnum, file ]
+  const rel = path.relative(SRC, abap).split(path.sep); // [ area, ...subfolders, file ]
   if (rel.length < 3) continue;
-  const [area, subnum] = rel;
+  const area = rel[0];
+  // full subfolder path ("08" or nested "08/00") so nested subpackages form
+  // their own group directly after their parent slot
+  const subnum = rel.slice(1, -1).join('/');
   if (!(area in tiles)) continue;
 
   const xmlPath = abap.replace(/\.clas\.abap$/, '.clas.xml');
   if (!fs.existsSync(xmlPath)) { console.warn(`skipping ${cls}: no .clas.xml`); continue; }
   const xml = fs.readFileSync(xmlPath, 'utf8');
-  const { header, sub } = splitDescript(tag(xml, 'DESCRIPT') || cls);
+  let { header, sub } = splitDescript(tag(xml, 'DESCRIPT') || cls);
+
+  // demo kit rebuilds (AGENTS.md §1) carry the full, untruncated demo kit
+  // description as ABAP Doc lines below the URL line — prefer it as sub over
+  // the 60-char DESCRIPT
+  const doc = fs.readFileSync(abap, 'utf8')
+    .match(/^"! Rebuild of the UI5 demo kit sample: \S+\r?\n((?:"! .*\r?\n)+)/);
+  if (doc) {
+    sub = doc[1].split(/\r?\n/)
+      .map((l) => l.replace(/^"! ?/, '').trim())
+      .filter(Boolean)
+      .join(' ');
+  }
 
   if (header.trim().toUpperCase() === 'ZZZ') { hidden++; continue; }
   if ((header + sub).includes('`')) throw new Error(`backtick in DESCRIPT of ${cls}`);

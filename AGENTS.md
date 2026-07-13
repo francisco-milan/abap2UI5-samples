@@ -26,7 +26,14 @@ src/
 │   ├── 01/  framework - basics
 │   ├── 02/  framework - action
 │   ├── 05/  controls - extended
-│   └── 08/  controls
+│   └── 08/  controls              1:1 rebuilds of UI5 demo kit samples, split by library
+│       ├── 00/  controls - sap.m
+│       ├── 01/  controls - sap.uxap
+│       ├── 02/  controls - sap.f
+│       ├── 03/  controls - sap.ui.core
+│       ├── 04/  controls - sap.ui.layout
+│       ├── 05/  controls - sap.tnt
+│       └── 06/  controls - sap.ui.codeeditor
 └── 00/  "extended"  restricted / special-purpose — STRIPPED from cloud & 702 builds
     ├── 01/  only non-abap-cloud          on-premise-only ABAP (not ABAP Cloud ready)
     ├── 02/  only non-openui5             SAPUI5-only controls (sap.suite.*, sap.ui.comp.*, VizFrame, …)
@@ -39,6 +46,7 @@ src/
     ├── 09/  generic xml view             built on z2ui5_cl_util_xml
     ├── 10/  only non-openui5-with-cc     SAPUI5-only control that also needs a custom control
     ├── 11/  uncategorized                not yet triaged into a category
+    ├── 12/  controls - custom            own control demos without a UI5 demo kit original
     └── 99/  obsolete                     superseded, or uses a deprecated control
 ```
 
@@ -49,6 +57,21 @@ group name — keep the two identical** (see §4).
 > Class names never encode the folder (`FOLDER_LOGIC=PREFIX`). Moving a sample
 > between packages needs **no rename** and keeps navigation intact — but the
 > overview catalog must be updated (§4).
+
+Every sample in `01/08` is a faithful rebuild of one specific UI5 demo kit
+sample, filed in the subpackage of the library its entity belongs to
+(`01/08/00` = sap.m, `01/08/01` = sap.uxap, …), and carries the demo kit URL
+as an ABAP Doc line directly above its `CLASS ... DEFINITION`
+(`"! Rebuild of the UI5 demo kit sample: <url>`).
+Its `<DESCRIPT>` follows the convention `<entity> - <demo kit description>`
+(e.g. `sap.m.Switch - "Some say it is only a switch, I say it i`), where the
+entity is the control from the demo kit URL and the description comes from
+the library's `demokit/docuindex.json` in openui5 (HTML markup stripped,
+truncated to the 60-character DESCRIPT limit). The **full, untruncated**
+description is kept as additional ABAP Doc lines below the URL line; the
+overview generator prefers those lines as the tile `sub` (§4).
+Demos that have no demo kit original belong in `00/12` (controls - custom)
+instead.
 
 ---
 
@@ -168,7 +191,10 @@ One row per app, all four fields always present:
 
 **`header` and `sub` come from the class, not from hand-written labels.** The
 source of truth is the app class's abapGit short text `<DESCRIPT>` in its
-`*.clas.xml`, written in the format `header - sub`:
+`*.clas.xml`, written in the format `header - sub` — except for demo kit
+rebuilds (§1), where the generator overrides `sub` with the full description
+from the ABAP Doc lines below the `"! Rebuild of the UI5 demo kit sample:`
+line:
 - Split the DESCRIPT on the **first** `` ` - ` `` (space-hyphen-space): the part
   before is `header`, the part after is `sub` (which may itself contain ` - `).
 - No ` - ` at all → `header` = the whole DESCRIPT, `sub` = empty.
@@ -191,10 +217,11 @@ from the old catalog.
    every tile's `group` to match. A tile's group must equal the CTEXT of the
    folder the class physically lives in — never a neighbouring category.
 4. **Group blocks follow folder order.** Emit groups in ascending folder number
-   (`00/01` → `00/11` → `00/99`; `01/01` → `01/08`) so the on-screen order
-   mirrors the tree. When inserting a new group, place it at its numeric slot
-   (e.g. `uncategorized` = `00/11` goes **after** `only non-openui5-with-cc`
-   (`00/10`) and **before** `obsolete` (`00/99`)).
+   (`00/01` → `00/12` → `00/99`; `01/01` → `01/08/00` → `01/08/06`) so the
+   on-screen order mirrors the tree; a nested subpackage forms its own group
+   directly after its parent slot. When inserting a new group, place it at its
+   numeric slot (e.g. `uncategorized` = `00/11` goes **after**
+   `only non-openui5-with-cc` (`00/10`) and **before** `obsolete` (`00/99`)).
 5. **Within a group, sort tiles alphabetically (case-insensitive) by `header`,
    then by `sub`.** Sorting by `header` first keeps numbered series together and
    in order (`Binding I`, `Binding II`, `Binding III`, … underneath each other;
