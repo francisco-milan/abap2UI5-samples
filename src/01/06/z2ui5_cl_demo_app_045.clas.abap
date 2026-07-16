@@ -23,7 +23,9 @@ CLASS z2ui5_cl_demo_app_045 DEFINITION PUBLIC.
 ENDCLASS.
 
 
-CLASS z2ui5_cl_demo_app_045 IMPLEMENTATION.
+
+CLASS Z2UI5_CL_DEMO_APP_045 IMPLEMENTATION.
+
 
   METHOD refresh_data.
 
@@ -110,5 +112,4 @@ CLASS z2ui5_cl_demo_app_045 IMPLEMENTATION.
     client->view_display( page->stringify( ) ).
 
   ENDMETHOD.
-
 ENDCLASS.
