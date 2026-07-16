@@ -13,6 +13,14 @@ CLASS z2ui5_cl_sample_app_000 DEFINITION PUBLIC.
     TYPES ty_t_tile TYPE STANDARD TABLE OF ty_s_tile WITH DEFAULT KEY.
 
   PROTECTED SECTION.
+    TYPES:
+      BEGIN OF ty_s_block,
+        group TYPE string,
+        base  TYPE string,
+        width TYPE i,
+      END OF ty_s_block.
+    TYPES ty_t_block TYPE STANDARD TABLE OF ty_s_block WITH DEFAULT KEY.
+
     DATA client TYPE REF TO z2ui5_if_client.
     DATA:
       BEGIN OF s_scroll,
@@ -27,6 +35,16 @@ CLASS z2ui5_cl_sample_app_000 DEFINITION PUBLIC.
     METHODS get_catalog
       RETURNING
         VALUE(result) TYPE ty_t_tile.
+    METHODS block_widths
+      IMPORTING
+        t_catalog     TYPE ty_t_tile
+      RETURNING
+        VALUE(result) TYPE ty_t_block.
+    METHODS header_width
+      IMPORTING
+        header        TYPE string
+      RETURNING
+        VALUE(result) TYPE i.
     METHODS header_base
       IMPORTING
         header        TYPE string
@@ -88,6 +106,9 @@ CLASS z2ui5_cl_sample_app_000 IMPLEMENTATION.
 
   METHOD view_display.
 
+    DATA(t_catalog) = get_catalog( ).
+    DATA(t_blocks) = block_widths( t_catalog ).
+
     DATA(view) = z2ui5_cl_xml_view=>factory( ).
 
     DATA(page) = view->shell( )->page(
@@ -106,7 +127,7 @@ CLASS z2ui5_cl_sample_app_000 IMPLEMENTATION.
     DATA(prev_group) = ``.
     DATA(prev_base) = ``.
 
-    LOOP AT get_catalog( ) INTO DATA(tile).
+    LOOP AT t_catalog INTO DATA(tile).
 
       DATA(base) = header_base( tile-header ).
       DATA(new_block) = abap_false.
@@ -124,6 +145,9 @@ CLASS z2ui5_cl_sample_app_000 IMPLEMENTATION.
 
       prev_base = base.
 
+      " widest header of the block plus roughly one space, in 1/100 em
+      DATA(tenths) = ( t_blocks[ group = tile-group base = base ]-width + 45 ) DIV 10.
+      DATA(width) = |{ tenths DIV 10 }.{ tenths MOD 10 }em|.
       DATA(row) = page->hbox(
           alignitems = `Center`
           wrap       = `Wrap`
@@ -134,12 +158,13 @@ CLASS z2ui5_cl_sample_app_000 IMPLEMENTATION.
       IF tile-sub IS INITIAL.
         row->link(
             text  = tile-header
+            width = width
             press = client->_event( tile-app ) ).
 
       ELSE.
         row->link(
             text  = tile-header
-            class = `sapUiTinyMarginEnd`
+            width = width
             press = client->_event( tile-app )
             )->text( tile-sub ).
       ENDIF.
@@ -211,7 +236,6 @@ CLASS z2ui5_cl_sample_app_000 IMPLEMENTATION.
       ( group = `only with javascript and css and html` header = `Messages with Styles I` sub = `` app = `z2ui5_cl_demo_app_310` )
       ( group = `only with javascript and css and html` header = `Messages with Styles II` sub = `` app = `z2ui5_cl_demo_app_311` )
       ( group = `only with javascript and css and html` header = `PDF Viewer` sub = `Display PDFs via iframe` app = `z2ui5_cl_demo_app_079` )
-      ( group = `only with javascript and css and html` header = `popups` sub = `p13n Dialog` app = `z2ui5_cl_demo_app_090` )
       ( group = `only with javascript and css and html` header = `selscreen` sub = `filter bar with variant management WIP` app = `z2ui5_cl_demo_app_111` )
       ( group = `only with javascript and css and html` header = `Softkeyboard on/off` sub = `` app = `z2ui5_cl_demo_app_352_0` )
       ( group = `only with javascript and css and html` header = `tab` sub = `focus edit controls` app = `z2ui5_cl_demo_app_346` )
@@ -257,7 +281,6 @@ CLASS z2ui5_cl_sample_app_000 IMPLEMENTATION.
       ( group = `experimental` header = `Storage` sub = `Store data inside localStorage or sessionStorage` app = `z2ui5_cl_demo_app_327` )
       ( group = `experimental` header = `tab` sub = `different odata models` app = `z2ui5_cl_demo_app_315` )
       ( group = `experimental` header = `tab` sub = `odata, device, http` app = `z2ui5_cl_demo_app_314` )
-      ( group = `experimental` header = `UploadSet` sub = `` app = `z2ui5_cl_demo_app_354` )
       ( group = `demos` header = `Sample App` sub = `` app = `z2ui5_cl_demo_app_085` )
       ( group = `demos` header = `Selection Screen` sub = `Explore Input Controls` app = `z2ui5_cl_demo_app_002` )
       ( group = `generic xml view` header = `more` sub = `InputListItem Sample` app = `z2ui5_cl_demo_app_355` )
@@ -282,8 +305,6 @@ CLASS z2ui5_cl_sample_app_000 IMPLEMENTATION.
       ( group = `uncategorized` header = `demo` sub = `object page` app = `z2ui5_cl_demo_app_042` )
       ( group = `uncategorized` header = `demo` sub = `smallest app` app = `z2ui5_cl_demo_app_044` )
       ( group = `uncategorized` header = `demo` sub = `template` app = `z2ui5_cl_demo_app_018` )
-      ( group = `uncategorized` header = `demo 02` sub = `` app = `z2ui5_cl_demo_app_105` )
-      ( group = `uncategorized` header = `demo 03` sub = `` app = `z2ui5_cl_demo_app_112` )
       ( group = `uncategorized` header = `extension` sub = `import xml view 2` app = `z2ui5_cl_demo_app_039` )
       ( group = `uncategorized` header = `Import View` sub = `Copy & paste views of the UI5 Documentation` app = `z2ui5_cl_demo_app_031` )
       ( group = `uncategorized` header = `list report` sub = `filter` app = `z2ui5_cl_demo_app_083` )
@@ -308,6 +329,38 @@ CLASS z2ui5_cl_sample_app_000 IMPLEMENTATION.
       ( group = `uncategorized` header = `ui` sub = `model update` app = `z2ui5_cl_demo_app_049` )
       ( group = `uncategorized` header = `ui table with filter` sub = `` app = `z2ui5_cl_demo_app_143` )
       ( group = `uncategorized` header = `view setting dialog` sub = `` app = `z2ui5_cl_demo_app_099` )
+      ( group = `controls - custom` header = `Code Editor` sub = `editable with type switch` app = `z2ui5_cl_demo_app_035` )
+      ( group = `controls - custom` header = `Color Picker` sub = `` app = `z2ui5_cl_demo_app_270` )
+      ( group = `controls - custom` header = `Date Time Picker` sub = `Value States` app = `z2ui5_cl_demo_app_377` )
+      ( group = `controls - custom` header = `Flexible Column Layout` sub = `Master details with tree` app = `z2ui5_cl_demo_app_069` )
+      ( group = `controls - custom` header = `Generic Tag` sub = `Since 1.70` app = `z2ui5_cl_demo_app_062` )
+      ( group = `controls - custom` header = `Grid` sub = `Split View in different Areas` app = `z2ui5_cl_demo_app_367` )
+      ( group = `controls - custom` header = `List I` sub = `Basic` app = `z2ui5_cl_demo_app_003` )
+      ( group = `controls - custom` header = `List II` sub = `Events & Visualization` app = `z2ui5_cl_demo_app_048` )
+      ( group = `controls - custom` header = `Object Identifier` sub = `inside a Table` app = `z2ui5_cl_demo_app_370` )
+      ( group = `controls - custom` header = `Object Number` sub = `inside a Table` app = `z2ui5_cl_demo_app_369` )
+      ( group = `controls - custom` header = `Page` sub = `Header, Sub-Header & Footer` app = `z2ui5_cl_demo_app_366` )
+      ( group = `controls - custom` header = `Range Slider` sub = `` app = `z2ui5_cl_demo_app_005` )
+      ( group = `controls - custom` header = `Rich Text Editor` sub = `` app = `z2ui5_cl_demo_app_106` )
+      ( group = `controls - custom` header = `Search Field I` sub = `Filter with enter` app = `z2ui5_cl_demo_app_053` )
+      ( group = `controls - custom` header = `Search Field II` sub = `Filter with Live Change Event` app = `z2ui5_cl_demo_app_059` )
+      ( group = `controls - custom` header = `Split Container` sub = `Master & Detail Pages` app = `z2ui5_cl_demo_app_374` )
+      ( group = `controls - custom` header = `Step Input` sub = `` app = `z2ui5_cl_demo_app_041` )
+      ( group = `controls - custom` header = `Tab Container` sub = `Multiple Items` app = `z2ui5_cl_demo_app_380` )
+      ( group = `controls - custom` header = `Table` sub = `Selection Modes: Single Select & Multi Select` app = `z2ui5_cl_demo_app_019` )
+      ( group = `controls - custom` header = `Table` sub = `Set Columns Editable` app = `z2ui5_cl_demo_app_011` )
+      ( group = `controls - custom` header = `Text Area` sub = `` app = `z2ui5_cl_demo_app_021` )
+      ( group = `controls - custom` header = `Time Picker` sub = `Formats & Steps` app = `z2ui5_cl_demo_app_376` )
+      ( group = `controls - custom` header = `Toolbar` sub = `Add a container & toolbar` app = `z2ui5_cl_demo_app_006` )
+      ( group = `controls - custom` header = `Tree Table I` sub = `Popup Select Entry` app = `z2ui5_cl_demo_app_068` )
+      ( group = `controls - custom` header = `Tree Table II` sub = `Checkbox Binding per Node` app = `z2ui5_cl_demo_app_364` )
+      ( group = `controls - custom` header = `ui.Table I` sub = `Simple example` app = `z2ui5_cl_demo_app_070` )
+      ( group = `controls - custom` header = `ui.Table II` sub = `Events on Cell Level` app = `z2ui5_cl_demo_app_160` )
+      ( group = `deprecated` header = `popups` sub = `p13n Dialog` app = `z2ui5_cl_demo_app_090` )
+      ( group = `deprecated` header = `sap.m.ActionSheet`
+        sub = `Action Sheet provides an easier way of showing a list of actions and allowing the user to select one. Title and Cancel button can be shown or hidden. Without an icon the entry will be left-aligned (see the last action in the list).`
+        app = `z2ui5_cl_demo_app_373` )
+      ( group = `deprecated` header = `UploadSet` sub = `` app = `z2ui5_cl_demo_app_354` )
       ( group = `obsolete` header = `landing page` sub = `` app = `z2ui5_cl_demo_app_000` )
       ( group = `obsolete` header = `obsolete` sub = `old focus demo, use Focus custom control` app = `z2ui5_cl_demo_app_133_0` )
       ( group = `obsolete` header = `obsolete` sub = `old focus demo, use Focus custom control` app = `z2ui5_cl_demo_app_189_0` )
@@ -324,6 +377,52 @@ CLASS z2ui5_cl_sample_app_000 IMPLEMENTATION.
       ( group = `obsolete` header = `obsolete` sub = `uses deprecated sap.f.Avatar, use sap.m.Avatar` app = `z2ui5_cl_demo_app_269` )
       ( group = `obsolete` header = `obsolete` sub = `uses deprecated sap.ui.table.AnalyticalTable` app = `z2ui5_cl_demo_app_284` )
       ( group = `obsolete` header = `obsolete` sub = `uses deprecated sap.ui.table.AnalyticalTable` app = `z2ui5_cl_demo_app_285` ) ).
+
+  ENDMETHOD.
+
+
+  METHOD block_widths.
+
+    LOOP AT t_catalog INTO DATA(tile).
+
+      DATA(base) = header_base( tile-header ).
+      READ TABLE result ASSIGNING FIELD-SYMBOL(<block>)
+        WITH KEY group = tile-group
+                 base  = base.
+
+      IF sy-subrc <> 0.
+        INSERT VALUE #( group = tile-group
+                        base  = base ) INTO TABLE result ASSIGNING <block>.
+      ENDIF.
+
+      DATA(width) = header_width( tile-header ).
+
+      IF width > <block>-width.
+        <block>-width = width.
+      ENDIF.
+
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
+  METHOD header_width.
+
+    " estimated render width in 1/100 em, weighted per character class
+    DATA(off) = 0.
+    WHILE off < strlen( header ).
+
+      DATA(char) = substring( val = header
+                              off = off
+                              len = 1 ).
+      result = result + COND i( WHEN char CA `MW` THEN 95
+                                WHEN char CA `mw` THEN 80
+                                WHEN char CA `ijltfrI. -` THEN 35
+                                WHEN char CA `ABCDEFGHJKLNOPQRSTUVXYZ` THEN 75
+                                ELSE 55 ).
+      off = off + 1.
+
+    ENDWHILE.
 
   ENDMETHOD.
 
